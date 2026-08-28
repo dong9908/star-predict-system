@@ -1,0 +1,63 @@
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+
+# External datasets, personal photos and downloaded catalogues
+data/photo/**
+HYG-Database-main/
+*.vot
+*.vot.gz
+vizier_votable.tsv
+
+# Large/reference data reconstructed from public sources
+data/reference/*
+!data/reference/.gitkeep
+
+# Generated outputs, WCS and local evaluation data
+data/results/
+data/wcs/
+data/evaluation/
+data/processed/
+data/sample/
+
+# Astronomy products
+*.fits
+*.fit
+*.fts
+*.wcs
+*.new
+*.corr
+*.axy
+*.rdls
+*.match
+*.solved
+
+# Machine-learning weights and exports
+*.pt
+*.onnx
+
+weights/
+*.pt
+*.onnx
+*.pth
