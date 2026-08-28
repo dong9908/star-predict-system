@@ -4,11 +4,25 @@
 카탈로그를 비교한 뒤, Plate Solving으로 얻은 WCS를 사용해 사진에 포함된 별자리를
 검증하고 표시하는 프로젝트입니다.
 
-현재 구현은 학습된 딥러닝 모델 하나가 사진을 직접 분류하는 방식이 아닙니다. OpenCV
-영상처리, Delaunay 그래프, Stellarium 별자리 연결선, HYG/Gaia 별 카탈로그,
-Astrometry.net Plate Solving을 결합한 설명 가능한 인식 파이프라인입니다. 이후 실제
-스마트폰 사진이 충분히 확보되면 별 검출과 실패 사진 판정 부분에 머신러닝·딥러닝
-모델을 추가할 계획입니다.
+현재 구현의 중심은 OpenCV 영상처리, Delaunay 그래프, Stellarium 별자리 연결선,
+HYG/Gaia 별 카탈로그와 Astrometry.net Plate Solving을 결합한 설명 가능한 인식
+파이프라인입니다. 이와 별도로 MobilTelesco의 천체 라벨을 사용한 YOLO11n 전이학습,
+테스트셋 평가 및 사진별 오답 분석 단계도 구현되어 있습니다. 딥러닝 결과는 WCS·카탈로그
+기반 검증을 대체하지 않고 기존 파이프라인을 보조하는 방향으로 개발합니다.
+
+## 전체 과정 한눈에 보기
+
+### 1. 데이터와 기준 자료
+
+![데이터와 기준 자료](docs/images/01_data_and_references.png)
+
+### 2. 사진 한 장의 별자리 인식
+
+![사진 한 장의 별자리 인식 과정](docs/images/02_constellation_recognition_pipeline.png)
+
+### 3. 딥러닝 학습과 다음 단계
+
+![딥러닝 학습과 다음 단계](docs/images/03_yolo_training_and_next_steps.png)
 
 ## 1. 프로젝트 구조
 
@@ -57,6 +71,9 @@ Git에 올리지 않습니다. GitHub에는 코드, 문서, 설정 예시만 올
 | `data/results/final_recognition` | 최종 상태, 별자리, 실패 코드 |
 | `data/results/wcs_constellation_overlay` | 실제 천구 좌표로 투영한 별자리 오버레이 |
 | `data/results/pipeline` | 사진 한 장의 전체 실행 로그와 요약 |
+| `data/results/yolo_training` | YOLO 학습 로그, 그래프, `best.pt`, `last.pt` 체크포인트 |
+| `data/results/yolo_evaluation` | 테스트셋 Precision, Recall, mAP와 혼동행렬 |
+| `data/results/yolo_error_analysis` | 사진별 미검출·오검출 순위, 클래스 오류와 시각화 |
 | `data/evaluation` | 정답 라벨, 장면 ID, 학습/검증/평가 분할 정보 |
 | `data/wcs` | `.wcs`, `.new`, `.corr` 등 Astrometry.net 산출물 |
 
@@ -219,6 +236,46 @@ WCS가 유효하면 `11`단계가 Stellarium의 88개 별자리 연결선을 사
 
 외부 사진을 학습에 사용할 때는 저작권, 촬영기기, 중복 및 라벨 품질을 확인해야 합니다.
 학습/검증/테스트는 개별 프레임이 아니라 `scene_id`, 촬영자, 촬영일을 기준으로 분리합니다.
+
+### 2.5 MobilTelesco YOLO 데이터와 학습 현황
+
+`20_prepare_mobiltelesco_manifest.py`로 MobilTelesco 전체 파일을 조사하여 JPG/DNG 쌍,
+DARKS, Skymap, 중복 파일과 촬영 세션을 구분했습니다. 현재 8클래스 지도학습 데이터는
+다음과 같습니다.
+
+| 항목 | 수량 |
+|---|---:|
+| 전체 지도학습 이미지 | 1,190장 |
+| 학습 이미지 | 791장 |
+| 검증 이미지 | 200장 |
+| 테스트 이미지 | 199장 |
+| 라벨 객체 | 9,372개 |
+| 독립 촬영 세션 | 24개 |
+| 촬영 세션 분할 누수 | 0건 |
+| 클래스 | 8개 |
+
+현재 클래스는 별자리 88개가 아니라 `Pleiades`, `Jupiter`, `Betelgeuse`, `Aldebaran`,
+`Zeta Tauri`, `Elnath`, `Hassaleh`, `Bellatrix`의 특정 천체 8개입니다. 따라서 이 모델은
+다양한 별자리를 직접 분류하는 완성 모델이 아니라, 특정 하늘 영역의 천체 검출과 딥러닝
+파이프라인을 검증하는 첫 기준 모델입니다.
+
+2026년 8월 28일 중간 확인 기준으로 GTX 1050 Ti에서 YOLO11n 전체 학습을 진행 중입니다.
+README에 기록된 값은 학습 완료 결과가 아니라 진행 중 스냅샷입니다.
+
+| 항목 | 중간 결과 |
+|---|---:|
+| 설정된 최대 epoch | 50 |
+| 완료 확인 epoch | 11 |
+| 현재 최고 epoch | 10 |
+| 최고 mAP50 | 0.56987 |
+| 최고 mAP50-95 | 0.18865 |
+| 최고 epoch Precision | 0.54645 |
+| 최고 epoch Recall | 0.67195 |
+| Early Stopping patience | 12 epoch |
+
+50 epoch는 반드시 모두 실행해야 하는 고정 횟수가 아니라 최대 횟수입니다. 검증 성능이
+12 epoch 동안 개선되지 않으면 조기 종료됩니다. 최종 모델 성능과 부족한 사진 유형은
+학습이 끝난 뒤 `23_evaluate_yolo.py`와 `24_yolo_error_analysis.py`로 판단합니다.
 
 ## 3. 데이터 출처와 각 데이터의 의미
 
@@ -463,6 +520,87 @@ CC0, Public Domain, CC BY이며 CC BY-SA는 `--include-sharealike`를 명시해�
 .\.venv\Scripts\python.exe .\scripts\14_error_analysis.py
 ```
 
+### MobilTelesco 매니페스트와 YOLO 데이터 준비
+
+MobilTelesco 원본을 촬영 세션 단위로 정리하고 지도학습 매니페스트를 생성합니다.
+
+```powershell
+.\.venv\Scripts\python.exe .\scripts\20_prepare_mobiltelesco_manifest.py
+```
+
+8클래스 매니페스트를 YOLO 폴더 구조로 변환합니다. 학습용 이미지는 원본 보호를 위해
+독립 복사본으로 구성합니다.
+
+```powershell
+.\.venv\Scripts\python.exe .\scripts\21_prepare_yolo_dataset.py --link-mode copy --replace-existing
+```
+
+### YOLO 전체 학습
+
+YOLO11n을 최대 50 epoch 학습합니다. CUDA를 사용할 수 있으면 GPU `0`을 자동 선택하고,
+GTX 1050 Ti 4GB에 맞춰 기본 배치 크기 `2`를 사용합니다.
+
+```powershell
+.\.venv\Scripts\python.exe .\scripts\22_train_yolo.py
+```
+
+학습 결과는 다음 위치에 저장됩니다.
+
+```text
+data/results/yolo_training/mobiltelesco8_yolo11n/
+├─ weights/best.pt    검증 성능이 가장 좋았던 가중치
+├─ weights/last.pt    마지막으로 완료한 epoch 가중치
+├─ results.csv        epoch별 손실과 평가 지표
+├─ results.png        학습 곡선
+└─ training_summary.json
+```
+
+### YOLO 학습 중단과 재개
+
+시간이 부족하면 학습 터미널에서 `Ctrl+C`를 한 번 눌러 중단합니다. 마지막으로 완료된
+epoch의 `last.pt`가 존재하는지 확인한 뒤 터미널을 종료합니다. `.pt` 파일은 Git에
+커밋하지 않으므로 다음 작업일까지 로컬 `data/results` 폴더를 유지해야 합니다.
+
+체크포인트 존재 여부를 확인합니다.
+
+```powershell
+Get-Item ".\data\results\yolo_training\mobiltelesco8_yolo11n\weights\last.pt"
+```
+
+2026년 8월 31일 이후 다음 명령으로 마지막 체크포인트부터 학습을 재개합니다.
+
+```powershell
+.\.venv\Scripts\python.exe .\scripts\22_train_yolo.py --resume ".\data\results\yolo_training\mobiltelesco8_yolo11n\weights\last.pt"
+```
+
+재개할 때 `--epochs 50`을 다시 지정할 필요는 없습니다. 체크포인트에 저장된 기존 학습
+설정과 optimizer 상태를 이어서 사용합니다. 재개 전 `results.csv`, `best.pt`, `last.pt`를
+다른 위치로 이동하거나 이름을 변경하지 않습니다.
+
+### YOLO 최종 평가와 오답 분석
+
+전체 학습 또는 Early Stopping 완료 후 `best.pt`로 보류한 테스트셋을 평가합니다.
+
+```powershell
+.\.venv\Scripts\python.exe .\scripts\23_evaluate_yolo.py
+```
+
+사진별 TP, FP, FN, 클래스 혼동과 위치 오차를 분석하고 오류가 큰 사진을 시각화합니다.
+
+```powershell
+.\.venv\Scripts\python.exe .\scripts\24_yolo_error_analysis.py --max-visualizations 100
+```
+
+진행 순서는 다음과 같습니다.
+
+```text
+22 전체 학습 또는 재개
+→ 23 테스트셋 정량 평가
+→ 24 사진별 오답 분석
+→ 부족한 클래스·촬영 조건 결정
+→ 데이터 보강 및 재학습
+```
+
 ## 6. 개인정보와 라이선스 주의사항
 
 - `.env`의 API 키를 GitHub에 올리지 않습니다.
@@ -478,12 +616,18 @@ CC0, Public Domain, CC BY이며 CC BY-SA는 `--include-sharealike`를 명시해�
 검증, 복수 별자리 오버레이와 실패 판정까지 수행할 수 있습니다. 즉 천문학적 규칙 기반
 인식 MVP는 동작합니다.
 
-딥러닝 모델까지 포함한 완성형 시스템을 위해 남은 주요 작업은 다음과 같습니다.
+딥러닝 단계에서는 MobilTelesco 파일 분류와 매니페스트 생성, 촬영 세션 단위
+train/validation/test 분할, YOLO 데이터셋 생성, CUDA 학습, 테스트 평가 및 오답 분석
+코드까지 구현했습니다. 현재 YOLO11n 50 epoch 학습이 진행 중이며, 시간이 부족하면
+`last.pt`로 중단 지점부터 재개할 수 있습니다.
 
-1. 라이선스가 명확하고 촬영 세션이 다양한 실제 스마트폰 사진 확보
-2. 외부 사진의 EXIF·라이선스·중복 해시를 포함한 수집 매니페스트 구축
-3. 현재 파이프라인으로 자동 라벨 생성 후 애매한 사진 수동 검수
-4. 장면 단위 train/validation/test 분할
-5. 품질 분류 모델과 별 keypoint 검출 모델 학습
-6. 기존 DoG와 딥러닝 모델을 동일 평가셋에서 비교
-7. ONNX 등 배포 형식으로 내보내고 10단계 파이프라인에 선택적으로 결합
+남은 주요 작업은 다음과 같습니다.
+
+1. 2026년 8월 31일에 `last.pt`로 22단계 학습 재개
+2. 학습 또는 Early Stopping 완료 후 23단계 테스트셋 평가
+3. 24단계에서 미검출·오검출·클래스 혼동 사진 확인
+4. 다른 기종·장소·계절·하늘 방향과 실패 사진 보강
+5. 기존 비라벨 스마트폰 사진을 Plate Solving하여 학습 라벨로 확장
+6. 특정 천체 8개에서 더 다양한 천체·별자리 영역으로 클래스 확대
+7. 기존 DoG와 딥러닝 검출기를 동일 평가셋에서 비교
+8. 검증된 모델을 ONNX 등 배포 형식으로 내보내고 10단계 파이프라인에 선택적으로 결합
