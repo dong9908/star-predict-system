@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ASTRA - 별자리 분석 & 관측 서비스</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans selection:bg-purple-500 selection:text-white">
+
+  <!-- 글로벌 네비게이션 바 (GNB) -->
+  <header class="border-b border-slate-800/80 bg-slate-900/50 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+      <!-- 로고 -->
+      <div class="flex items-center gap-3 cursor-pointer" onclick="navigate('main')">
+        <i data-lucide="sparkles" class="w-6 h-6 text-purple-400"></i>
+        <span class="text-xl font-bold tracking-wider text-white">ASTRA</span>
+      </div>
+
+      <!-- 메뉴 -->
+      <nav class="flex items-center gap-8 text-sm font-medium text-slate-300">
+        <button onclick="navigate('main')" class="hover:text-white transition-colors">메인</button>
+        <button onclick="navigate('main')" class="hover:text-white transition-colors">별자리 찾기</button>
+        <button onclick="navigate('main')" class="hover:text-white transition-colors">별자리 위치</button>
+        <button onclick="navigate('main')" class="hover:text-white transition-colors">별자리 정보</button>
+        <button onclick="navigate('main')" class="hover:text-white transition-colors">도감</button>
+        <button onclick="navigate('main')" class="hover:text-white transition-colors">운세</button>
+        <button onclick="navigate('main')" class="hover:text-white transition-colors">결제</button>
+      </nav>
+
+      <!-- 인증 버튼 -->
+      <div class="flex items-center gap-3">
+        <button onclick="navigate('login')" class="px-4 py-1.5 rounded-full border border-slate-700 text-sm font-medium hover:border-slate-500 hover:text-white transition-all">로그인</button>
+        <button onclick="navigate('signup')" class="px-4 py-1.5 rounded-full bg-purple-600 hover:bg-purple-500 text-white text-sm font-medium transition-all shadow-lg shadow-purple-600/20">회원가입</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 메인 컨테이너 -->
+  <main class="flex-1 flex flex-col justify-center items-center p-6 max-w-7xl mx-auto w-full">
+    
+    <!-- 1. 메인 뷰 (Main View) -->
+    <section id="view-main" class="w-full space-y-12">
+      <!-- Hero 섹션 -->
+      <div class="grid grid-cols-12 gap-8 items-center pt-6">
+        <div class="col-span-7 space-y-6">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-950/60 border border-purple-800/50 text-purple-300 text-xs font-semibold">
+            <span>✦ 오늘 밤, 별과 더 가까워지는 방법</span>
+          </div>
+          <h1 class="text-4xl lg:text-5xl font-extrabold leading-tight tracking-tight text-white">
+            밤하늘을 올려다보는 순간,<br>별자리가 이야기가 됩니다
+          </h1>
+          <div class="flex items-center gap-4 pt-2">
+            <button class="px-6 py-3 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-sm font-semibold flex items-center gap-2 transition-all shadow-lg shadow-purple-600/25">
+              사진으로 별자리 찾기 <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </button>
+            <button class="px-6 py-3 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-slate-200 text-sm font-semibold transition-all">
+              내 위치에서 찾아보기
+            </button>
+          </div>
+        </div>
+
+        <!-- 성도 뷰어 카드 -->
+        <div class="col-span-5 bg-gradient-to-br from-slate-900/90 to-slate-950/90 border border-slate-800 p-6 rounded-2xl relative overflow-hidden shadow-2xl backdrop-blur-sm">
+          <div class="flex justify-between items-center text-xs text-cyan-400 font-mono tracking-wider mb-6">
+            <span>LIVE SKY · SEOUL 21:42</span>
+            <i data-lucide="compass" class="w-4 h-4"></i>
+          </div>
+
+          <div class="relative h-48 w-full flex items-center justify-center">
+            <!-- 별자리 SVG 일러스트 -->
+            <svg class="w-full h-full" viewBox="0 0 300 200">
+              <line x1="50" y1="140" x2="110" y2="90" stroke="#818cf8" stroke-width="1.5" stroke-dasharray="3 3"/>
+              <line x1="110" y1="90" x2="160" y2="110" stroke="#818cf8" stroke-width="1.5"/>
+              <line x1="160" y1="110" x2="200" y2="55" stroke="#818cf8" stroke-width="1.5"/>
+              <line x1="200" y1="55" x2="250" y2="40" stroke="#818cf8" stroke-width="1.5"/>
+              <line x1="250" y1="40" x2="280" y2="90" stroke="#818cf8" stroke-width="1.5"/>
+              <line x1="160" y1="110" x2="200" y2="150" stroke="#818cf8" stroke-width="1.5" stroke-dasharray="3 3"/>
+              
+              <!-- Star Nodes -->
+              <circle cx="50" cy="140" r="3.5" fill="#fff" class="animate-pulse" />
+              <circle cx="110" cy="90" r="4.5" fill="#fff" />
+              <circle cx="160" cy="110" r="5" fill="#c084fc" />
+              <circle cx="200" cy="55" r="3.5" fill="#fff" />
+              <circle cx="250" cy="40" r="4" fill="#fff" />
+              <circle cx="280" cy="90" r="3.5" fill="#fff" />
+              <circle cx="200" cy="150" r="3" fill="#fff" />
+            </svg>
+          </div>
+
+          <div class="mt-4 pt-4 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
+            <span>오리온자리 · 남동쪽 32°</span>
+            <span class="text-emerald-400 font-medium">관측 좋음</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3열 기능 카드 그리드 -->
+      <div class="grid grid-cols-3 gap-6 pt-4">
+        <div class="p-6 rounded-xl bg-slate-900/60 border border-slate-800 hover:border-purple-600/50 transition-all group">
+          <div class="text-xs font-mono text-purple-400 font-bold mb-2">01</div>
+          <h3 class="text-lg font-bold text-white mb-2">사진으로 별자리 찾기</h3>
+          <p class="text-xs text-slate-400 leading-relaxed mb-4">밤하늘 사진을 올리면 별자리 이름과 숨겨진 신화 이야기를 알려드려요.</p>
+          <a href="#" class="text-xs font-semibold text-purple-400 group-hover:text-purple-300 inline-flex items-center gap-1">지금 업로드하기 →</a>
+        </div>
+
+        <div class="p-6 rounded-xl bg-slate-900/60 border border-slate-800 hover:border-purple-600/50 transition-all group">
+          <div class="text-xs font-mono text-purple-400 font-bold mb-2">02</div>
+          <h3 class="text-lg font-bold text-white mb-2">내 위치에서 별자리 찾기</h3>
+          <p class="text-xs text-slate-400 leading-relaxed mb-4">현재 위치와 시간 기준으로 별이 있는 정확한 방향과 고도를 확인해요.</p>
+          <a href="#" class="text-xs font-semibold text-purple-400 group-hover:text-purple-300 inline-flex items-center gap-1">하늘 지도 열기 →</a>
+        </div>
+
+        <div class="p-6 rounded-xl bg-slate-900/60 border border-slate-800 hover:border-purple-600/50 transition-all group">
+          <div class="text-xs font-mono text-purple-400 font-bold mb-2">03</div>
+          <h3 class="text-lg font-bold text-white mb-2">별자리 정보</h3>
+          <p class="text-xs text-slate-400 leading-relaxed mb-4">88개 별자리의 역사, 밝은 별 정보, 설화 및 신화 도감을 한눈에 조회하세요.</p>
+          <a href="#" class="text-xs font-semibold text-purple-400 group-hover:text-purple-300 inline-flex items-center gap-1">별자리 정보 보기 →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. 로그인 뷰 (Login View) -->
+    <section id="view-login" class="w-full max-w-md hidden">
+      <div class="bg-slate-900/80 border border-slate-800 p-8 rounded-2xl backdrop-blur-md shadow-2xl">
+        <h2 class="text-2xl font-bold text-center text-white mb-6">로그인</h2>
+
+        <form onsubmit="handleAuthSubmit(event, '로그인')" class="space-y-4">
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1.5">이메일</label>
+            <input type="email" required placeholder="name@example.com" class="w-full px-4 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-sm text-white focus:outline-none focus:border-purple-500 transition-colors">
+          </div>
+
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1.5">비밀번호</label>
+            <input type="password" required placeholder="••••••••" class="w-full px-4 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-sm text-white focus:outline-none focus:border-purple-500 transition-colors">
+          </div>
+
+          <div class="flex items-center gap-2 pt-1">
+            <input type="checkbox" id="login-stay" class="rounded border-slate-800 bg-slate-950 text-purple-600 focus:ring-0">
+            <label for="login-stay" class="text-xs text-slate-400">로그인 유지</label>
+          </div>
+
+          <button type="submit" class="w-full py-2.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white font-semibold text-sm transition-all shadow-lg shadow-purple-600/20 mt-2">
+            로그인
+          </button>
+        </form>
+
+        <div class="flex justify-between items-center text-xs text-slate-400 mt-4 pt-2">
+          <span>계정이 없으신가요? <button onclick="navigate('signup')" class="text-purple-400 hover:underline">회원가입</button></span>
+          <a href="#" class="hover:underline">아이디/비밀번호 찾기</a>
+        </div>
+
+        <div class="relative my-6">
+          <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-slate-800"></div></div>
+          <div class="relative flex justify-center text-xs uppercase"><span class="bg-slate-900 px-2 text-slate-500">간편 로그인</span></div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <button class="w-full py-2 rounded-lg bg-slate-950 border border-slate-800 text-xs font-medium hover:bg-slate-800 transition-colors flex items-center justify-center gap-2">
+            <i data-lucide="message-circle" class="w-4 h-4 text-yellow-400"></i> 카카오
+          </button>
+          <button class="w-full py-2 rounded-lg bg-slate-950 border border-slate-800 text-xs font-medium hover:bg-slate-800 transition-colors flex items-center justify-center gap-2">
+            <i data-lucide="chrome" class="w-4 h-4 text-blue-400"></i> 구글
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. 회원가입 뷰 (Signup View) -->
+    <section id="view-signup" class="w-full max-w-md hidden">
+      <div class="bg-slate-900/80 border border-slate-800 p-8 rounded-2xl backdrop-blur-md shadow-2xl">
+        <h2 class="text-2xl font-bold text-center text-white mb-6">회원가입</h2>
+
+        <form onsubmit="handleAuthSubmit(event, '회원가입')" class="space-y-3.5">
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">이름</label>
+            <input type="text" required placeholder="홍길동" class="w-full px-3.5 py-2 rounded-lg bg-slate-950 border border-slate-800 text-sm text-white focus:outline-none focus:border-purple-500 transition-colors">
+          </div>
+
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">생년월일</label>
+            <input type="text" required placeholder="YYYYMMDD (예: 20030909)" class="w-full px-3.5 py-2 rounded-lg bg-slate-950 border border-slate-800 text-sm text-white focus:outline-none focus:border-purple-500 transition-colors">
+          </div>
+
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">이메일</label>
+            <div class="flex items-center gap-2">
+              <input type="text" required placeholder="이메일 아이디" class="flex-1 px-3.5 py-2 rounded-lg bg-slate-950 border border-slate-800 text-sm text-white focus:outline-none focus:border-purple-500 transition-colors">
+              <span class="text-slate-500 text-sm">@</span>
+              <input type="text" required placeholder="example.com" class="flex-1 px-3.5 py-2 rounded-lg bg-slate-950 border border-slate-800 text-sm text-white focus:outline-none focus:border-purple-500 transition-colors">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">비밀번호</label>
+            <input type="password" required placeholder="8자 이상 영문, 숫자 조합" class="w-full px-3.5 py-2 rounded-lg bg-slate-950 border border-slate-800 text-sm text-white focus:outline-none focus:border-purple-500 transition-colors">
+          </div>
+
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">비밀번호 확인</label>
+            <input type="password" required placeholder="비밀번호 재입력" class="w-full px-3.5 py-2 rounded-lg bg-slate-950 border border-slate-800 text-sm text-white focus:outline-none focus:border-purple-500 transition-colors">
+          </div>
+
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">휴대폰 번호</label>
+            <input type="tel" required placeholder="010-0000-0000" class="w-full px-3.5 py-2 rounded-lg bg-slate-950 border border-slate-800 text-sm text-white focus:outline-none focus:border-purple-500 transition-colors">
+          </div>
+
+          <div class="flex items-center gap-2 pt-1">
+            <input type="checkbox" id="signup-terms" required class="rounded border-slate-800 bg-slate-950 text-purple-600 focus:ring-0">
+            <label for="signup-terms" class="text-xs text-slate-400">이용약관 및 개인정보처리방침 동의 (필수)</label>
+          </div>
+
+          <button type="submit" class="w-full py-2.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white font-semibold text-sm transition-all shadow-lg shadow-purple-600/20 mt-2">
+            회원가입
+          </button>
+        </form>
+
+        <div class="text-center text-xs text-slate-400 mt-4">
+          이미 계정이 있으신가요? <button onclick="navigate('login')" class="text-purple-400 hover:underline">로그인</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
