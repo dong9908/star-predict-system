@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Cloud, MapPin, Zap } from 'lucide-react'
 import {
   PageContainer,
@@ -24,6 +25,7 @@ import {
 } from './styles/ConstellationFindPage.styles'
 
 function ConstellationFindPage() {
+  const navigate = useNavigate()
   const [dragActive, setDragActive] = useState(false)
   const [uploadedFile, setUploadedFile] = useState(null)
   const fileInputRef = useRef(null)
@@ -134,9 +136,35 @@ function ConstellationFindPage() {
         </UploadArea>
 
         {uploadedFile && (
-          <p style={{ color: '#10b981', textAlign: 'center', fontSize: '0.875rem' }}>
-            ✓ {uploadedFile.name} 선택됨
-          </p>
+          <div style={{ textAlign: 'center' }}>
+            <p style={{ color: '#10b981', fontSize: '0.875rem', marginBottom: '1rem' }}>
+              ✓ {uploadedFile.name} 선택됨
+            </p>
+            <button
+              onClick={() => navigate('/constellation-find-result', { state: { image: uploadedFile } })}
+              style={{
+                padding: '0.75rem 2rem',
+                background: '#a78bfa',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '8px',
+                fontSize: '1rem',
+                fontWeight: '600',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+              }}
+              onMouseOver={(e) => {
+                e.target.style.background = '#c084fc'
+                e.target.style.transform = 'translateY(-2px)'
+              }}
+              onMouseOut={(e) => {
+                e.target.style.background = '#a78bfa'
+                e.target.style.transform = 'translateY(0)'
+              }}
+            >
+              분석하기
+            </button>
+          </div>
         )}
 
         {/* Features Grid */}
