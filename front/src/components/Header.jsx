@@ -48,7 +48,7 @@ function Header() {
           <NavButton onClick={() => navigate('/')}>메인</NavButton>
           <NavButton onClick={() => navigate('/constellation-find')}>별자리 찾기</NavButton>
           <NavButton onClick={() => navigate('/constellation-location')}>별자리 위치</NavButton>
-          <NavButton onClick={() => navigate('/')}>별자리 정보</NavButton>
+          <NavButton onClick={() => navigate('/constellation-info')}>별자리 정보</NavButton>
           <NavButton onClick={() => navigate('/constellation-catalog')}>도감</NavButton>
           <NavButton onClick={() => navigate('/fortune-reading')}>운세</NavButton>
           <NavButton onClick={() => navigate('/')}>결제</NavButton>
