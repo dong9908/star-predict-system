@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { MessageCircle, Chrome } from 'lucide-react'
+import { loginAPI } from '../api/auth'
 import {
   FormContainer,
   FormWrapper,
@@ -30,6 +30,7 @@ function LoginPage() {
     password: '',
     remember: false,
   })
+  const [loading, setLoading] = useState(false)
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target
@@ -39,10 +40,30 @@ function LoginPage() {
     }))
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    alert('로그인 요청이 정상 처리되었습니다.')
-    navigate('/')
+    setLoading(true)
+
+    try {
+      // 1. 백엔드로 로그인 요청
+      const data = await loginAPI({
+        email: formData.email.trim(),
+        pwd: formData.password,
+      })
+
+      // 2. 서버가 준 토큰을 Local Storage에 저장
+      if (data.accessToken) {
+        localStorage.setItem('accessToken', data.accessToken)
+        localStorage.setItem('user', JSON.stringify(data.user))
+      }
+
+      alert('로그인이 완료되었습니다!')
+      navigate('/') // 메인 페이지로 이동
+    } catch (error) {
+      alert(error.message || '이메일 또는 비밀번호가 올바르지 않습니다.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -86,7 +107,9 @@ function LoginPage() {
             <CheckboxLabel htmlFor="login-stay">로그인 유지</CheckboxLabel>
           </CheckboxGroup>
 
-          <SubmitButton type="submit">로그인</SubmitButton>
+          <SubmitButton type="submit" disabled={loading}>
+            {loading ? '로그인 중...' : '로그인'}
+          </SubmitButton>
         </Form>
 
         <LinksGroup>
@@ -96,25 +119,6 @@ function LoginPage() {
           </span>
           <ForgotLink href="#">아이디/비밀번호 찾기</ForgotLink>
         </LinksGroup>
-
-        <Divider>
-          <DividerText>간편 로그인</DividerText>
-        </Divider>
-
-        <SocialButtonsGroup>
-          <SocialButton>
-            <SocialIcon>
-              <MessageCircle size={16} color="#facc15" />
-            </SocialIcon>
-            카카오
-          </SocialButton>
-          <SocialButton>
-            <SocialIcon>
-              <Chrome size={16} color="#60a5fa" />
-            </SocialIcon>
-            구글
-          </SocialButton>
-        </SocialButtonsGroup>
       </FormWrapper>
     </FormContainer>
   )

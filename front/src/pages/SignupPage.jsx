@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { signupAPI } from '../api/auth'
 import {
   FormContainer,
   FormWrapper,
@@ -29,23 +30,82 @@ function SignupPage() {
     phone: '',
     agreeTos: false,
   })
+  const [loading, setLoading] = useState(false)
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target
+
+    // 1. 생년월일: 숫자만 최대 8자리 입력 허용
+    if (name === 'birthDate') {
+      const onlyNumbers = value.replace(/[^0-9]/g, '').slice(0, 8)
+      setFormData((prev) => ({ ...prev, birthDate: onlyNumbers }))
+      return
+    }
+
+    // 2. 휴대폰 번호: 숫자 입력 시 자동으로 010-XXXX-XXXX 하이픈 포맷 적용
+    if (name === 'phone') {
+      const rawDigits = value.replace(/[^0-9]/g, '').slice(0, 11)
+      let formattedPhone = rawDigits
+      if (rawDigits.length > 3 && rawDigits.length <= 7) {
+        formattedPhone = `${rawDigits.slice(0, 3)}-${rawDigits.slice(3)}`
+      } else if (rawDigits.length > 7) {
+        formattedPhone = `${rawDigits.slice(0, 3)}-${rawDigits.slice(3, 7)}-${rawDigits.slice(7)}`
+      }
+      setFormData((prev) => ({ ...prev, phone: formattedPhone }))
+      return
+    }
+
     setFormData((prev) => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : value,
     }))
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
+
+    // 비밀번호 확인
     if (formData.password !== formData.passwordConfirm) {
       alert('비밀번호가 일치하지 않습니다.')
       return
     }
-    alert('회원가입 요청이 정상 처리되었습니다.')
-    navigate('/')
+
+    // 생년월일 8자리 검증 (예: 20030909)
+    if (formData.birthDate.length !== 8) {
+      alert('생년월일을 8자리 숫자(YYYYMMDD)로 정확히 입력해 주세요. (예: 20030909)')
+      return
+    }
+
+    // 약관 동의 체크
+    if (!formData.agreeTos) {
+      alert('이용약관 및 개인정보처리방침에 동의해 주세요.')
+      return
+    }
+
+    setLoading(true)
+    try {
+      // 이메일 결합
+      const email = `${formData.emailId.trim()}@${formData.emailDomain.trim()}`
+
+      // 생년월일을 DB DATE 규격(YYYY-MM-DD)으로 변환
+      const formattedBirthDate = `${formData.birthDate.slice(0, 4)}-${formData.birthDate.slice(4, 6)}-${formData.birthDate.slice(6, 8)}`
+
+      // 회원가입 API 호출
+      await signupAPI({
+        name: formData.name.trim(),
+        email: email,
+        pwd: formData.password,
+        birthDate: formattedBirthDate,
+        phone: formData.phone.trim(),
+      })
+
+      alert('회원가입이 완료되었습니다! 로그인해 주세요.')
+      navigate('/login')
+    } catch (error) {
+      alert(error.message || '회원가입 처리 중 오류가 발생했습니다.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -72,6 +132,7 @@ function SignupPage() {
               type="text"
               name="birthDate"
               required
+              maxLength={8}
               placeholder="YYYYMMDD (예: 20030909)"
               value={formData.birthDate}
               onChange={handleChange}
@@ -130,7 +191,7 @@ function SignupPage() {
           <FormGroup>
             <Label>휴대폰 번호</Label>
             <Input
-              type="tel"
+              type="text"
               name="phone"
               required
               placeholder="010-0000-0000"
@@ -153,7 +214,9 @@ function SignupPage() {
             </CheckboxLabel>
           </CheckboxGroup>
 
-          <SubmitButton type="submit">회원가입</SubmitButton>
+          <SubmitButton type="submit" disabled={loading}>
+            {loading ? '처리 중...' : '회원가입'}
+          </SubmitButton>
         </Form>
 
         <div style={{ textAlign: 'center', fontSize: '0.75rem', color: '#94a3b8', marginTop: '1rem' }}>
