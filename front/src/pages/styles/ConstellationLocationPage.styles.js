@@ -138,13 +138,14 @@ export const CheckStatus = styled.div`
 export const VisualizationSection = styled.div`
   border: 1px solid rgba(167, 139, 250, 0.3);
   border-radius: 1rem;
-  padding: 2rem;
+  padding: 1.5rem;
   background: rgba(0, 0, 0, 0.3);
   min-height: 500px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   position: relative;
+
+  &:hover {
+    border-color: #a78bfa;
+  }
 
   @media (max-width: 1024px) {
     min-height: 400px;
@@ -177,4 +178,9 @@ export const VisualizationPlaceholder = styled.div`
     margin: 0;
     font-size: 0.875rem;
   }
+`
+export const LocationNotice = styled.span`
+  color: #64748b;
+  font-size: 0.7rem;
+  margin-top: 0.25rem;
 `
