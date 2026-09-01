@@ -15,10 +15,9 @@ import {
   Input,
   LocationCheckBox,
   LocationButton,
+  LocationNotice,
   CheckStatus,
   VisualizationSection,
-  StepLabel,
-  VisualizationPlaceholder,
 } from './styles/ConstellationLocationPage.styles'
 
 function ConstellationLocationPage() {
@@ -29,11 +28,14 @@ function ConstellationLocationPage() {
     latitude: '',
     longitude: '',
   })
+
   const [locationConfirmed, setLocationConfirmed] = useState(false)
   const [useCurrentTime, setUseCurrentTime] = useState(false)
+  const [searchCompleted, setSearchCompleted] = useState(false)
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
+
     setFormData(prev => ({
       ...prev,
       [name]: value,
@@ -59,10 +61,6 @@ function ConstellationLocationPage() {
         }))
 
         setLocationConfirmed(true)
-
-        console.log('현재 위치')
-        console.log('위도:', latitude)
-        console.log('경도:', longitude)
       },
       (error) => {
         console.error('위치 정보를 가져오지 못했습니다.', error)
@@ -84,6 +82,7 @@ function ConstellationLocationPage() {
     )
   }
 
+  // 현재 시간 설정
   const handleUseCurrentTime = () => {
     const now = new Date()
 
@@ -101,9 +100,38 @@ function ConstellationLocationPage() {
       date: dateStr,
       time: timeStr,
     }))
+  }
 
-    console.log('현재 날짜:', dateStr)
-    console.log('현재 시간:', timeStr)
+  // 별자리 위치 검색
+  const handleConstellationSearch = () => {
+    if (!formData.constellation.trim()) {
+      alert('별자리 이름을 입력해주세요.')
+      return
+    }
+
+    if (!formData.date) {
+      alert('날짜를 입력해주세요.')
+      return
+    }
+
+    if (!formData.time) {
+      alert('시간을 입력해주세요.')
+      return
+    }
+
+    if (!formData.latitude || !formData.longitude) {
+      alert('위치를 지정해주세요.')
+      return
+    }
+
+    setSearchCompleted(true)
+
+    console.log('========== 별자리 위치 검색 ==========')
+    console.log('별자리:', formData.constellation)
+    console.log('관측 날짜:', formData.date)
+    console.log('관측 시간:', formData.time)
+    console.log('위도:', formData.latitude)
+    console.log('경도:', formData.longitude)
   }
 
   return (
@@ -117,12 +145,18 @@ function ConstellationLocationPage() {
         </PageHeader>
 
         <MainContainer>
-          {/* Form Section */}
+
+          {/* 왼쪽: 01 ~ 03 */}
           <FormSection>
+
             {/* 01. 별자리 입력 */}
             <FormGroup>
               <FormGroupNumber>01</FormGroupNumber>
-              <FormGroupTitle>첫 글자 별자리를 입력해주세요</FormGroupTitle>
+
+              <FormGroupTitle>
+                첫 글자 별자리를 입력해주세요
+              </FormGroupTitle>
+
               <FormGroupContent>
                 <Input
                   type="text"
@@ -131,16 +165,17 @@ function ConstellationLocationPage() {
                   onChange={handleInputChange}
                   placeholder="오리온자리"
                 />
-                <LocationButton> {/* 버튼 역할 아직 추가 안 함. */}
-                  별자리 설정
-                </LocationButton>
               </FormGroupContent>
             </FormGroup>
 
             {/* 02. 날짜 및 시간 */}
             <FormGroup>
               <FormGroupNumber>02</FormGroupNumber>
-              <FormGroupTitle>관측할 날짜와 시간을 입력해주세요</FormGroupTitle>
+
+              <FormGroupTitle>
+                관측할 날짜와 시간을 입력해주세요
+              </FormGroupTitle>
+
               <FormGroupContent>
                 <Input
                   type="date"
@@ -148,12 +183,14 @@ function ConstellationLocationPage() {
                   value={formData.date}
                   onChange={handleInputChange}
                 />
+
                 <Input
                   type="time"
                   name="time"
                   value={formData.time}
                   onChange={handleInputChange}
                 />
+
                 <LocationCheckBox>
                   <input
                     type="checkbox"
@@ -176,34 +213,42 @@ function ConstellationLocationPage() {
                   />
                   <span>현재 시간으로 설정</span>
                 </LocationCheckBox>
-                <LocationButton>
-                  시간 설정
-                </LocationButton>
               </FormGroupContent>
             </FormGroup>
 
             {/* 03. 위치 설정 */}
             <FormGroup>
               <FormGroupNumber>03</FormGroupNumber>
-              <FormGroupTitle>위치 설정 버튼을 눌러 위치를 지정해주세요</FormGroupTitle>
+
+              <FormGroupTitle>
+                위치 설정 버튼을 눌러 현재위치를 지정해주세요
+              </FormGroupTitle>
+
               <FormGroupContent>
                 <Input
                   type="text"
                   name="latitude"
                   value={formData.latitude}
                   onChange={handleInputChange}
-                  placeholder="위도 (예: 37.50)"
+                  placeholder="위도 (예: 37.5)"
                 />
+
                 <Input
                   type="text"
                   name="longitude"
                   value={formData.longitude}
                   onChange={handleInputChange}
-                  placeholder="경도 (예: 127.00)"
+                  placeholder="경도 (예: 127.0)"
                 />
+
                 <LocationButton onClick={handleLocationConfirm}>
                   위치 설정
                 </LocationButton>
+
+                <LocationNotice>
+                  위치 정보는 별자리 위치 계산 목적으로만 사용됩니다.
+                </LocationNotice>
+
                 {locationConfirmed && (
                   <CheckStatus>
                     <Check size={16} />
@@ -212,18 +257,34 @@ function ConstellationLocationPage() {
                 )}
               </FormGroupContent>
             </FormGroup>
+
           </FormSection>
 
-          {/* Visualization Section */}
+          {/* 오른쪽: 04 */}
           <VisualizationSection>
-            <StepLabel>04 별자리 위치</StepLabel>
-            <VisualizationPlaceholder>
-              <p>📍 별자리 시각화 영역</p>
-              <p style={{ fontSize: '0.75rem', marginTop: '0.5rem' }}>
-                입력 정보를 바탕으로 별자리 위치가 표시됩니다
-              </p>
-            </VisualizationPlaceholder>
+            <FormGroupNumber>04</FormGroupNumber>
+
+            <FormGroupTitle>
+              별자리 위치를 검색해주세요
+            </FormGroupTitle>
+
+            <FormGroupContent>
+              <LocationButton onClick={handleConstellationSearch}>
+                별자리 위치 검색
+              </LocationButton>
+            </FormGroupContent>
+            {searchCompleted && (
+              <>
+                <div>[별자리 이미지 들어갈 곳.]</div>
+
+                <div>
+                  {formData.constellation}는 {formData.date} {formData.time} 기준
+                  남동쪽 고도 38° 에서 관측할 수 있습니다.
+                </div>
+              </>
+            )}
           </VisualizationSection>
+
         </MainContainer>
       </ContentWrapper>
     </PageContainer>
