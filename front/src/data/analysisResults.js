@@ -1,0 +1,67 @@
+export const analysisResults = [
+  {
+    rank: 1,
+    name: '오리온자리',
+    englishName: 'Orion',
+    percentage: 92,
+    description: '겨울 밤하늘에서 가장 잘 알려진 별자리',
+    mainStars: [
+      { ko: '베텔게우스', en: 'Betelgeuse' },
+      { ko: '리겔', en: 'Rigel' },
+      { ko: '벨라트릭스', en: 'Bellatrix' },
+    ],
+    story: `오리온은 그리스 신화에서 가장 위대한 사냥꾼으로 알려져 있습니다. 그는 신들의 왕 제우스의 아들이었으며, 뛰어난 사냥 능력으로 유명했습니다.\n\n오리온이 자신의 사냥 능력을 자랑하다가 여신 아르테미스와 그녀의 어머니 레토에게 죽임을 당했다는 이야기가 전해집니다. 이후 제우스는 그를 별자리로 변성시켜 하늘에 영원히 남기게 했습니다.`,
+  },
+  {
+    rank: 2,
+    name: '큰개자리',
+    englishName: 'Canis Major',
+    percentage: 78,
+    description: '시리우스를 주성으로 가진 겨울 별자리',
+    mainStars: [
+      { ko: '시리우스', en: 'Sirius' },
+      { ko: '뮬리페인', en: 'Murzim' },
+      { ko: '알도반', en: 'Adara' },
+    ],
+    story: `큰개자리는 신화에서 오리온이 사냥을 할 때 데려갔던 사냥개로 알려져 있습니다. 가장 밝은 별인 시리우스를 포함하고 있으며, 이는 밤하늘에서 가장 밝은 별입니다.\n\n고대 이집트에서는 시리우스의 새벽 출현이 나일강의 범람 시기를 알려주는 매우 중요한 별로 여겨졌습니다.`,
+  },
+  {
+    rank: 3,
+    name: '쌍둥이자리',
+    englishName: 'Gemini',
+    percentage: 65,
+    description: '카스토르와 폴룩스 형제를 나타내는 별자리',
+    mainStars: [
+      { ko: '카스토르', en: 'Castor' },
+      { ko: '폴룩스', en: 'Pollux' },
+      { ko: '알헤나', en: 'Alhena' },
+    ],
+    story: `쌍둥이자리는 그리스 신화의 카스토르와 폴룩스라는 형제를 나타냅니다. 이들은 아르고선의 영웅들 중 일원이었으며, 해상에서의 보호자로 여겨졌습니다.\n\n카스토르는 인간이었지만 폴룩스는 반신(demigod)이어서 불멸성을 가지고 있었습니다.`,
+  },
+  {
+    rank: 4,
+    name: '황소자리',
+    englishName: 'Taurus',
+    percentage: 52,
+    description: '플레이아데스 성단을 포함한 황도띠 별자리',
+    mainStars: [
+      { ko: '알데바란', en: 'Aldebaran' },
+      { ko: '엘나타', en: 'Elnath' },
+      { ko: '아크야', en: 'Akya' },
+    ],
+    story: `황소자리는 제우스가 유럽을 유혹하기 위해 변신한 하얀 황소로 알려져 있습니다. 제우스는 이 모습으로 페니키아의 공주 유럽을 납치했고, 유럽은 새로운 대륙(유럽)의 이름이 되는 여정을 떠났습니다.\n\n황소자리에는 플레이아데스라는 유명한 성단이 포함되어 있습니다.`,
+  },
+  {
+    rank: 5,
+    name: '마차부자리',
+    englishName: 'Auriga',
+    percentage: 41,
+    description: '카펠라를 주성으로 하는 겨울 별자리',
+    mainStars: [
+      { ko: '카펠라', en: 'Capella' },
+      { ko: '하말', en: 'Hamal' },
+      { ko: '호카', en: 'Hocha' },
+    ],
+    story: `마차부자리는 그리스 신화에서 영리한 마차의 발명자로 알려져 있습니다. 제우스의 손자이기도 한 이 인물은 신에게 축복을 받아 별자리로 변성되었다고 전해집니다.\n\n마차부자리의 주성인 카펠라는 매우 밝은 별이며, 그 이름은 '염소'라는 뜻을 가지고 있습니다.`,
+  },
+]
