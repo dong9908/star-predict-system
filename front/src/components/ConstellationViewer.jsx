@@ -14,9 +14,10 @@ function ConstellationViewer({
   title = '오리온자리',
   location = '남동쪽 32°',
   condition = '관측 좋음',
+  onCardClick,
 }) {
   return (
-    <CardWrapper>
+    <CardWrapper onClick={onCardClick} style={{ cursor: onCardClick ? 'pointer' : 'default' }}>
       <CardHeader>
         <HeaderText>LIVE SKY · SEOUL 21:42</HeaderText>
         <HeaderIcon>
