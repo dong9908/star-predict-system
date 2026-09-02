@@ -58,6 +58,10 @@ export const getMyInfoAPI = async (accessToken) => {
       'Authorization': `Bearer ${accessToken}`,
     },
   });
-  if (!response.ok) throw new Error('인증이 만료되었습니다.');
+  if (!response.ok) {
+    const error = new Error('인증이 만료되었습니다. 다시 로그인해주세요.');
+    error.status = response.status;
+    throw error;
+  }
   return response.json(); // { email, name, birth_date, phone, role }
 };

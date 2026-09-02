@@ -1,50 +1,60 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Gift } from 'lucide-react'
 import { getMyInfoAPI } from '../api/auth'
+import { createInitialFortuneAPI } from '../api/fortune'
 import {
-  PageContainer,
-  ContentWrapper,
-  PageTitle,
-  PageSubtitle,
-  UserInfoBox,
-  UserInfoContent,
-  ConstellationInfo,
-  ConstellationIcon,
-  ConstellationDetails,
-  ConstellationName,
-  ConstellationMetaInfo,
-  DetailInfo,
-  DetailLabel,
-  ActionButton,
-  FortuneBox,
-  FortuneTitle,
-  FortuneDate,
-  FortuneContent,
-  PremiumBox,
-  PremiumContent,
-  PremiumIcon,
-  PremiumInfo,
-  PremiumTitle,
-  PremiumDescription,
-  PriceSection,
-  Price,
-  BuyButton,
+  PageContainer, ContentWrapper, PageTitle, PageSubtitle, UserInfoBox,
+  UserInfoContent, ConstellationInfo, ConstellationIcon, ConstellationDetails,
+  ConstellationName, ConstellationMetaInfo, DetailInfo, DetailLabel,
+  ActionButton, FortuneBox, FortuneTitle, FortuneDate, FortuneContent,
+  PremiumBox, PremiumContent, PremiumIcon, PremiumInfo, PremiumTitle,
+  PremiumDescription, PriceSection, Price, BuyButton,
 } from './styles/FortuneReadingPage.styles'
+
+const formatDate = value => value ? String(value).replaceAll('-', '.') : '생년월일 정보 없음'
+
+const formatToday = () => new Intl.DateTimeFormat('ko-KR', {
+  year: 'numeric', month: 'long', day: 'numeric', weekday: 'long',
+}).format(new Date())
 
 function FortuneReadingPage() {
   const navigate = useNavigate()
-  const [user] = useState({
-    constellation: '염소자리',
-    icon: '♑',
-    birthDate: '2000.04.12',
-    gender: '남성',
-  })
+  const [user, setUser] = useState(null)
   const [checkingAccess, setCheckingAccess] = useState(false)
+
+  useEffect(() => {
+    let isMounted = true
+
+    const loadUser = async () => {
+      const storedUser = localStorage.getItem('user')
+      if (storedUser) {
+        try {
+          setUser(JSON.parse(storedUser))
+        } catch {
+          localStorage.removeItem('user')
+        }
+      }
+
+      const accessToken = localStorage.getItem('accessToken')
+      if (!accessToken) return
+
+      try {
+        const myInfo = await getMyInfoAPI(accessToken)
+        if (isMounted) setUser(current => ({ ...current, ...myInfo }))
+      } catch {
+        // 인증 만료 처리는 운세 생성 버튼을 누를 때 진행한다.
+      }
+    }
+
+    loadUser()
+    return () => {
+      isMounted = false
+    }
+  }, [])
 
   const handleBuyClick = async () => {
     const accessToken = localStorage.getItem('accessToken')
-
     if (!accessToken) {
       navigate('/login')
       return
@@ -53,98 +63,69 @@ function FortuneReadingPage() {
     setCheckingAccess(true)
     try {
       const myInfo = await getMyInfoAPI(accessToken)
+      const initialFortune = await createInitialFortuneAPI(accessToken)
+      const resultState = { fortune: initialFortune, user: myInfo }
 
-      if (!myInfo.hasFortuneAccess) {
-        alert('운세 상세 보기는 결제 후 이용하실 수 있습니다.')
+      sessionStorage.setItem('fortuneResult', JSON.stringify(resultState))
+      navigate('/fortune-result', { state: resultState })
+    } catch (error) {
+      if (error.status === 401 || error.message.includes('인증')) {
+        localStorage.removeItem('accessToken')
+        localStorage.removeItem('user')
+        navigate('/login')
         return
       }
-
-      navigate('/fortune-result')
-    } catch (error) {
-      localStorage.removeItem('accessToken')
-      localStorage.removeItem('user')
-      navigate('/login')
+      alert(error.message || '운세를 불러오지 못했습니다. 잠시 후 다시 시도해주세요.')
     } finally {
       setCheckingAccess(false)
     }
   }
 
-  const today = new Date()
-  const dateStr = `${today.getFullYear()}년 ${today.getMonth() + 1}월 ${today.getDate()}일 ${{
-    0: '일요일',
-    1: '월요일',
-    2: '화요일',
-    3: '수요일',
-    4: '목요일',
-    5: '금요일',
-    6: '토요일',
-  }[today.getDay()]}`
-
   return (
     <PageContainer>
       <ContentWrapper>
         <PageTitle>✦ 오늘의 운세 확인</PageTitle>
-        <PageSubtitle>
-          내 정보를 확인하고 오늘의 운세를 읽어보세요
-        </PageSubtitle>
+        <PageSubtitle>내 정보를 바탕으로 생성되는 오늘의 맞춤 운세를 확인해보세요.</PageSubtitle>
 
-        {/* User Info */}
         <UserInfoBox>
           <UserInfoContent>
             <ConstellationInfo>
-              <ConstellationIcon>{user.icon}</ConstellationIcon>
+              <ConstellationIcon>✨</ConstellationIcon>
               <ConstellationDetails>
-                <ConstellationName>{user.constellation}</ConstellationName>
-                <ConstellationMetaInfo>{user.birthDate} · {user.gender}</ConstellationMetaInfo>
+                <ConstellationName>{user?.name ? `${user.name}님의 운세` : '나의 오늘 운세'}</ConstellationName>
+                <ConstellationMetaInfo>{formatDate(user?.birth_date || user?.birthDate)}</ConstellationMetaInfo>
               </ConstellationDetails>
             </ConstellationInfo>
             <DetailInfo>
-              <DetailLabel>🌟</DetailLabel>
-              <span>별자리 정보 수정 가능</span>
+              <DetailLabel>✦</DetailLabel>
+              <span>생년월일을 기준으로 별자리와 오늘의 기운을 분석합니다.</span>
             </DetailInfo>
           </UserInfoContent>
-          <ActionButton>
-            ✓ 별자리 기본 문석
-          </ActionButton>
+          <ActionButton type="button" onClick={() => navigate('/mypage')}>내 정보 확인</ActionButton>
         </UserInfoBox>
 
-        {/* Fortune Content */}
         <FortuneBox>
-          <FortuneTitle>
-            ✦ 오늘의 종합 운세
-          </FortuneTitle>
-          <FortuneDate>{dateStr}</FortuneDate>
+          <FortuneTitle>✦ 오늘의 종합 운세</FortuneTitle>
+          <FortuneDate>{formatToday()}</FortuneDate>
           <FortuneContent>
-            <p>
-              오늘은 펀소보다 직감이 돋보나는 하루입니다. 오른쪽 직감을 믿고 행동했을 때는 도움이 지갈 길 있습니다. 가끔 숨소 놓을 정도로 직장이 거칠 것 수도 있어요.
-            </p>
-            <p>
-              가족과 가지민 ↓ 느는 슬픔을 한잔 자중을 가거울 수 있습니다. 시들 너문 과심하지 마세요.
-            </p>
-            <p>
-              아래에서 오늘의 운세 상세 내용을 확인해 보세요.
-            </p>
+            <p>오늘의 흐름과 기회를 AI 운세 상담가가 알기 쉽게 풀어드립니다.</p>
+            <p>사랑, 재물, 건강, 직업, 인간관계의 다섯 가지 영역을 한 번에 확인할 수 있습니다.</p>
+            <p>상세 결과를 확인한 뒤 궁금한 내용을 운세 챗봇에게 이어서 질문해보세요.</p>
           </FortuneContent>
         </FortuneBox>
 
-        {/* Premium Fortune */}
         <PremiumBox>
           <PremiumContent>
-            <PremiumIcon>
-              <Gift size={24} color="white" />
-            </PremiumIcon>
+            <PremiumIcon><Gift size={24} color="white" /></PremiumIcon>
             <PremiumInfo>
-              <PremiumTitle>운세 상세 내용이 궁금하신가요?</PremiumTitle>
-              <PremiumDescription>
-                전문 점술가와 함께하는 오늘의 메시지를 받아보세요.
-              </PremiumDescription>
+              <PremiumTitle>AI가 생성하는 오늘의 상세 운세</PremiumTitle>
+              <PremiumDescription>현재 개발 단계에서는 결제 없이 운세 챗봇을 체험할 수 있습니다.</PremiumDescription>
             </PremiumInfo>
           </PremiumContent>
           <PriceSection>
-            <Price>₩1,900</Price>
-            <BuyButton onClick={handleBuyClick} disabled={checkingAccess}>
-              {checkingAccess ? '확인 중...' : '💳 ₩1,900 결제하고 운세 전체 보기'}
-
+            <Price>체험판</Price>
+            <BuyButton type="button" onClick={handleBuyClick} disabled={checkingAccess}>
+              {checkingAccess ? 'AI 운세 생성 중...' : '오늘의 운세 전체 보기'}
             </BuyButton>
           </PriceSection>
         </PremiumBox>
