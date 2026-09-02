@@ -9,6 +9,8 @@ import ConstellationLocationPage from './pages/ConstellationLocationPage'
 import ConstellationInfoPage from './pages/ConstellationInfoPage'
 import ConstellationCatalogPage from './pages/ConstellationCatalogPage'
 import FortuneReadingPage from './pages/FortuneReadingPage'
+import FortuneResultPage from './pages/FortuneResultPage'
+import MyPage from './pages/MyPage'
 import { AppContainer, MainContent } from './App.styles'
 
 function App() {
@@ -27,6 +29,8 @@ function App() {
             <Route path="/constellation-info" element={<ConstellationInfoPage />} />
             <Route path="/constellation-catalog" element={<ConstellationCatalogPage />} />
             <Route path="/fortune-reading" element={<FortuneReadingPage />} />
+            <Route path="/fortune-result" element={<FortuneResultPage />} />
+            <Route path="/mypage" element={<MyPage />} />
           </Routes>
         </MainContent>
       </AppContainer>
