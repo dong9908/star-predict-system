@@ -52,20 +52,20 @@ function MainPage() {
               밤하늘을 올려다보는 순간,<br />별자리가 이야기가 됩니다
             </Title>
             <ButtonGroup>
-              <PrimaryButton onClick={() => navigate('/')}>
+              <PrimaryButton onClick={() => navigate('/constellation-find')}>
                 사진으로 별자리 찾기
                 <ButtonIcon>
                   <ArrowRight size={16} />
                 </ButtonIcon>
               </PrimaryButton>
-              <SecondaryButton onClick={() => navigate('/')}>
+              <SecondaryButton onClick={() => navigate('/constellation-location')}>
                 내 위치에서 찾아보기
               </SecondaryButton>
             </ButtonGroup>
           </HeroContent>
 
           <div style={{ gridColumn: 'span 5' }}>
-            <ConstellationViewer />
+            <ConstellationViewer onCardClick={() => navigate('/constellation-location')} />
           </div>
         </HeroGrid>
       </HeroSection>
@@ -79,6 +79,15 @@ function MainPage() {
             title={feature.title}
             description={feature.description}
             linkText={feature.linkText}
+            onLinkClick={() => {
+              if (feature.number === '01') {
+                navigate('/constellation-find')
+              } else if (feature.number === '02') {
+                navigate('/constellation-location')
+              } else if (feature.number === '03') {
+                navigate('/constellation-info')
+              }
+            }}
           />
         ))}
       </FeatureGrid>
