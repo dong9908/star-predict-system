@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Gift } from 'lucide-react'
 import {
   PageContainer,
@@ -31,6 +32,7 @@ import {
 } from './styles/FortuneReadingPage.styles'
 
 function FortuneReadingPage() {
+  const navigate = useNavigate()
   const [user] = useState({
     constellation: '염소자리',
     icon: '♑',
@@ -111,7 +113,7 @@ function FortuneReadingPage() {
           </PremiumContent>
           <PriceSection>
             <Price>₩1,900</Price>
-            <BuyButton>
+            <BuyButton onClick={() => navigate('/fortune-result')}>
               💳 ₩1,900 결제하고 운세 전체 보기
             </BuyButton>
           </PriceSection>
