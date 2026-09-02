@@ -51,7 +51,7 @@ function Header() {
           <NavButton onClick={() => navigate('/constellation-info')}>별자리 정보</NavButton>
           <NavButton onClick={() => navigate('/constellation-catalog')}>도감</NavButton>
           <NavButton onClick={() => navigate('/fortune-reading')}>운세</NavButton>
-          <NavButton onClick={() => navigate('/')}>결제</NavButton>
+          <NavButton onClick={() => navigate('/mypage')}>마이 페이지</NavButton>
         </Nav>
 
         <AuthButtonsGroup>
