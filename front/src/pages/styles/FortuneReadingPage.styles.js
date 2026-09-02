@@ -251,6 +251,13 @@ export const BuyButton = styled.button`
     box-shadow: 0 10px 25px rgba(167, 139, 250, 0.3);
   }
 
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+
   @media (max-width: 768px) {
     width: 100%;
   }
