@@ -144,6 +144,7 @@ function FortuneReadingPage() {
             <Price>₩1,900</Price>
             <BuyButton onClick={handleBuyClick} disabled={checkingAccess}>
               {checkingAccess ? '확인 중...' : '💳 ₩1,900 결제하고 운세 전체 보기'}
+
             </BuyButton>
           </PriceSection>
         </PremiumBox>
