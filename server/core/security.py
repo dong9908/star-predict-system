@@ -3,7 +3,13 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from dotenv import load_dotenv
 import bcrypt
-from jose import jwt
+from fastapi import Depends, HTTPException, status
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from jose import JWTError, jwt
+from sqlalchemy.orm import Session
+
+from database.connection import get_db
+from models.member import UserModel
 
 BASE_DIR = Path(__file__).resolve().parents[1]
 load_dotenv(BASE_DIR / ".env")
@@ -45,3 +51,40 @@ def create_access_token(email: str, role: str = "USER") -> str:
 
 def create_refresh_token(email: str, role: str = "USER") -> str:
     return _create_token(email, role, REFRESH_SECRET, timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS))
+
+bearer_scheme = HTTPBearer(auto_error=False)
+
+def get_current_user(
+    credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme),
+    db: Session = Depends(get_db),
+) -> UserModel:
+    """Access Token을 검증하고 DB에서 사용자를 조회한다."""
+    if credentials is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="인증 정보가 없습니다."
+        )
+
+    try:
+        payload = jwt.decode(credentials.credentials, ACCESS_SECRET, algorithms=[ALGORITHM])
+    except JWTError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="유효하지 않거나 만료된 토큰입니다."
+        )
+
+    subject = payload.get("sub")
+    if not subject:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="유효하지 않거나 만료된 토큰입니다."
+        )
+
+    user = db.query(UserModel).filter(UserModel.email == subject).first()
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="사용자를 찾을 수 없습니다."
+        )
+
+    return user
