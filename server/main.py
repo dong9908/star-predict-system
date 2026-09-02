@@ -5,6 +5,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from database.connection import engine, Base
 from routes.member import member_router
+from fortune.router import fortune_router
 
 BASE_DIR = Path(__file__).resolve().parent
 load_dotenv(BASE_DIR / ".env")
@@ -28,6 +29,9 @@ app.add_middleware(
 
 # 회원 라우터 등록
 app.include_router(member_router, prefix="/api/member", tags=["Auth & Member"])
+
+# 운세 라우터 등록
+app.include_router(fortune_router, prefix="/api/fortune", tags=["Fortune"])
 
 @app.get("/")
 def root():
