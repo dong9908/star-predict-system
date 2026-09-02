@@ -283,3 +283,125 @@ export const BackButton = styled.button`
     color: #d8b4fe;
   }
 `
+
+export const ChatSection = styled.section`
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  background: rgba(30, 41, 59, 0.7);
+  border: 1px solid rgba(147, 51, 234, 0.3);
+  margin-bottom: 2rem;
+`
+
+export const ChatMessages = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  max-height: 480px;
+  overflow-y: auto;
+  padding: 0.5rem 0;
+  margin-bottom: 1rem;
+`
+
+export const ChatMessage = styled.div`
+  align-self: ${props => (props.$role === 'user' ? 'flex-end' : 'flex-start')};
+  width: fit-content;
+  max-width: 82%;
+  padding: 0.875rem 1rem;
+  border-radius: ${props => (props.$role === 'user' ? '1rem 1rem 0.25rem 1rem' : '1rem 1rem 1rem 0.25rem')};
+  background: ${props => (props.$role === 'user' ? '#7e22ce' : 'rgba(15, 23, 42, 0.9)')};
+  border: 1px solid rgba(167, 139, 250, 0.25);
+  color: #e2e8f0;
+
+  p {
+    margin: 0;
+    line-height: 1.6;
+    white-space: pre-wrap;
+  }
+`
+
+export const MessageRole = styled.span`
+  display: block;
+  margin-bottom: 0.35rem;
+  color: #c4b5fd;
+  font-size: 0.75rem;
+  font-weight: 700;
+`
+
+export const SuggestedQuestions = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+`
+
+export const SuggestedQuestionButton = styled.button`
+  padding: 0.55rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid rgba(167, 139, 250, 0.45);
+  background: rgba(147, 51, 234, 0.12);
+  color: #ddd6fe;
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    background: rgba(147, 51, 234, 0.25);
+  }
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+`
+
+export const ChatForm = styled.form`
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.75rem;
+
+  @media (max-width: 560px) {
+    grid-template-columns: 1fr;
+  }
+`
+
+export const ChatInput = styled.input`
+  min-width: 0;
+  padding: 0.85rem 1rem;
+  border-radius: 0.625rem;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: rgba(15, 23, 42, 0.9);
+  color: white;
+  outline: none;
+
+  &:focus {
+    border-color: #a855f7;
+    box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.15);
+  }
+
+  &::placeholder {
+    color: #64748b;
+  }
+`
+
+export const SendButton = styled.button`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.8rem 1.1rem;
+  border: 0;
+  border-radius: 0.625rem;
+  background: linear-gradient(135deg, #9333ea, #7c3aed);
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+`
+
+export const ChatError = styled.p`
+  margin: 0.75rem 0 0;
+  color: #fca5a5;
+  font-size: 0.875rem;
+`
