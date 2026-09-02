@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Gift } from 'lucide-react'
+import { getMyInfoAPI } from '../api/auth'
 import {
   PageContainer,
   ContentWrapper,
@@ -39,6 +40,34 @@ function FortuneReadingPage() {
     birthDate: '2000.04.12',
     gender: '남성',
   })
+  const [checkingAccess, setCheckingAccess] = useState(false)
+
+  const handleBuyClick = async () => {
+    const accessToken = localStorage.getItem('accessToken')
+
+    if (!accessToken) {
+      navigate('/login')
+      return
+    }
+
+    setCheckingAccess(true)
+    try {
+      const myInfo = await getMyInfoAPI(accessToken)
+
+      if (!myInfo.hasFortuneAccess) {
+        alert('운세 상세 보기는 결제 후 이용하실 수 있습니다.')
+        return
+      }
+
+      navigate('/fortune-result')
+    } catch (error) {
+      localStorage.removeItem('accessToken')
+      localStorage.removeItem('user')
+      navigate('/login')
+    } finally {
+      setCheckingAccess(false)
+    }
+  }
 
   const today = new Date()
   const dateStr = `${today.getFullYear()}년 ${today.getMonth() + 1}월 ${today.getDate()}일 ${{
@@ -113,8 +142,8 @@ function FortuneReadingPage() {
           </PremiumContent>
           <PriceSection>
             <Price>₩1,900</Price>
-            <BuyButton onClick={() => navigate('/fortune-result')}>
-              💳 ₩1,900 결제하고 운세 전체 보기
+            <BuyButton onClick={handleBuyClick} disabled={checkingAccess}>
+              {checkingAccess ? '확인 중...' : '💳 ₩1,900 결제하고 운세 전체 보기'}
             </BuyButton>
           </PriceSection>
         </PremiumBox>

@@ -88,7 +88,43 @@ async def login(item: UserLoginItem, response: Response, db: Session = Depends(g
             "name": user.name
         }
     }
-#3. 로그아웃
+#3. 내 정보 조회 (토큰 검증)
+@member_router.get("/me")
+async def get_my_info(
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+    db: Session = Depends(get_db)
+):
+    if credentials is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="인증 정보가 없습니다."
+        )
+
+    try:
+        payload = jwt.decode(credentials.credentials, ACCESS_SECRET, algorithms=[ALGORITHM])
+    except JWTError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="유효하지 않거나 만료된 토큰입니다."
+        )
+
+    user = db.query(UserModel).filter(UserModel.email == payload.get("sub")).first()
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="사용자를 찾을 수 없습니다."
+        )
+
+    return {
+        "email": user.email,
+        "name": user.name,
+        "birth_date": user.birth_date,
+        "phone": user.phone,
+        "role": payload.get("role", "USER"),
+        "hasFortuneAccess": user.has_fortune_access,
+    }
+
+#4. 로그아웃
 @member_router.post("/logout")
 async def logout(response: Response):
     # 쿠키에 저장된 refreshToken 삭제 (max_age=0 및 과거 만료일 설정)
