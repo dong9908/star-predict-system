@@ -13,6 +13,11 @@ export const PageWrapper = styled.div`
     flex-direction: column;
     gap: 1.5rem;
   }
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+    gap: 1rem;
+  }
 `
 
 export const LeftSection = styled.div`

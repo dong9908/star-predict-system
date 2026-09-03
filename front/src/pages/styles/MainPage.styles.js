@@ -4,6 +4,11 @@ export const HeroSection = styled.section`
   width: 100%;
   margin-bottom: 3rem;
   padding-top: 1.5rem;
+
+  @media (max-width: 768px) {
+    margin-bottom: 2rem;
+    padding-top: 1rem;
+  }
 `
 
 export const HeroGrid = styled.div`
@@ -11,6 +16,10 @@ export const HeroGrid = styled.div`
   grid-template-columns: repeat(12, 1fr);
   gap: 2rem;
   align-items: center;
+
+  @media (max-width: 768px) {
+    gap: 1.5rem;
+  }
 `
 
 export const HeroContent = styled.div`
@@ -39,11 +48,15 @@ export const Badge = styled.div`
 `
 
 export const Title = styled.h1`
-  font-size: 2.25rem;
+  font-size: 1.5rem;
   line-height: 1.2;
   letter-spacing: -0.02em;
   color: white;
   margin: 0;
+
+  @media (min-width: 768px) {
+    font-size: 2.25rem;
+  }
 
   @media (min-width: 1024px) {
     font-size: 3rem;
@@ -58,6 +71,11 @@ export const ButtonGroup = styled.div`
 
   @media (max-width: 640px) {
     flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
   }
 `
 
@@ -75,9 +93,18 @@ export const PrimaryButton = styled.button`
   gap: 0.5rem;
   transition: background-color 150ms ease-in-out;
   box-shadow: 0 10px 15px -3px rgba(147, 51, 234, 0.25);
+  height: auto;
 
   &:hover {
     background-color: #a855f7;
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    padding: 1rem;
+    height: 3.5rem;
+    justify-content: center;
+    font-size: 1rem;
   }
 `
 
@@ -96,9 +123,17 @@ export const SecondaryButton = styled.button`
   font-weight: 600;
   cursor: pointer;
   transition: all 150ms ease-in-out;
+  height: auto;
 
   &:hover {
     background-color: #1e293b;
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    padding: 1rem;
+    height: 3.5rem;
+    font-size: 1rem;
   }
 `
 

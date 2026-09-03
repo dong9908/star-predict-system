@@ -2,9 +2,17 @@ import styled from 'styled-components'
 
 export const FormContainer = styled.div`
   width: 100%;
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 1rem;
+
+  @media (max-width: 768px) {
+    align-items: flex-start;
+    padding: 1rem;
+    padding-top: 6rem;
+  }
 `
 
 export const FormWrapper = styled.div`
@@ -16,6 +24,12 @@ export const FormWrapper = styled.div`
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.25);
   width: 100%;
   max-width: 28rem;
+
+  @media (max-width: 768px) {
+    padding: 1.5rem;
+    border-radius: 1rem;
+    max-width: 100%;
+  }
 `
 
 export const Title = styled.h2`
@@ -24,12 +38,21 @@ export const Title = styled.h2`
   text-align: center;
   color: white;
   margin: 0 0 1.5rem;
+
+  @media (max-width: 768px) {
+    font-size: 1.25rem;
+    margin-bottom: 1.25rem;
+  }
 `
 
 export const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: 1rem;
+
+  @media (max-width: 768px) {
+    gap: 1.25rem;
+  }
 `
 
 export const FormGroup = styled.div`
@@ -42,6 +65,11 @@ export const Label = styled.label`
   font-weight: 500;
   color: #cbd5e1;
   margin-bottom: 0.375rem;
+
+  @media (max-width: 768px) {
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+  }
 `
 
 export const Input = styled.input`
@@ -53,6 +81,7 @@ export const Input = styled.input`
   font-size: 0.875rem;
   color: white;
   transition: border-color 150ms ease-in-out;
+  height: auto;
 
   &::placeholder {
     color: #64748b;
@@ -61,6 +90,12 @@ export const Input = styled.input`
   &:focus {
     outline: none;
     border-color: #9333ea;
+  }
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+    height: 3.5rem;
+    font-size: 1rem;
   }
 `
 
@@ -97,9 +132,22 @@ export const SubmitButton = styled.button`
   transition: background-color 150ms ease-in-out;
   box-shadow: 0 10px 15px -3px rgba(147, 51, 234, 0.2);
   margin-top: 0.5rem;
+  height: auto;
 
   &:hover {
     background-color: #a855f7;
+  }
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+    height: 3.5rem;
+    font-size: 1rem;
+    margin-top: 1.5rem;
   }
 `
 
@@ -111,6 +159,15 @@ export const LinksGroup = styled.div`
   color: #94a3b8;
   margin-top: 1rem;
   padding-top: 0.5rem;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(30, 41, 59, 0.5);
+  }
 `
 
 export const SignupLink = styled.button`

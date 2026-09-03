@@ -4,11 +4,19 @@ export const PageContainer = styled.div`
   width: 100%;
   padding: 3rem 2rem;
   min-height: calc(100vh - 80px);
+
+  @media (max-width: 768px) {
+    padding: 1.5rem 1rem;
+  }
 `
 
 export const ContentWrapper = styled.div`
   max-width: 1200px;
   margin: 0 auto;
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 `
 
 export const ProcessIndicator = styled.div`
@@ -94,10 +102,15 @@ export const MainDescription = styled.p`
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
+
+  @media (max-width: 768px) {
+    font-size: 0.9375rem;
+    margin-bottom: 2rem;
+  }
 `
 
 export const UploadArea = styled.div`
-  border: 2px dashed #a78bfa;
+  border: 2px dashed #9333ea;
   border-radius: 1rem;
   padding: 3rem;
   background: rgba(167, 139, 250, 0.05);
@@ -105,6 +118,11 @@ export const UploadArea = styled.div`
   cursor: pointer;
   transition: all 300ms ease;
   margin-bottom: 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
 
   &:hover {
     background: rgba(167, 139, 250, 0.1);
@@ -118,7 +136,9 @@ export const UploadArea = styled.div`
   `}
 
   @media (max-width: 768px) {
-    padding: 2rem 1rem;
+    padding: 1.5rem 1rem;
+    height: 200px;
+    margin-bottom: 2rem;
   }
 `
 
@@ -161,6 +181,18 @@ export const SelectButton = styled.button`
   &:hover {
     transform: translateY(-2px);
     box-shadow: 0 10px 25px rgba(167, 139, 250, 0.3);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    padding: 1rem;
+    height: 3.5rem;
+    font-size: 1rem;
   }
 `
 

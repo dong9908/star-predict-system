@@ -2,9 +2,18 @@ import styled from 'styled-components'
 
 export const FormContainer = styled.div`
   width: 100%;
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 1rem;
+
+  @media (max-width: 768px) {
+    align-items: flex-start;
+    padding: 1rem;
+    padding-top: 6rem;
+    padding-bottom: 2rem;
+  }
 `
 
 export const FormWrapper = styled.div`
@@ -16,6 +25,12 @@ export const FormWrapper = styled.div`
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.25);
   width: 100%;
   max-width: 28rem;
+
+  @media (max-width: 768px) {
+    padding: 1.5rem;
+    border-radius: 1rem;
+    max-width: 100%;
+  }
 `
 
 export const Title = styled.h2`
@@ -24,12 +39,21 @@ export const Title = styled.h2`
   text-align: center;
   color: white;
   margin: 0 0 1.5rem;
+
+  @media (max-width: 768px) {
+    font-size: 1.25rem;
+    margin-bottom: 1.25rem;
+  }
 `
 
 export const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: 0.875rem;
+
+  @media (max-width: 768px) {
+    gap: 1.25rem;
+  }
 `
 
 export const FormGroup = styled.div`
@@ -42,6 +66,11 @@ export const Label = styled.label`
   font-weight: 500;
   color: #cbd5e1;
   margin-bottom: 0.25rem;
+
+  @media (max-width: 768px) {
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+  }
 `
 
 export const Input = styled.input`
@@ -53,6 +82,7 @@ export const Input = styled.input`
   font-size: 0.875rem;
   color: white;
   transition: border-color 150ms ease-in-out;
+  height: auto;
 
   &::placeholder {
     color: #64748b;
@@ -62,17 +92,31 @@ export const Input = styled.input`
     outline: none;
     border-color: #9333ea;
   }
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+    height: 3.5rem;
+    font-size: 1rem;
+  }
 `
 
 export const EmailGroup = styled.div`
   display: flex;
   align-items: center;
   gap: 0.5rem;
+
+  @media (max-width: 768px) {
+    gap: 0.75rem;
+  }
 `
 
 export const EmailSeparator = styled.span`
   color: #64748b;
   font-size: 0.875rem;
+
+  @media (max-width: 768px) {
+    font-size: 1rem;
+  }
 `
 
 export const CheckboxGroup = styled.div`
@@ -108,9 +152,23 @@ export const SubmitButton = styled.button`
   transition: background-color 150ms ease-in-out;
   box-shadow: 0 10px 15px -3px rgba(147, 51, 234, 0.2);
   margin-top: 0.5rem;
+  height: auto;
 
   &:hover {
     background-color: #a855f7;
+  }
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+    height: 3.5rem;
+    font-size: 1rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
   }
 `
 
@@ -124,5 +182,9 @@ export const SignupLink = styled.button`
 
   &:hover {
     text-decoration: underline;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 0.875rem;
   }
 `
