@@ -20,6 +20,8 @@ import {
   VisualizationSection,
 } from './styles/ConstellationLocationPage.styles'
 
+import { getConstellationPositionAPI } from '../api/auth'
+
 function ConstellationLocationPage() {
   const [formData, setFormData] = useState({
     constellation: '',
@@ -32,6 +34,7 @@ function ConstellationLocationPage() {
   const [locationConfirmed, setLocationConfirmed] = useState(false)
   const [useCurrentTime, setUseCurrentTime] = useState(false)
   const [searchCompleted, setSearchCompleted] = useState(false)
+  const [searchResult, setSearchResult] = useState(null)
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
@@ -103,7 +106,7 @@ function ConstellationLocationPage() {
   }
 
   // 별자리 위치 검색
-  const handleConstellationSearch = () => {
+  const handleConstellationSearch = async () => {
     if (!formData.constellation.trim()) {
       alert('별자리 이름을 입력해주세요.')
       return
@@ -124,14 +127,25 @@ function ConstellationLocationPage() {
       return
     }
 
-    setSearchCompleted(true)
+    try {
+      const result = await getConstellationPositionAPI({
+        constellation: formData.constellation,
+        date: formData.date,
+        time: formData.time,
+        latitude: formData.latitude,
+        longitude: formData.longitude,
+      })
 
-    console.log('========== 별자리 위치 검색 ==========')
-    console.log('별자리:', formData.constellation)
-    console.log('관측 날짜:', formData.date)
-    console.log('관측 시간:', formData.time)
-    console.log('위도:', formData.latitude)
-    console.log('경도:', formData.longitude)
+      console.log('========== 별자리 위치 검색 결과 ==========')
+      console.log(result)
+
+      setSearchResult(result)
+      setSearchCompleted(true)
+
+    } catch (error) {
+      console.error('별자리 위치 조회 실패:', error)
+      alert(error.message)
+    }
   }
 
   return (
@@ -154,7 +168,7 @@ function ConstellationLocationPage() {
               <FormGroupNumber>01</FormGroupNumber>
 
               <FormGroupTitle>
-                첫 글자 별자리를 입력해주세요
+                찾을 별자리를 입력해주세요
               </FormGroupTitle>
 
               <FormGroupContent>
@@ -265,7 +279,7 @@ function ConstellationLocationPage() {
             <FormGroupNumber>04</FormGroupNumber>
 
             <FormGroupTitle>
-              별자리 위치를 검색해주세요
+              별자리 위치 검색 버튼을 눌러 별자리를 찾아보세요
             </FormGroupTitle>
 
             <FormGroupContent>
@@ -273,13 +287,37 @@ function ConstellationLocationPage() {
                 별자리 위치 검색
               </LocationButton>
             </FormGroupContent>
-            {searchCompleted && (
+            {searchCompleted && searchResult && (
               <>
                 <div>[별자리 이미지 들어갈 곳.]</div>
 
-                <div>
-                  {formData.constellation}는 {formData.date} {formData.time} 기준
-                  남동쪽 고도 38° 에서 관측할 수 있습니다.
+                <div> 
+                  {searchResult.constellation}는 {formData.date} {formData.time} 기준 
+                  <br /> 
+
+                  {searchResult.observable === '현재 관측 불가' && ( 
+                    <> 
+                    지평선 밑에 있어 관측이 불가능합니다. 
+                    </> 
+                  )} 
+
+                  {searchResult.observable === '전체 관측 가능' && ( 
+                    <> 
+                      {searchResult.direction}쪽하늘 고도 약 {searchResult.altitude}°에서 관측할 수 있습니다. 
+                    </> 
+                  )} 
+                  {searchResult.observable === '일부 관측 가능' && 
+                    searchResult.altitude <= 5 && ( 
+                    <> 
+                      {searchResult.direction}쪽하늘 지평선 근처에서 별자리 일부를 관측할 수 있습니다.
+                    </> 
+                  )} 
+                  {searchResult.observable === '일부 관측 가능' && 
+                    searchResult.altitude > 5 && ( 
+                    <> 
+                      {searchResult.direction}쪽하늘 고도 약 {searchResult.altitude}°에서 별자리 일부를 관측할 수 있습니다. 
+                    </> 
+                  )} 
                 </div>
               </>
             )}
