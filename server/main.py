@@ -10,6 +10,7 @@ from routes.member import member_router
 from routes.constellation import constellation_router
 from routes.constellation_recognition import constellation_recognition_router
 from fortune.router import fortune_router
+from payment.router import payment_router
 
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -40,6 +41,9 @@ app.include_router(member_router, prefix="/api/member", tags=["Auth & Member"])
 
 # 운세 라우터
 app.include_router(fortune_router, prefix="/api/fortune", tags=["Fortune"])
+
+# 결제 라우터
+app.include_router(payment_router, prefix="/api/payment", tags=["Payment"])
 
 # 별자리 위치 조회 라우터
 app.include_router(

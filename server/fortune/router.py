@@ -41,6 +41,17 @@ from models.member import UserModel
 fortune_router = APIRouter()
 
 
+def require_fortune_access(
+    user: UserModel = Depends(get_current_user),
+) -> UserModel:
+    if not user.has_fortune_access:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="결제 후 이용할 수 있는 운세 서비스입니다.",
+        )
+    return user
+
+
 @fortune_router.get("/context", response_model=FortuneContextResponse)
 async def get_fortune_context(
     user: UserModel = Depends(get_current_user),
@@ -50,7 +61,7 @@ async def get_fortune_context(
 
 @fortune_router.post("/initial", response_model=InitialFortuneResponse)
 async def create_initial_fortune(
-    user: UserModel = Depends(get_current_user),
+    user: UserModel = Depends(require_fortune_access),
 ) -> InitialFortuneResponse:
     try:
         return await generate_initial_fortune(build_fortune_context(user))
@@ -61,7 +72,7 @@ async def create_initial_fortune(
 @fortune_router.post("/chat", response_model=FortuneChatResponse)
 async def create_fortune_chat_response(
     chat_input: FortuneChatInput,
-    user: UserModel = Depends(get_current_user),
+    user: UserModel = Depends(require_fortune_access),
     db: Session = Depends(get_db),
 ) -> FortuneChatResponse:
     try:
@@ -115,7 +126,7 @@ async def create_fortune_chat_response(
     response_model=list[FortuneConversationSummary],
 )
 async def get_fortune_conversations(
-    user: UserModel = Depends(get_current_user),
+    user: UserModel = Depends(require_fortune_access),
     db: Session = Depends(get_db),
 ) -> list[FortuneConversationSummary]:
     conversations = list_user_conversations(db, user.user_id)
@@ -131,7 +142,7 @@ async def get_fortune_conversations(
 )
 async def get_fortune_conversation_messages(
     conversation_id: int,
-    user: UserModel = Depends(get_current_user),
+    user: UserModel = Depends(require_fortune_access),
     db: Session = Depends(get_db),
 ) -> FortuneConversationDetail:
     try:
@@ -162,7 +173,7 @@ async def get_fortune_conversation_messages(
 )
 async def delete_fortune_conversation(
     conversation_id: int,
-    user: UserModel = Depends(get_current_user),
+    user: UserModel = Depends(require_fortune_access),
     db: Session = Depends(get_db),
 ) -> Response:
     try:
