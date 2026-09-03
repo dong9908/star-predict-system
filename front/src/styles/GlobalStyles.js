@@ -8,6 +8,16 @@ export const GlobalStyles = createGlobalStyle`
     font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
   }
 
+  html {
+    font-size: 16px;
+  }
+
+  @media (max-width: 768px) {
+    html {
+      font-size: 14px;
+    }
+  }
+
   html, body, #root {
     height: 100%;
     margin: 0;

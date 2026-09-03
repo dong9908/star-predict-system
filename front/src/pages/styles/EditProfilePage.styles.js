@@ -8,11 +8,21 @@ export const PageContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+    align-items: flex-start;
+    padding-top: 6rem;
+  }
 `
 
 export const FormWrapper = styled.div`
   width: 100%;
   max-width: 600px;
+
+  @media (max-width: 768px) {
+    max-width: 100%;
+  }
 `
 
 export const PageHeader = styled.div`
@@ -20,6 +30,10 @@ export const PageHeader = styled.div`
   align-items: center;
   gap: 1rem;
   margin-bottom: 2rem;
+
+  @media (max-width: 768px) {
+    margin-bottom: 1.5rem;
+  }
 `
 
 export const BackButton = styled.button`
@@ -41,6 +55,11 @@ export const BackButton = styled.button`
     border-color: rgba(147, 51, 234, 0.8);
     color: #d8b4fe;
   }
+
+  @media (max-width: 768px) {
+    padding: 0.625rem 1rem;
+    font-size: 0.75rem;
+  }
 `
 
 export const PageTitle = styled.h1`
@@ -48,6 +67,10 @@ export const PageTitle = styled.h1`
   font-weight: 700;
   color: white;
   margin: 0;
+
+  @media (max-width: 768px) {
+    font-size: 1.25rem;
+  }
 `
 
 export const FormCard = styled.div`
@@ -55,6 +78,11 @@ export const FormCard = styled.div`
   border-radius: 0.75rem;
   background: rgba(30, 41, 59, 0.6);
   border: 1px solid rgba(147, 51, 234, 0.3);
+
+  @media (max-width: 768px) {
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+  }
 `
 
 export const FormGroup = styled.div`
@@ -66,6 +94,10 @@ export const FormGroup = styled.div`
   &:last-of-type {
     margin-bottom: 0;
   }
+
+  @media (max-width: 768px) {
+    margin-bottom: 1.25rem;
+  }
 `
 
 export const Label = styled.label`
@@ -73,12 +105,22 @@ export const Label = styled.label`
   font-weight: 600;
   color: #cbd5e1;
   text-transform: capitalize;
+
+  @media (max-width: 768px) {
+    font-size: 0.875rem;
+  }
 `
 
 export const InputWrapper = styled.div`
   display: ${props => (props.$flex ? 'flex' : 'block')};
   gap: ${props => (props.$gap ? props.$gap : '0')};
   align-items: ${props => (props.$flex ? 'center' : 'stretch')};
+
+  @media (max-width: 768px) {
+    display: ${props => (props.$flex ? 'flex' : 'block')};
+    flex-direction: column;
+    align-items: stretch;
+  }
 `
 
 export const Input = styled.input`
@@ -91,6 +133,7 @@ export const Input = styled.input`
   font-family: inherit;
   transition: all 150ms ease-in-out;
   flex: ${props => (props.$flex ? props.$flex : '1')};
+  height: auto;
 
   &:focus {
     outline: none;
@@ -105,6 +148,12 @@ export const Input = styled.input`
   &:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+  }
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+    height: 3.5rem;
+    font-size: 1rem;
   }
 `
 
@@ -153,6 +202,7 @@ export const SubmitButton = styled.button`
   cursor: pointer;
   transition: all 150ms ease-in-out;
   margin-top: 2rem;
+  height: auto;
 
   &:hover:not(:disabled) {
     background-color: #a855f7;
@@ -162,6 +212,14 @@ export const SubmitButton = styled.button`
   &:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+  }
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+    height: 3.5rem;
+    font-size: 1rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
   }
 `
 
