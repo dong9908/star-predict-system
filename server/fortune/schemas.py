@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime
 from enum import Enum
 from typing import Literal
 
@@ -40,8 +40,9 @@ class ConversationMessage(BaseModel):
 
 
 class FortuneChatInput(BaseModel):
-    model_config = ConfigDict(str_strip_whitespace=True)
+    model_config = ConfigDict(populate_by_name=True, str_strip_whitespace=True)
 
+    conversation_id: int | None = Field(default=None, ge=1, alias="conversationId")
     message: str = Field(min_length=1, max_length=500)
     category: FortuneCategory = FortuneCategory.GENERAL
     history: list[ConversationMessage] = Field(default_factory=list, max_length=10)
@@ -114,7 +115,7 @@ class InitialFortuneResponse(BaseModel):
         return self
 
 
-class FortuneChatResponse(BaseModel):
+class FortuneAIChatResponse(BaseModel):
     model_config = ConfigDict(
         populate_by_name=True,
         str_strip_whitespace=True,
@@ -129,3 +130,34 @@ class FortuneChatResponse(BaseModel):
         alias="suggestedQuestions",
     )
     disclaimer: str = Field(min_length=1, max_length=300)
+
+
+class FortuneChatResponse(FortuneAIChatResponse):
+    conversation_id: int = Field(ge=1, alias="conversationId")
+
+
+class FortuneConversationSummary(BaseModel):
+    model_config = ConfigDict(from_attributes=True, populate_by_name=True)
+
+    conversation_id: int = Field(alias="conversationId")
+    title: str
+    created_at: datetime = Field(alias="createdAt")
+    updated_at: datetime = Field(alias="updatedAt")
+
+
+class FortuneMessageResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True, populate_by_name=True)
+
+    message_id: int = Field(alias="messageId")
+    role: Literal["user", "assistant"]
+    content: str
+    category: FortuneCategory
+    created_at: datetime = Field(alias="createdAt")
+
+
+class FortuneConversationDetail(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    conversation_id: int = Field(alias="conversationId")
+    title: str
+    messages: list[FortuneMessageResponse]

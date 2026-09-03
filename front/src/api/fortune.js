@@ -29,13 +29,52 @@ export const createInitialFortuneAPI = async (accessToken) => {
 
 export const createFortuneChatAPI = async (
   accessToken,
-  { message, category = 'general', history = [] },
+  { conversationId = null, message, category = 'general', history = [] },
 ) => {
   const response = await fetch('/api/fortune/chat', {
     method: 'POST',
     headers: authorizationHeaders(accessToken),
-    body: JSON.stringify({ message, category, history }),
+    body: JSON.stringify({ conversationId, message, category, history }),
   })
+
+  return parseResponse(response)
+}
+
+export const getFortuneConversationsAPI = async accessToken => {
+  const response = await fetch('/api/fortune/conversations', {
+    method: 'GET',
+    headers: authorizationHeaders(accessToken),
+  })
+
+  return parseResponse(response)
+}
+
+export const getFortuneConversationMessagesAPI = async (
+  accessToken,
+  conversationId,
+) => {
+  const response = await fetch(
+    `/api/fortune/conversations/${conversationId}/messages`,
+    {
+      method: 'GET',
+      headers: authorizationHeaders(accessToken),
+    },
+  )
+
+  return parseResponse(response)
+}
+
+export const deleteFortuneConversationAPI = async (
+  accessToken,
+  conversationId,
+) => {
+  const response = await fetch(
+    `/api/fortune/conversations/${conversationId}`,
+    {
+      method: 'DELETE',
+      headers: authorizationHeaders(accessToken),
+    },
+  )
 
   return parseResponse(response)
 }
