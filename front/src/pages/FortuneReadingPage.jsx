@@ -66,6 +66,7 @@ function FortuneReadingPage() {
       const initialFortune = await createInitialFortuneAPI(accessToken)
       const resultState = { fortune: initialFortune, user: myInfo }
 
+      sessionStorage.removeItem('fortuneConversationId')
       sessionStorage.setItem('fortuneResult', JSON.stringify(resultState))
       navigate('/fortune-result', { state: resultState })
     } catch (error) {

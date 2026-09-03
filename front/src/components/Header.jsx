@@ -43,6 +43,8 @@ function Header() {
     } finally {
       localStorage.removeItem('accessToken')
       localStorage.removeItem('user')
+      sessionStorage.removeItem('fortuneResult')
+      sessionStorage.removeItem('fortuneConversationId')
       alert('로그아웃 되었습니다.')
       setMobileMenuOpen(false)
       navigate('/')

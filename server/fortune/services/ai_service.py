@@ -4,7 +4,7 @@ from typing import TypeVar
 
 from pydantic import BaseModel, ValidationError
 
-from core.config import get_fortune_ai_settings
+from fortune.config import get_fortune_ai_settings
 from fortune.exceptions import (
     FortuneAIAuthenticationError,
     FortuneAIConfigurationError,
@@ -17,7 +17,7 @@ from fortune.exceptions import (
 from fortune.providers.groq_provider import FortuneAIProvider, GroqFortuneProvider
 from fortune.schemas import (
     FortuneChatInput,
-    FortuneChatResponse,
+    FortuneAIChatResponse,
     FortuneContextResponse,
     InitialFortuneResponse,
     PromptBundle,
@@ -93,7 +93,7 @@ async def generate_chat_response(
     chat_input: FortuneChatInput,
     provider: FortuneAIProvider | None = None,
     max_retries: int | None = None,
-) -> FortuneChatResponse:
+) -> FortuneAIChatResponse:
     prompt = build_chat_prompt(
         context=context,
         message=chat_input.message,
@@ -102,7 +102,7 @@ async def generate_chat_response(
     )
     return await _generate_validated_response(
         prompt,
-        FortuneChatResponse,
+        FortuneAIChatResponse,
         provider,
         max_retries,
     )
