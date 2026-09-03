@@ -65,3 +65,37 @@ export const getMyInfoAPI = async (accessToken) => {
   }
   return response.json(); // { email, name, birth_date, phone, role }
 };
+
+// 6. 별자리 위치 조회
+export const getConstellationPositionAPI = async ({
+  constellation,
+  date,
+  time,
+  latitude,
+  longitude,
+}) => {
+  const response = await fetch('/api/constellation/position', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      constellation,
+      date,
+      time,
+      latitude: Number(latitude),
+      longitude: Number(longitude),
+    }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(
+      errorData.detail ||
+      errorData.message ||
+      '별자리 위치 조회에 실패했습니다.'
+    );
+  }
+
+  return response.json();
+};
