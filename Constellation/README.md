@@ -9,7 +9,7 @@ Plate Solving, WCS 검증과 YOLO 딥러닝을 함께 사용합니다. 근거가
 
 ## 현재 상태
 
-2026년 9월 2일 기준입니다.
+2026년 9월 3일 기준입니다.
 
 | 영역 | 현재 상태 |
 |---|---|
@@ -19,6 +19,9 @@ Plate Solving, WCS 검증과 YOLO 딥러닝을 함께 사용합니다. 근거가
 | TargetedWeb 수집 | 이미지 207장, 메타데이터 275행, 대형 데이터셋 후보 213행 |
 | TargetedWeb 분류 | 스마트폰 후보 79장, 기기 불명 밤하늘 32장, 실패 후보 10장 |
 | TargetedWeb WCS | 대상 111장 중 성공 1장, 실패 10장, 미처리 100장 |
+| Roboflow 원본 | 공개 데이터셋 5개, 이미지·라벨 각각 9,522개 검증 완료 |
+| Roboflow 선별 | 직접 라벨 328장, WCS 1,123장, 음성 500장 선별 |
+| Roboflow WCS | 실제 시험 1장 timeout, 미처리 1,122장 |
 | YOLO 데이터 | MobilTelesco + Openverse + AstroSmartphone, 총 1,397장 |
 | 최신 YOLO 테스트 | Precision 0.832, Recall 0.828, mAP50 0.786, mAP50-95 0.293 |
 | 가장 부족한 클래스 | Hassaleh, Bellatrix, Aldebaran |
@@ -49,8 +52,11 @@ Plate Solving, WCS 검증과 YOLO 딥러닝을 함께 사용합니다. 근거가
   → 23 독립 테스트 평가
   → 24 오답 분석
   → 29~33 AstroSmartphone 보강
-  → 34~36 웹 데이터 수집·분류·Plate Solving
-  → 37 WCS 라벨 생성 및 재학습(다음 단계)
+  → 34~39 웹 데이터 수집·분류·WCS 라벨·병합
+  → 40 Roboflow 전체 인벤토리·중복 검사
+  → 41 8개 클래스 직접 라벨·WCS·음성 후보 분류
+  → 42 클래스 균형과 유사 중복을 반영한 후보 선별
+  → 43 Roboflow 후보 Plate Solving(진행 중)
 ```
 
 ## 프로젝트 구조
@@ -65,7 +71,7 @@ star-predict-system/
    ├─ requirements.txt               Python 패키지
    ├─ README.md                      현재 문서
    ├─ 용어설명.md                    천문·영상처리·평가 용어
-   ├─ scripts/                       01~36 처리 프로그램
+   ├─ scripts/                       01~43 처리 프로그램
    ├─ data/
    │  ├─ photo/                      원본·외부 사진
    │  ├─ reference/                  별 카탈로그·경계·연결선
@@ -86,6 +92,7 @@ star-predict-system/
 | `data/photo/WikimediaCommons` | 기존 Wikimedia 수집 자료 |
 | `data/photo/Openverse` | 기존 Openverse 수집 자료 |
 | `data/photo/TargetedWeb` | 34번 통합 수집 자료 |
+| `data/photo/Roboflow` | 공개 Roboflow 5개 데이터셋 원본 |
 | `data/photo/SWINSEG` | 하늘 영역 분할 참고 데이터 |
 | `data/reference` | Gaia, 별자리 경계, Stellarium 기준 자료 |
 | `data/processed` | YOLO 이미지·라벨·`dataset.yaml` |
@@ -243,6 +250,160 @@ mAP50-95 0.294로 이전 모델보다 개선됐습니다. 오답 분석은 TP 1,
 
 36번은 유효 후보 111장을 외부 업로드 없이 로컬에서 풉니다. 현재 성공 1장, 실패
 10장, 미처리 100장입니다. 웹 축소본은 별 신호가 약해 원본보다 성공률이 낮습니다.
+
+## 2026-09-03 Roboflow 보강 작업
+
+오늘은 공개 Roboflow 데이터셋을 추가로 확보하고, 바로 학습에 섞지 않고 전체 파일의
+무결성·클래스 체계·중복·활용 경로를 먼저 검사했습니다. Roboflow의 클래스 번호는 현재
+프로젝트의 8개 클래스 번호와 서로 다르므로 원본 TXT를 그대로 병합하면 안 됩니다.
+
+### 확보한 데이터
+
+| 데이터셋 | 이미지 | 라벨 | 라이선스 |
+|---|---:|---:|---|
+| ConstellationFinderNew | 4,810 | 4,810 | CC BY 4.0 |
+| ConstellationIdentifier | 292 | 292 | Public Domain |
+| ConstellationsRico | 2,360 | 2,360 | CC BY 4.0 |
+| ConstellationStarDetection | 1,750 | 1,750 | CC BY 4.0 |
+| DeepSkyImageDetector | 310 | 310 | CC BY 4.0 |
+| **합계** | **9,522** | **9,522** | 출처별 보존 |
+
+DeepSkyImageDetector의 일부 라벨은 일반 YOLO 바운딩박스가 아니라 segmentation 다각형
+좌표였습니다. 40·41번은 두 형식을 모두 읽고, 직접 대상 라벨은 다각형을 감싸는 YOLO
+바운딩박스로 변환합니다.
+
+### 40번: 전체 인벤토리와 중복 검사
+
+`40_prepare_roboflow_training_data.py`는 9,522장 전체를 읽어 이미지·라벨 대응 여부,
+해상도, 클래스, SHA-256, 64비트 perceptual dHash를 기록합니다. 원본 파일은 수정하지
+않습니다.
+
+결과:
+
+| 항목 | 결과 |
+|---|---:|
+| 이미지·라벨 | 9,522 / 9,522 |
+| 전체 객체 | 32,091 |
+| 검증 오류 | 0 |
+| 직접 목표 후보 | 2,557장 |
+| Orion·Taurus·Auriga 문맥 후보 | 390장 |
+| 기타 검토 후보 | 6,575장 |
+| SHA-256 완전 중복 그룹 | 0 |
+| dHash 유사 중복 그룹 | 1,007 |
+| 연락처 시트 | 202페이지 |
+
+실행:
+
+```powershell
+.\.venv\Scripts\python.exe .\scripts\40_prepare_roboflow_training_data.py
+```
+
+주요 결과는 `data/results/roboflow_training_preparation`에 저장됩니다.
+
+### 41번: 클래스 매핑과 활용 경로 분류
+
+`41_classify_and_map_roboflow_images.py`는 모든 사진을 다음 경로로 분류합니다.
+
+- 직접 라벨 후보: 원본 클래스가 8개 대상 이름과 직접 일치
+- WCS 후보: Orion·Taurus·Auriga 전체 라벨을 개별 별 좌표로 다시 계산해야 함
+- 음성 후보: 직접 대상과 관련 별자리 문맥 라벨이 없음
+
+한 사진에 Pleiades와 Taurus가 같이 표시된 경우에는 Pleiades 직접 라벨 후보이면서
+동시에 Taurus 영역의 다른 별을 찾는 WCS 후보로도 기록합니다.
+
+결과:
+
+| 경로 | 이미지 |
+|---|---:|
+| 직접 라벨 후보 | 2,557 |
+| WCS 필요 후보 | 2,067 |
+| 음성 후보 | 6,575 |
+
+직접 변환 가능한 객체는 Pleiades 2,520개, Jupiter 37개, Elnath 1개였습니다. 나머지
+5개 대상은 별자리 전체 박스를 개별 별 박스로 바꾸지 않고 WCS 단계로 보냈습니다.
+
+```powershell
+.\.venv\Scripts\python.exe .\scripts\41_classify_and_map_roboflow_images.py
+```
+
+### 42번: 균형 선별
+
+Pleiades 2,520장을 전부 추가하면 클래스 편중이 심해지므로
+`42_select_roboflow_training_candidates.py`에서 클래스 상한, 출처 균형과 유사 중복
+대표를 적용했습니다. 제외된 파일은 삭제하지 않고 예비 데이터로 유지합니다.
+
+| 선별 결과 | 이미지 |
+|---|---:|
+| 직접 학습 후보 | 328 |
+| WCS 후보 | 1,123 |
+| 음성 후보 | 500 |
+| dHash 유사 그룹 대표 | 4,510 |
+| 유사 중복 예비 | 5,012 |
+
+직접 후보는 Pleiades 300장, Jupiter 27장, Elnath 1장입니다. 자동 선별은 정답 승인을
+의미하지 않으며, 시뮬레이션·천체 확대·실제 밤하늘을 구분한 뒤 사용해야 합니다.
+
+```powershell
+.\.venv\Scripts\python.exe .\scripts\42_select_roboflow_training_candidates.py
+```
+
+### 43번: Roboflow Plate Solving
+
+`43_plate_solve_roboflow_candidates.py`는 선별된 1,123장을 WSL2의 로컬
+Astrometry.net으로 처리합니다. 사진은 외부 서비스에 업로드하지 않으며, 이미지마다
+결과를 저장하므로 중단·재부팅 후 같은 명령어로 이어서 실행할 수 있습니다. 긴 Roboflow
+파일명은 Windows 경로 제한을 피하기 위해 짧은 이름의 하드링크 입력으로 처리합니다.
+
+현재 실제 시험 1장은 90.8초 후 timeout이었고, 스크립트·WSL·체크포인트 동작은 정상임을
+확인했습니다. timeout은 프로그램 오류가 아니라 제한 시간 안에 별 배열 해를 찾지 못한
+상태입니다.
+
+재부팅 후 실행 순서:
+
+```powershell
+cd "D:\dev\star-predict-system\Constellation"
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+.\.venv\Scripts\Activate.ps1
+wsl.exe -d Ubuntu -- sh -lc "command -v solve-field && solve-field --version"
+```
+
+100장 단위 처리:
+
+```powershell
+.\.venv\Scripts\python.exe .\scripts\43_plate_solve_roboflow_candidates.py --limit 100 --timeout-seconds 60
+```
+
+상태 확인:
+
+```powershell
+$root=".\data\results\roboflow_plate_solving"; $s=Get-Content "$root\summary.json" -Raw | ConvertFrom-Json; Write-Host "WCS 성공:" $s.successful_wcs; Write-Host "실패:" $s.failed; Write-Host "미처리:" $s.remaining_unprocessed
+```
+
+`미처리: 0`이 될 때까지 100장 처리 명령과 상태 확인을 반복합니다. 기본 실행은 이미
+처리된 성공·실패를 건너뜁니다. 모든 미처리를 끝낸 후 필요한 경우에만 실패 자료를
+재시도합니다.
+
+```powershell
+.\.venv\Scripts\python.exe .\scripts\43_plate_solve_roboflow_candidates.py --retry-failed --limit 25 --timeout-seconds 180
+```
+
+60초 제한에서도 WSL 종료 여유로 timeout 한 장은 약 90초가 걸릴 수 있습니다. 실제
+100장 처리는 약 50분~1시간 40분, 대부분 timeout이면 약 2시간 30분으로 예상합니다.
+미처리 약 1,122장 전체는 현실적으로 약 12~28시간이며 이미지 특성에 따라 더 길어질 수
+있습니다.
+
+Plate Solving이 필요한 이유는 Roboflow의 Orion·Taurus·Auriga 박스가 별자리 전체
+영역이기 때문입니다. WCS를 생성해야 다음처럼 개별 천체의 RA/DEC를 정확한 픽셀 위치로
+변환할 수 있습니다.
+
+```text
+Orion → Betelgeuse, Bellatrix
+Taurus → Pleiades, Aldebaran, Zeta Tauri, Elnath
+Auriga → Elnath, Hassaleh
+```
+
+별자리 전체 박스를 개별 별 라벨로 이름만 변경하면 잘못된 정답이 되므로 사용하지
+않습니다.
 
 ## 설치
 
