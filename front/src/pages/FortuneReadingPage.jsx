@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Gift } from 'lucide-react'
 import { getMyInfoAPI } from '../api/auth'
 import { createInitialFortuneAPI } from '../api/fortune'
+import { getPaymentAccessAPI, readyPaymentAPI } from '../api/payment'
 import {
   PageContainer, ContentWrapper, PageTitle, PageSubtitle, UserInfoBox,
   UserInfoContent, ConstellationInfo, ConstellationIcon, ConstellationDetails,
@@ -22,9 +23,11 @@ function FortuneReadingPage() {
   const navigate = useNavigate()
   const [user, setUser] = useState(null)
   const [checkingAccess, setCheckingAccess] = useState(false)
+  const accessCheckStarted = useRef(false)
 
   useEffect(() => {
-    let isMounted = true
+    if (accessCheckStarted.current) return undefined
+    accessCheckStarted.current = true
 
     const loadUser = async () => {
       const storedUser = localStorage.getItem('user')
@@ -37,21 +40,38 @@ function FortuneReadingPage() {
       }
 
       const accessToken = localStorage.getItem('accessToken')
-      if (!accessToken) return
+      if (!accessToken) {
+        navigate('/login', { replace: true })
+        return
+      }
 
+      setCheckingAccess(true)
       try {
         const myInfo = await getMyInfoAPI(accessToken)
-        if (isMounted) setUser(current => ({ ...current, ...myInfo }))
-      } catch {
-        // 인증 만료 처리는 운세 생성 버튼을 누를 때 진행한다.
+        setUser(current => ({ ...current, ...myInfo }))
+
+        const access = await getPaymentAccessAPI(accessToken)
+        if (!access.hasFortuneAccess) return
+
+        const initialFortune = await createInitialFortuneAPI(accessToken)
+        const resultState = { fortune: initialFortune, user: myInfo }
+        sessionStorage.removeItem('fortuneConversationId')
+        sessionStorage.setItem('fortuneResult', JSON.stringify(resultState))
+        navigate('/fortune-result', { replace: true, state: resultState })
+      } catch (error) {
+        if (error.status === 401) {
+          localStorage.removeItem('accessToken')
+          localStorage.removeItem('user')
+          navigate('/login', { replace: true })
+        }
+      } finally {
+        setCheckingAccess(false)
       }
     }
 
     loadUser()
-    return () => {
-      isMounted = false
-    }
-  }, [])
+    return undefined
+  }, [navigate])
 
   const handleBuyClick = async () => {
     const accessToken = localStorage.getItem('accessToken')
@@ -63,12 +83,28 @@ function FortuneReadingPage() {
     setCheckingAccess(true)
     try {
       const myInfo = await getMyInfoAPI(accessToken)
-      const initialFortune = await createInitialFortuneAPI(accessToken)
-      const resultState = { fortune: initialFortune, user: myInfo }
+      const access = await getPaymentAccessAPI(accessToken)
 
-      sessionStorage.removeItem('fortuneConversationId')
-      sessionStorage.setItem('fortuneResult', JSON.stringify(resultState))
-      navigate('/fortune-result', { state: resultState })
+      if (access.hasFortuneAccess) {
+        const initialFortune = await createInitialFortuneAPI(accessToken)
+        const resultState = { fortune: initialFortune, user: myInfo }
+        sessionStorage.removeItem('fortuneConversationId')
+        sessionStorage.setItem('fortuneResult', JSON.stringify(resultState))
+        navigate('/fortune-result', { state: resultState })
+        return
+      }
+
+      const payment = await readyPaymentAPI(accessToken)
+      sessionStorage.setItem('pendingPaymentOrderId', payment.partnerOrderId)
+
+      const isMobile = window.matchMedia('(max-width: 768px)').matches
+        || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
+      const redirectUrl = isMobile
+        ? payment.mobileRedirectUrl || payment.appRedirectUrl || payment.redirectUrl
+        : payment.pcRedirectUrl || payment.redirectUrl
+
+      if (!redirectUrl) throw new Error('카카오페이 이동 주소를 받지 못했습니다.')
+      window.location.assign(redirectUrl)
     } catch (error) {
       if (error.status === 401 || error.message.includes('인증')) {
         localStorage.removeItem('accessToken')
@@ -120,13 +156,13 @@ function FortuneReadingPage() {
             <PremiumIcon><Gift size={24} color="white" /></PremiumIcon>
             <PremiumInfo>
               <PremiumTitle>AI가 생성하는 오늘의 상세 운세</PremiumTitle>
-              <PremiumDescription>현재 개발 단계에서는 결제 없이 운세 챗봇을 체험할 수 있습니다.</PremiumDescription>
+              <PremiumDescription>카카오페이 결제 후 오늘의 상세 운세와 AI 상담을 이용할 수 있습니다.</PremiumDescription>
             </PremiumInfo>
           </PremiumContent>
           <PriceSection>
-            <Price>체험판</Price>
+            <Price>₩1,900</Price>
             <BuyButton type="button" onClick={handleBuyClick} disabled={checkingAccess}>
-              {checkingAccess ? 'AI 운세 생성 중...' : '오늘의 운세 전체 보기'}
+              {checkingAccess ? '결제 상태 확인 중...' : '카카오페이로 운세 전체 보기'}
             </BuyButton>
           </PriceSection>
         </PremiumBox>

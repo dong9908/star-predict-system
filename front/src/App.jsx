@@ -10,6 +10,9 @@ import ConstellationInfoPage from './pages/ConstellationInfoPage'
 import ConstellationCatalogPage from './pages/ConstellationCatalogPage'
 import FortuneReadingPage from './pages/FortuneReadingPage'
 import FortuneResultPage from './pages/FortuneResultPage'
+import PaymentSuccessPage from './pages/PaymentSuccessPage'
+import PaymentCancelPage from './pages/PaymentCancelPage'
+import PaymentFailPage from './pages/PaymentFailPage'
 import MyPage from './pages/MyPage'
 import EditProfilePage from './pages/EditProfilePage'
 import { AppContainer, MainContent } from './App.styles'
@@ -31,6 +34,9 @@ function App() {
             <Route path="/constellation-catalog" element={<ConstellationCatalogPage />} />
             <Route path="/fortune-reading" element={<FortuneReadingPage />} />
             <Route path="/fortune-result" element={<FortuneResultPage />} />
+            <Route path="/payment/success" element={<PaymentSuccessPage />} />
+            <Route path="/payment/cancel" element={<PaymentCancelPage />} />
+            <Route path="/payment/fail" element={<PaymentFailPage />} />
             <Route path="/mypage" element={<MyPage />} />
             <Route path="/edit-profile" element={<EditProfilePage />} />
           </Routes>

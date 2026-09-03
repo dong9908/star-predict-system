@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { ChevronLeft, Send, Trash2 } from 'lucide-react'
+import { Send, Trash2 } from 'lucide-react'
 import {
   createFortuneChatAPI,
   deleteFortuneConversationAPI,
   getFortuneConversationMessagesAPI,
   getFortuneConversationsAPI,
 } from '../api/fortune'
+import { getPaymentAccessAPI } from '../api/payment'
 import {
   PageContainer, ContentWrapper, PageHeader, PageTitle, PageSubtitle,
   UserInfoSection, UserInfo, ConstellationIcon, UserDetails, UserName,
@@ -63,6 +64,7 @@ function FortuneResultPage() {
   const [conversations, setConversations] = useState([])
   const [loadingHistory, setLoadingHistory] = useState(false)
   const [deletingConversationId, setDeletingConversationId] = useState(null)
+  const [accessChecked, setAccessChecked] = useState(false)
 
   const handleAuthenticationError = requestError => {
     if (requestError.status !== 401) return false
@@ -147,12 +149,59 @@ function FortuneResultPage() {
   }
 
   useEffect(() => {
-    if (!fortune) return
-    loadConversations()
-    if (conversationId) loadConversation(conversationId)
-    // 최초 진입 시에만 저장된 대화와 목록을 불러온다.
+    let isMounted = true
+
+    const validateAccess = async () => {
+      const accessToken = localStorage.getItem('accessToken')
+      if (!accessToken) {
+        navigate('/login', { replace: true })
+        return
+      }
+
+      try {
+        const access = await getPaymentAccessAPI(accessToken)
+        if (!access.hasFortuneAccess) {
+          sessionStorage.removeItem('fortuneResult')
+          navigate('/fortune-reading', { replace: true })
+          return
+        }
+        if (!isMounted) return
+        setAccessChecked(true)
+        if (fortune) {
+          loadConversations()
+          if (conversationId) loadConversation(conversationId)
+        }
+      } catch (requestError) {
+        if (!handleAuthenticationError(requestError)) {
+          if (requestError.status === 403) {
+            sessionStorage.removeItem('fortuneResult')
+            navigate('/fortune-reading', { replace: true })
+          } else {
+            setError(requestError.message || '운세 이용 권한을 확인하지 못했습니다.')
+            setAccessChecked(true)
+          }
+        }
+      }
+    }
+
+    validateAccess()
+    return () => {
+      isMounted = false
+    }
+    // 최초 진입 시에만 결제 권한과 저장된 대화를 불러온다.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  if (!accessChecked) {
+    return (
+      <PageContainer><ContentWrapper>
+        <PageHeader>
+          <PageTitle>운세 이용 권한 확인 중</PageTitle>
+          <PageSubtitle>잠시만 기다려주세요.</PageSubtitle>
+        </PageHeader>
+      </ContentWrapper></PageContainer>
+    )
+  }
 
   if (!fortune) {
     return (
@@ -215,10 +264,6 @@ function FortuneResultPage() {
 
   return (
     <PageContainer><ContentWrapper>
-      <BackButton type="button" onClick={() => navigate('/fortune-reading')}>
-        <ChevronLeft size={20} /> 돌아가기
-      </BackButton>
-
       <PageHeader>
         <PageTitle>✦ 오늘의 운세 상세 결과</PageTitle>
         <PageSubtitle>AI 운세 상담가가 전하는 오늘의 메시지</PageSubtitle>
