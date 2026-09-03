@@ -7,7 +7,7 @@ from urllib.request import Request, urlopen
 
 from pydantic import BaseModel
 
-from core.config import FortuneAISettings, get_fortune_ai_settings
+from fortune.config import FortuneAISettings, get_fortune_ai_settings
 from fortune.exceptions import (
     FortuneAIAuthenticationError,
     FortuneAIConfigurationError,

@@ -284,12 +284,120 @@ export const BackButton = styled.button`
   }
 `
 
+export const ConversationWorkspace = styled.div`
+  display: grid;
+  grid-template-columns: minmax(190px, 2fr) minmax(0, 8fr);
+  gap: 1rem;
+  align-items: stretch;
+  margin-bottom: 2rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+`
+
 export const ChatSection = styled.section`
   padding: 1.5rem;
   border-radius: 0.75rem;
   background: rgba(30, 41, 59, 0.7);
   border: 1px solid rgba(147, 51, 234, 0.3);
-  margin-bottom: 2rem;
+  min-width: 0;
+`
+
+export const HistoryPanel = styled.section`
+  padding: 1.25rem 1.5rem;
+  border-radius: 0.75rem;
+  background: rgba(15, 23, 42, 0.55);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  min-width: 0;
+`
+
+export const HistoryHeader = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.75rem;
+
+  ${SectionTitle} {
+    margin-bottom: 0;
+  }
+`
+
+export const ConversationList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: 480px;
+  overflow-y: auto;
+  margin-top: 1rem;
+  padding-right: 0.25rem;
+  color: #94a3b8;
+  font-size: 0.875rem;
+`
+
+export const ConversationItem = styled.div`
+  display: flex;
+  flex: 0 0 auto;
+  align-items: stretch;
+  border-radius: 0.5rem;
+  overflow: hidden;
+`
+
+export const ConversationButton = styled.button`
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: none;
+  padding: 0.65rem 0.85rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border-radius: 0.5rem 0 0 0.5rem;
+  border: 1px solid ${props => (props.$active ? '#a855f7' : 'rgba(148, 163, 184, 0.3)')};
+  background: ${props => (props.$active ? 'rgba(147, 51, 234, 0.25)' : 'rgba(30, 41, 59, 0.7)')};
+  color: #e2e8f0;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+`
+
+export const DeleteConversationButton = styled.button`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  border: 1px solid rgba(248, 113, 113, 0.35);
+  border-left: 0;
+  border-radius: 0 0.5rem 0.5rem 0;
+  background: rgba(127, 29, 29, 0.2);
+  color: #fca5a5;
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    background: rgba(185, 28, 28, 0.35);
+    color: #fecaca;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+`
+
+export const NewConversationButton = styled.button`
+  flex: 0 0 auto;
+  padding: 0.55rem 0.8rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(167, 139, 250, 0.5);
+  background: transparent;
+  color: #c4b5fd;
+  cursor: pointer;
+
+  &:hover {
+    background: rgba(147, 51, 234, 0.15);
+  }
 `
 
 export const ChatMessages = styled.div`
