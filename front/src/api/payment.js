@@ -38,6 +38,31 @@ export const approvePaymentAPI = async (
   return parseResponse(response)
 }
 
+const updatePaymentStatusAPI = async (accessToken, path, partnerOrderId) => {
+  const response = await fetch(`/api/payment/${path}`, {
+    method: 'POST',
+    headers: authorizationHeaders(accessToken),
+    body: JSON.stringify({ partnerOrderId }),
+  })
+  return parseResponse(response)
+}
+
+export const cancelPaymentAPI = async (accessToken, partnerOrderId) => (
+  updatePaymentStatusAPI(accessToken, 'cancel', partnerOrderId)
+)
+
+export const failPaymentAPI = async (accessToken, partnerOrderId) => (
+  updatePaymentStatusAPI(accessToken, 'fail', partnerOrderId)
+)
+
+export const refundPaymentAPI = async accessToken => {
+  const response = await fetch('/api/payment/refund', {
+    method: 'POST',
+    headers: authorizationHeaders(accessToken),
+  })
+  return parseResponse(response)
+}
+
 export const getPaymentAccessAPI = async accessToken => {
   const response = await fetch('/api/payment/access', {
     method: 'GET',
