@@ -16,6 +16,29 @@ class PaymentApproveRequest(BaseModel):
     pg_token: str = Field(min_length=1, max_length=255, alias="pgToken")
 
 
+class PaymentOrderRequest(BaseModel):
+    model_config = ConfigDict(populate_by_name=True, str_strip_whitespace=True)
+
+    partner_order_id: str = Field(
+        min_length=1,
+        max_length=100,
+        alias="partnerOrderId",
+    )
+
+
+class PaymentStatusResponse(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    payment_id: int = Field(ge=1, alias="paymentId")
+    partner_order_id: str = Field(alias="partnerOrderId")
+    status: PaymentStatus
+
+
+class PaymentRefundResponse(PaymentStatusResponse):
+    cancelled_at: datetime = Field(alias="cancelledAt")
+    has_fortune_access: bool = Field(alias="hasFortuneAccess")
+
+
 class PaymentReadyResponse(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
 

@@ -20,13 +20,19 @@ from payment.schemas import (
     PaymentApprovalResponse,
     PaymentApproveRequest,
     PaymentHistoryItem,
+    PaymentOrderRequest,
     PaymentReadyResponse,
+    PaymentRefundResponse,
+    PaymentStatusResponse,
 )
 from payment.services.entitlement_service import has_fortune_access
 from payment.services.payment_service import (
     approve_fortune_payment,
+    cancel_ready_payment,
+    fail_ready_payment,
     list_user_payments,
     prepare_fortune_payment,
+    refund_latest_fortune_payment,
 )
 
 
@@ -101,6 +107,84 @@ async def approve_payment(
         amount=payment.amount,
         status=payment.status,
         approved_at=payment.approved_at,
+        has_fortune_access=has_fortune_access(user),
+    )
+
+
+@payment_router.post(
+    "/cancel",
+    response_model=PaymentStatusResponse,
+)
+async def cancel_payment(
+    request: PaymentOrderRequest,
+    user: UserModel = Depends(get_current_user),
+    db: Session = Depends(get_db),
+) -> PaymentStatusResponse:
+    try:
+        payment = cancel_ready_payment(
+            db,
+            user.user_id,
+            request.partner_order_id,
+        )
+    except Exception as error:
+        raise _to_http_exception(error) from error
+
+    return PaymentStatusResponse(
+        payment_id=payment.payment_id,
+        partner_order_id=payment.partner_order_id,
+        status=payment.status,
+    )
+
+
+@payment_router.post(
+    "/fail",
+    response_model=PaymentStatusResponse,
+)
+async def fail_payment(
+    request: PaymentOrderRequest,
+    user: UserModel = Depends(get_current_user),
+    db: Session = Depends(get_db),
+) -> PaymentStatusResponse:
+    try:
+        payment = fail_ready_payment(
+            db,
+            user.user_id,
+            request.partner_order_id,
+        )
+    except Exception as error:
+        raise _to_http_exception(error) from error
+
+    return PaymentStatusResponse(
+        payment_id=payment.payment_id,
+        partner_order_id=payment.partner_order_id,
+        status=payment.status,
+    )
+
+
+@payment_router.post(
+    "/refund",
+    response_model=PaymentRefundResponse,
+)
+async def refund_payment(
+    user: UserModel = Depends(get_current_user),
+    db: Session = Depends(get_db),
+) -> PaymentRefundResponse:
+    try:
+        payment = await refund_latest_fortune_payment(db, user)
+    except Exception as error:
+        raise _to_http_exception(error) from error
+
+    if payment.cancelled_at is None:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="환불된 결제의 취소 시간이 없습니다.",
+        )
+
+    return PaymentRefundResponse(
+        payment_id=payment.payment_id,
+        partner_order_id=payment.partner_order_id,
+        status=payment.status,
+        cancelled_at=payment.cancelled_at,
         has_fortune_access=has_fortune_access(user),
     )
 

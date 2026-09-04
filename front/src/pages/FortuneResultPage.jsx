@@ -7,7 +7,7 @@ import {
   getFortuneConversationMessagesAPI,
   getFortuneConversationsAPI,
 } from '../api/fortune'
-import { getPaymentAccessAPI } from '../api/payment'
+import { getPaymentAccessAPI, refundPaymentAPI } from '../api/payment'
 import {
   PageContainer, ContentWrapper, PageHeader, PageTitle, PageSubtitle,
   UserInfoSection, UserInfo, ConstellationIcon, UserDetails, UserName,
@@ -20,6 +20,7 @@ import {
   ConversationWorkspace,
   HistoryPanel, HistoryHeader, ConversationList, ConversationButton,
   ConversationItem, DeleteConversationButton, NewConversationButton,
+  RefundArea, RefundButton,
 } from './styles/FortuneResultPage.styles'
 
 const CATEGORY_META = {
@@ -65,6 +66,7 @@ function FortuneResultPage() {
   const [loadingHistory, setLoadingHistory] = useState(false)
   const [deletingConversationId, setDeletingConversationId] = useState(null)
   const [accessChecked, setAccessChecked] = useState(false)
+  const [refunding, setRefunding] = useState(false)
 
   const handleAuthenticationError = requestError => {
     if (requestError.status !== 401) return false
@@ -258,6 +260,32 @@ function FortuneResultPage() {
     sendMessage(input)
   }
 
+  const refundPayment = async () => {
+    if (refunding) return
+    if (!window.confirm('결제를 전액 환불하면 운세 챗봇을 더 이상 이용할 수 없습니다. 환불할까요?')) return
+
+    const accessToken = localStorage.getItem('accessToken')
+    if (!accessToken) {
+      navigate('/login')
+      return
+    }
+
+    setRefunding(true)
+    setError('')
+    try {
+      await refundPaymentAPI(accessToken)
+      sessionStorage.removeItem('fortuneResult')
+      sessionStorage.removeItem('fortuneConversationId')
+      alert('결제가 환불되었습니다.')
+      navigate('/fortune-reading', { replace: true })
+    } catch (requestError) {
+      if (handleAuthenticationError(requestError)) return
+      setError(requestError.message || '환불을 처리하지 못했습니다.')
+    } finally {
+      setRefunding(false)
+    }
+  }
+
   const renderStars = score => Array.from({ length: 5 }, (_, index) => (
     <Star key={index} $filled={index < score}>★</Star>
   ))
@@ -382,6 +410,11 @@ function FortuneResultPage() {
         <FooterText>오늘의 운세는 매일 자정에 새로운 날짜를 기준으로 생성됩니다.</FooterText>
         <FooterText>운세는 참고용이며 중요한 결정은 충분한 검토 후 내려주세요.</FooterText>
       </FooterInfo>
+      <RefundArea>
+        <RefundButton type="button" onClick={refundPayment} disabled={refunding}>
+          {refunding ? '환불 처리 중' : '결제 환불'}
+        </RefundButton>
+      </RefundArea>
     </ContentWrapper></PageContainer>
   )
 }

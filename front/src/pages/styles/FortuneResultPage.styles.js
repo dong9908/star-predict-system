@@ -513,3 +513,30 @@ export const ChatError = styled.p`
   color: #fca5a5;
   font-size: 0.875rem;
 `
+
+export const RefundArea = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1.25rem;
+`
+
+export const RefundButton = styled.button`
+  padding: 0.35rem 0.55rem;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  border-radius: 0.4rem;
+  background: transparent;
+  color: rgba(148, 163, 184, 0.42);
+  font-size: 0.72rem;
+  cursor: pointer;
+
+  &:hover:not(:disabled),
+  &:focus-visible {
+    border-color: rgba(248, 113, 113, 0.55);
+    color: #fca5a5;
+  }
+
+  &:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+`

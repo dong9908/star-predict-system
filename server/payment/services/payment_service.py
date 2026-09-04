@@ -1,3 +1,4 @@
+from datetime import datetime
 from uuid import uuid4
 
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
@@ -15,8 +16,15 @@ from payment.exceptions import (
 )
 from payment.models import PaymentModel, PaymentStatus
 from payment.providers.kakaopay_provider import KakaoPayProvider
-from payment.schemas import KakaoPayApprovalResponse, KakaoPayReadyResponse
-from payment.services.entitlement_service import grant_fortune_access
+from payment.schemas import (
+    KakaoPayApprovalResponse,
+    KakaoPayCancellationResponse,
+    KakaoPayReadyResponse,
+)
+from payment.services.entitlement_service import (
+    grant_fortune_access,
+    revoke_fortune_access,
+)
 
 
 def generate_partner_order_id(user_id: int) -> str:
@@ -48,6 +56,146 @@ def list_user_payments(db: Session, user_id: int) -> list[PaymentModel]:
         .order_by(PaymentModel.created_at.desc())
         .all()
     )
+
+
+def cancel_ready_payment(
+    db: Session,
+    user_id: int,
+    partner_order_id: str,
+) -> PaymentModel:
+    payment = get_user_payment_by_order_id(db, user_id, partner_order_id)
+
+    if payment.status == PaymentStatus.CANCELLED:
+        return payment
+    if payment.status != PaymentStatus.READY:
+        raise PaymentInvalidStateError(
+            f"{payment.status.value} 상태의 결제는 취소 처리할 수 없습니다.",
+        )
+
+    try:
+        payment.status = PaymentStatus.CANCELLED
+        payment.cancelled_at = datetime.now()
+        db.commit()
+        db.refresh(payment)
+        return payment
+    except SQLAlchemyError:
+        db.rollback()
+        raise
+
+
+def fail_ready_payment(
+    db: Session,
+    user_id: int,
+    partner_order_id: str,
+) -> PaymentModel:
+    payment = get_user_payment_by_order_id(db, user_id, partner_order_id)
+
+    if payment.status == PaymentStatus.FAILED:
+        return payment
+    if payment.status != PaymentStatus.READY:
+        raise PaymentInvalidStateError(
+            f"{payment.status.value} 상태의 결제는 실패 처리할 수 없습니다.",
+        )
+
+    try:
+        payment.status = PaymentStatus.FAILED
+        db.commit()
+        db.refresh(payment)
+        return payment
+    except SQLAlchemyError:
+        db.rollback()
+        raise
+
+
+def _validate_refund(
+    payment: PaymentModel,
+    user: UserModel,
+    cancellation: KakaoPayCancellationResponse,
+    settings: KakaoPaySettings,
+) -> None:
+    if cancellation.tid != payment.tid:
+        raise PaymentProviderResponseError("카카오페이 거래번호가 일치하지 않습니다.")
+    if cancellation.cid != settings.cid:
+        raise PaymentProviderResponseError("카카오페이 가맹점 코드가 일치하지 않습니다.")
+    if cancellation.partner_order_id != payment.partner_order_id:
+        raise PaymentProviderResponseError("카카오페이 주문번호가 일치하지 않습니다.")
+    if cancellation.partner_user_id != str(user.user_id):
+        raise PaymentProviderResponseError("카카오페이 사용자 정보가 일치하지 않습니다.")
+    if cancellation.canceled_amount.total != payment.amount:
+        raise PaymentAmountMismatchError("카카오페이 환불 금액이 결제 금액과 다릅니다.")
+
+
+async def refund_latest_fortune_payment(
+    db: Session,
+    user: UserModel,
+    provider: KakaoPayProvider | None = None,
+    settings: KakaoPaySettings | None = None,
+) -> PaymentModel:
+    payment = (
+        db.query(PaymentModel)
+        .filter(
+            PaymentModel.user_id == user.user_id,
+            PaymentModel.status == PaymentStatus.APPROVED,
+        )
+        .order_by(PaymentModel.approved_at.desc())
+        .with_for_update()
+        .first()
+    )
+
+    if payment is None:
+        refunded_payment = (
+            db.query(PaymentModel)
+            .filter(
+                PaymentModel.user_id == user.user_id,
+                PaymentModel.status == PaymentStatus.REFUNDED,
+            )
+            .order_by(PaymentModel.cancelled_at.desc())
+            .first()
+        )
+        if refunded_payment is not None:
+            if user.has_fortune_access:
+                revoke_fortune_access(user)
+                db.commit()
+            return refunded_payment
+        raise PaymentNotFoundError("환불할 승인 결제가 없습니다.")
+    if not payment.tid:
+        raise PaymentInvalidStateError("환불할 결제의 거래번호가 없습니다.")
+
+    try:
+        active_settings = settings or get_kakaopay_settings()
+    except ValueError as error:
+        db.rollback()
+        raise PaymentConfigurationError(str(error)) from error
+    active_provider = provider or KakaoPayProvider(active_settings)
+
+    try:
+        cancellation = await active_provider.cancel(payment.tid, payment.amount)
+        _validate_refund(payment, user, cancellation, active_settings)
+
+        payment.status = PaymentStatus.REFUNDED
+        payment.cancelled_at = cancellation.canceled_at
+        has_other_approved_payment = (
+            db.query(PaymentModel)
+            .filter(
+                PaymentModel.user_id == user.user_id,
+                PaymentModel.payment_id != payment.payment_id,
+                PaymentModel.status == PaymentStatus.APPROVED,
+            )
+            .first()
+            is not None
+        )
+        if not has_other_approved_payment:
+            revoke_fortune_access(user)
+
+        db.commit()
+        db.refresh(payment)
+        return payment
+    except SQLAlchemyError:
+        db.rollback()
+        raise
+    except Exception:
+        db.rollback()
+        raise
 
 
 async def prepare_fortune_payment(
