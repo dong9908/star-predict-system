@@ -68,8 +68,16 @@ class KakaoPayProvider:
                 "partnerOrderId",
                 partner_order_id,
             ),
-            "cancel_url": self.settings.cancel_url,
-            "fail_url": self.settings.fail_url,
+            "cancel_url": _append_query_parameter(
+                self.settings.cancel_url,
+                "partnerOrderId",
+                partner_order_id,
+            ),
+            "fail_url": _append_query_parameter(
+                self.settings.fail_url,
+                "partnerOrderId",
+                partner_order_id,
+            ),
         }
         return await self._post(
             KAKAOPAY_READY_URL,
