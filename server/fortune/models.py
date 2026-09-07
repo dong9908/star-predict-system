@@ -1,10 +1,66 @@
-from datetime import datetime
+from datetime import date, datetime
 
-from sqlalchemy import BigInteger, DateTime, ForeignKey, Index, String, Text, func
+from sqlalchemy import (
+    JSON,
+    BigInteger,
+    Date,
+    DateTime,
+    ForeignKey,
+    Index,
+    String,
+    Text,
+    UniqueConstraint,
+    func,
+)
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from database.connection import Base
 from models.member import UserModel
+
+
+class FortuneDailyResultModel(Base):
+    __tablename__ = "fortune_daily_results"
+    __table_args__ = (
+        UniqueConstraint(
+            "user_id",
+            "fortune_date",
+            name="uq_fortune_daily_user_date",
+        ),
+        Index("idx_fortune_daily_user_id", "user_id"),
+        Index("idx_fortune_daily_date", "fortune_date"),
+    )
+
+    fortune_result_id: Mapped[int] = mapped_column(
+        BigInteger,
+        primary_key=True,
+        autoincrement=True,
+    )
+    user_id: Mapped[int] = mapped_column(
+        BigInteger,
+        ForeignKey(
+            "users.user_id",
+            ondelete="CASCADE",
+            onupdate="CASCADE",
+        ),
+        nullable=False,
+    )
+    fortune_date: Mapped[date] = mapped_column(Date, nullable=False)
+    zodiac_code: Mapped[str] = mapped_column(String(20), nullable=False)
+    result_json: Mapped[dict[str, object]] = mapped_column(JSON, nullable=False)
+    model_name: Mapped[str | None] = mapped_column(String(100))
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime,
+        nullable=False,
+        server_default=func.current_timestamp(),
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime,
+        nullable=False,
+        server_default=func.current_timestamp(),
+        onupdate=func.current_timestamp(),
+    )
+
+    user: Mapped[UserModel] = relationship()
 
 
 class FortuneConversationModel(Base):
