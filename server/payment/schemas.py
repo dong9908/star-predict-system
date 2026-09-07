@@ -60,6 +60,7 @@ class PaymentApprovalResponse(BaseModel):
     amount: int = Field(gt=0)
     status: PaymentStatus
     approved_at: datetime = Field(alias="approvedAt")
+    access_expires_at: datetime = Field(alias="accessExpiresAt")
     has_fortune_access: bool = Field(alias="hasFortuneAccess")
 
 
@@ -75,6 +76,7 @@ class PaymentHistoryItem(BaseModel):
     amount: int
     status: PaymentStatus
     approved_at: datetime | None = Field(alias="approvedAt")
+    access_expires_at: datetime | None = Field(alias="accessExpiresAt")
     cancelled_at: datetime | None = Field(alias="cancelledAt")
     created_at: datetime = Field(alias="createdAt")
     updated_at: datetime = Field(alias="updatedAt")
@@ -84,6 +86,7 @@ class PaymentAccessResponse(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
 
     has_fortune_access: bool = Field(alias="hasFortuneAccess")
+    expires_at: datetime | None = Field(default=None, alias="expiresAt")
 
 
 class KakaoPayReadyResponse(BaseModel):

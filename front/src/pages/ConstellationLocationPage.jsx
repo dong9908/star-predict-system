@@ -46,6 +46,15 @@ function ConstellationLocationPage() {
   const [useCurrentTime, setUseCurrentTime] = useState(false)
   const [searchCompleted, setSearchCompleted] = useState(false)
   const [searchResult, setSearchResult] = useState(null)
+  const [showSuggestions, setShowSuggestions] = useState(false)
+
+  const filteredConstellations = useMemo(() => {
+    if (!formData.constellation.trim()) return constellations
+    return constellations.filter(c =>
+      c.name.toLowerCase().includes(formData.constellation.toLowerCase()) ||
+      c.englishName.toLowerCase().includes(formData.constellation.toLowerCase())
+    )
+  }, [formData.constellation])
 
   const [constellations, setConstellations] = useState([])
   const [showConstellationList, setShowConstellationList] = useState(false)
@@ -72,6 +81,18 @@ function ConstellationLocationPage() {
       ...prev,
       [name]: value,
     }))
+
+    if (name === 'constellation') {
+      setShowSuggestions(true)
+    }
+  }
+
+  const handleSelectConstellation = (name) => {
+    setFormData(prev => ({
+      ...prev,
+      constellation: name,
+    }))
+    setShowSuggestions(false)
   }
 
   // 별자리 검색

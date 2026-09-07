@@ -76,6 +76,7 @@ export const FormGroupContent = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+  position: relative;
 `
 
 export const Input = styled.input`
@@ -83,6 +84,8 @@ export const Input = styled.input`
   box-sizing: border-box;
 
   padding: 0.75rem 1rem;
+  padding-left: ${props => props.style?.paddingLeft || '2.5rem'};
+  width: 100%;
   background: rgba(30, 41, 59, 0.8);
   border: 1px solid rgba(167, 139, 250, 0.3);
   border-radius: 0.5rem;

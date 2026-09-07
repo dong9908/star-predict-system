@@ -10,8 +10,6 @@ import {
   SectionLabel,
   MainStarsContainer,
   StarChip,
-  ObservationInfo,
-  InfoCard,
   StorySection,
   RightSection,
   SearchContainer,
@@ -226,25 +224,6 @@ function ConstellationInfoPage() {
               </StarChip>
             ))}
           </MainStarsContainer>
-
-          <SectionLabel>📊 관측 정보</SectionLabel>
-          <ObservationInfo>
-            <InfoCard>
-              <div className="label">현재 시간</div>
-              <div className="value">{getCurrentTime()}</div>
-            </InfoCard>
-            <InfoCard>
-              <div className="label">고도</div>
-              <div className="value">{selectedConstellation.altitude}°</div>
-            </InfoCard>
-            <InfoCard>
-              <div className="label">방향</div>
-              <div className="value">{getDirectionIcon(selectedConstellation.direction)}</div>
-              <div style={{ fontSize: '0.85rem', color: '#cbd5e1', marginTop: '0.25rem' }}>
-                {selectedConstellation.direction}
-              </div>
-            </InfoCard>
-          </ObservationInfo>
 
           <SectionLabel>📖 별자리 이야기</SectionLabel>
           <StorySection>
