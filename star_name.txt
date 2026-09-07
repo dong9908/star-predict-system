@@ -1,0 +1,93 @@
+name_ko,name_en,image_url,abbreviation
+돛자리,Vela,/img/constellation/1.png,Vel
+파리자리,Musca,/img/constellation/2.png,Mus
+두루미자리,Grus,/img/constellation/3.png,Gru
+작은개자리,Canis Minor,/img/constellation/4.png,CMi
+게자리,Cancer,/img/constellation/5.png,Cnc
+사자자리,Leo,/img/constellation/6.png,Leo
+작은사자자리,Leo Minor,/img/constellation/7.png,LMi
+작은곰자리,Ursa Minor,/img/constellation/8.png,UMi
+거문고자리,Lyra,/img/constellation/9.png,Lyr
+황새치자리,Dorado,/img/constellation/10.png,Dor
+전갈자리,Scorpius,/img/constellation/11.png,Sco
+세페우스자리,Cepheus,/img/constellation/12.png,Cep
+처녀자리,Virgo,/img/constellation/13.png,Vir
+큰곰자리,Ursa Major,/img/constellation/14.png,UMa
+페르세우스자리,Perseus,/img/constellation/15.png,Per
+큰개자리,Canis Major,/img/constellation/16.png,CMa
+토끼자리,Lepus,/img/constellation/17.png,Lep
+비둘기자리,Columba,/img/constellation/18.png,Col
+물병자리,Aquarius,/img/constellation/19.png,Aqr
+염소자리,Capricornus,/img/constellation/20.png,Cap
+쌍둥이자리,Gemini,/img/constellation/21.png,Gem
+화가자리,Pictor,/img/constellation/22.png,Pic
+고물자리,Puppis,/img/constellation/23.png,Pup
+테이블산자리,Mensa,/img/constellation/24.png,Men
+그물자리,Reticulum,/img/constellation/25.png,Ret
+날치자리,Volans,/img/constellation/26.png,Vol
+목동자리,Boötes,/img/constellation/27.png,Boo
+도마뱀자리,Lacerta,/img/constellation/28.png,Lac
+화로자리,Fornax,/img/constellation/29.png,For
+물뱀자리,Hydrus,/img/constellation/30.png,Hyi
+팔분의자리,Octans,/img/constellation/31.png,Oct
+공작자리,Pavo,/img/constellation/32.png,Pav
+이리자리,Lupus,/img/constellation/33.png,Lup
+오리온자리,Orion,/img/constellation/34.png,Ori
+고래자리,Cetus,/img/constellation/35.png,Cet
+육분의자리,Sextans,/img/constellation/36.png,Sex
+독수리자리,Aquila,/img/constellation/37.png,Aql
+현미경자리,Microscopium,/img/constellation/38.png,Mic
+인디언자리,Indus,/img/constellation/39.png,Ind
+제단자리,Ara,/img/constellation/40.png,Ara
+남쪽왕관자리,Corona Australis,/img/constellation/41.png,CrA
+천칭자리,Libra,/img/constellation/42.png,Lib
+궁수자리,Sagittarius,/img/constellation/43.png,Sgr
+양자리,Aries,/img/constellation/44.png,Ari
+북쪽왕관자리,Corona Borealis,/img/constellation/45.png,CrB
+조각가자리,Sculptor,/img/constellation/46.png,Scl
+봉황자리,Phoenix,/img/constellation/47.png,Phe
+시계자리,Horologium,/img/constellation/48.png,Hor
+조각칼자리,Caelum,/img/constellation/49.png,Cae
+큰부리새자리,Tucana,/img/constellation/50.png,Tuc
+카멜레온자리,Chamaeleon,/img/constellation/51.png,Cha
+남십자자리,Crux,/img/constellation/52.png,Cru
+외뿔소자리,Monoceros,/img/constellation/53.png,Mon
+황소자리,Taurus,/img/constellation/54.png,Tau
+컵자리,Crater,/img/constellation/55.png,Crt
+까마귀자리,Corvus,/img/constellation/56.png,Crv
+컴퍼스자리,Circinus,/img/constellation/57.png,Cir
+삼각형자리,Triangulum,/img/constellation/58.png,Tri
+카시오페이아자리,Cassiopeia,/img/constellation/59.png,Cas
+백조자리,Cygnus,/img/constellation/60.png,Cyg
+기린자리,Camelopardalis,/img/constellation/61.png,Cam
+머리털자리,Coma Berenices,/img/constellation/62.png,Com
+남쪽물고기자리,Piscis Austrinus,/img/constellation/63.png,PsA
+헤르쿨레스자리,Hercules,/img/constellation/64.png,Her
+직각자자리,Norma,/img/constellation/65.png,Nor
+조랑말자리,Equuleus,/img/constellation/66.png,Equ
+돌고래자리,Delphinus,/img/constellation/67.png,Del
+화살자리,Sagitta,/img/constellation/68.png,Sge
+여우자리,Vulpecula,/img/constellation/69.png,Vul
+뱀자리(머리),Serpens Caput,/img/constellation/70.png,SerH
+살쾡이자리,Lynx,/img/constellation/71.png,Lyn
+공기펌프자리,Antlia,/img/constellation/72.png,Ant
+나침반자리,Pyxis,/img/constellation/73.png,Pyx
+마차부자리,Auriga,/img/constellation/74.png,Aur
+물고기자리,Pisces,/img/constellation/75.png,Psc
+용자리,Draco,/img/constellation/76.png,Dra
+방패자리,Scutum,/img/constellation/77.png,Sct
+안드로메다자리,Andromeda,/img/constellation/78.png,And
+페가수스자리,Pegasus,/img/constellation/79.png,Peg
+용골자리,Carina,/img/constellation/80.png,Car
+사냥개자리,Canes Venatici,/img/constellation/81.png,CVn
+뱀자리(꼬리),Serpens Cauda,/img/constellation/82.png,SerT
+극락조자리,Apus,/img/constellation/83.png,Aps
+망원경자리,Telescopium,/img/constellation/84.png,Tel
+남쪽삼각형자리,Triangulum Australe,/img/constellation/85.png,TrA
+센타우루스자리,Centaurus,/img/constellation/86.png,Cen
+바다뱀자리,Hydra,/img/constellation/87.png,Hya
+뱀주인자리,Ophiuchus,/img/constellation/88.png,Oph
+에리다누스자리,Eridanus,/img/constellation/89.png,Eri
+
+머리 : SerH
+꼬리 : SerT

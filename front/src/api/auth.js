@@ -99,3 +99,20 @@ export const getConstellationPositionAPI = async ({
 
   return response.json();
 };
+
+// 7. 별자리 전체 목록 조회
+export const getConstellationsAPI = async () => {
+  const response = await fetch('/api/constellation/', {
+    method: 'GET',
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+
+    throw new Error(
+      errorData.detail || '별자리 목록을 불러오는데 실패했습니다.'
+    );
+  }
+
+  return response.json();
+};

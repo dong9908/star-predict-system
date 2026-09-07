@@ -79,6 +79,9 @@ export const FormGroupContent = styled.div`
 `
 
 export const Input = styled.input`
+  width: 100%;
+  box-sizing: border-box;
+
   padding: 0.75rem 1rem;
   background: rgba(30, 41, 59, 0.8);
   border: 1px solid rgba(167, 139, 250, 0.3);
@@ -140,16 +143,26 @@ export const VisualizationSection = styled.div`
   border-radius: 1rem;
   padding: 1.5rem;
   background: rgba(0, 0, 0, 0.3);
-  min-height: 500px;
+  min-height: 650px;
   position: relative;
+
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 
   &:hover {
     border-color: #a78bfa;
   }
 
   @media (max-width: 1024px) {
-    min-height: 400px;
+    min-height: 600px;
   }
+`
+
+export const VisualizationHeader = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0;
 `
 
 export const StepLabel = styled.span`
@@ -183,4 +196,91 @@ export const LocationNotice = styled.span`
   color: #64748b;
   font-size: 0.7rem;
   margin-top: 0.25rem;
+`
+
+export const ConstellationSearchWrapper = styled.div`
+  position: relative;
+  width: 100%;
+`
+
+export const ConstellationDropdown = styled.div`
+  position: absolute;
+  z-index: 10;
+  top: calc(100% + 4px);
+  left: 0;
+  width: 100%;
+  max-height: 240px;
+  overflow-y: auto;
+
+  border: 1px solid rgba(167, 139, 250, 0.3);
+  border-radius: 0.5rem;
+  background: rgba(30, 41, 59, 0.98);
+
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+`
+
+export const ConstellationOption = styled.button`
+  display: block;
+  width: 100%;
+  padding: 0.75rem 1rem;
+
+  text-align: left;
+  color: white;
+  font-size: 0.875rem;
+
+  border: none;
+  background: transparent;
+  cursor: pointer;
+
+  transition: background 200ms ease;
+
+  &:hover {
+    background: rgba(167, 139, 250, 0.1);
+  }
+`
+
+export const ConstellationNoResult = styled.div`
+  position: absolute;
+  z-index: 10;
+  top: calc(100% + 4px);
+  left: 0;
+  width: 100%;
+
+  padding: 0.75rem 1rem;
+
+  color: #94a3b8;
+  font-size: 0.875rem;
+
+  border: 1px solid rgba(167, 139, 250, 0.3);
+  border-radius: 0.5rem;
+  background: rgba(30, 41, 59, 0.98);
+
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+`
+
+export const ConstellationImageBox = styled.div`
+  width: 100%;
+  min-height: 350px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 0.75rem;
+
+  background: rgba(255, 255, 255, 0.02);
+  overflow: hidden;
+`
+
+export const ConstellationImage = styled.img`
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  display: block;
+`
+
+export const HighlightText = styled.span`
+  color: #7dd3fc;
+  font-weight: 600;
 `
