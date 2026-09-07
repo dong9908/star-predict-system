@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Check } from 'lucide-react'
+import { useState, useMemo } from 'react'
+import { Check, Search } from 'lucide-react'
 import {
   PageContainer,
   ContentWrapper,
@@ -18,9 +18,14 @@ import {
   LocationNotice,
   CheckStatus,
   VisualizationSection,
+  ConstellationSuggestList,
+  ConstellationSuggestItem,
+  SearchInputWrapper,
+  SearchIconWrapper,
 } from './styles/ConstellationLocationPage.styles'
 
 import { getConstellationPositionAPI } from '../api/auth'
+import { constellations } from '../data/constellations'
 
 function ConstellationLocationPage() {
   const [formData, setFormData] = useState({
@@ -35,6 +40,15 @@ function ConstellationLocationPage() {
   const [useCurrentTime, setUseCurrentTime] = useState(false)
   const [searchCompleted, setSearchCompleted] = useState(false)
   const [searchResult, setSearchResult] = useState(null)
+  const [showSuggestions, setShowSuggestions] = useState(false)
+
+  const filteredConstellations = useMemo(() => {
+    if (!formData.constellation.trim()) return constellations
+    return constellations.filter(c =>
+      c.name.toLowerCase().includes(formData.constellation.toLowerCase()) ||
+      c.englishName.toLowerCase().includes(formData.constellation.toLowerCase())
+    )
+  }, [formData.constellation])
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
@@ -43,6 +57,18 @@ function ConstellationLocationPage() {
       ...prev,
       [name]: value,
     }))
+
+    if (name === 'constellation') {
+      setShowSuggestions(true)
+    }
+  }
+
+  const handleSelectConstellation = (name) => {
+    setFormData(prev => ({
+      ...prev,
+      constellation: name,
+    }))
+    setShowSuggestions(false)
   }
 
   // 현재 사용자 위치 가져오기
@@ -172,13 +198,32 @@ function ConstellationLocationPage() {
               </FormGroupTitle>
 
               <FormGroupContent>
-                <Input
-                  type="text"
-                  name="constellation"
-                  value={formData.constellation}
-                  onChange={handleInputChange}
-                  placeholder="오리온자리"
-                />
+                <SearchInputWrapper>
+                  <SearchIconWrapper>
+                    <Search size={16} />
+                  </SearchIconWrapper>
+                  <Input
+                    type="text"
+                    name="constellation"
+                    value={formData.constellation}
+                    onChange={handleInputChange}
+                    onFocus={() => setShowSuggestions(true)}
+                    placeholder="오리온자리"
+                  />
+                </SearchInputWrapper>
+                {showSuggestions && filteredConstellations.length > 0 && (
+                  <ConstellationSuggestList>
+                    {filteredConstellations.slice(0, 8).map((c) => (
+                      <ConstellationSuggestItem
+                        key={c.id}
+                        onClick={() => handleSelectConstellation(c.name)}
+                      >
+                        <span>{c.name}</span>
+                        <span style={{ fontSize: '0.75rem', opacity: 0.6 }}>{c.englishName}</span>
+                      </ConstellationSuggestItem>
+                    ))}
+                  </ConstellationSuggestList>
+                )}
               </FormGroupContent>
             </FormGroup>
 

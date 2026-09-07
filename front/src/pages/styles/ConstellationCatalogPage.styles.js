@@ -205,13 +205,36 @@ export const ConstellationGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 1rem;
+  max-height: 600px;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba(167, 139, 250, 0.1);
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(167, 139, 250, 0.3);
+    border-radius: 4px;
+
+    &:hover {
+      background: rgba(167, 139, 250, 0.5);
+    }
+  }
 
   @media (max-width: 1024px) {
     grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    max-height: 500px;
   }
 
   @media (max-width: 768px) {
     grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    max-height: 400px;
   }
 `
 
