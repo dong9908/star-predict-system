@@ -1,6 +1,10 @@
 import numpy as np
 
-from fastapi import APIRouter
+from sqlalchemy.orm import Session
+from fastapi import APIRouter, Depends
+
+from database.connection import get_db
+from models.constellation import ConstellationModel
 from schemas.constellation import ConstellationRequest
 from services.constellation import (
     get_constellation_stars,
@@ -57,10 +61,14 @@ def get_direction(azimuth: float):
     return directions[index]
 
 @constellation_router.post("/position")
-def get_constellation_position(request: ConstellationRequest):
+def get_constellation_position(
+    request: ConstellationRequest,
+    db: Session = Depends(get_db)):
 
     # 1. 별자리 이름으로 별 데이터 조회
-    stars = get_constellation_stars(request.constellation)
+    stars = get_constellation_stars(
+        db,
+        request.constellation)
 
     if stars is None or stars.empty:
         return {
@@ -98,3 +106,27 @@ def get_constellation_position(request: ConstellationRequest):
         "azimuth": round(float(azimuth), 2),
         "direction": get_direction(float(azimuth)),
     }
+
+# 별자리 전체 목록 조회
+@constellation_router.get("/")
+def get_constellations(db: Session = Depends(get_db)):
+
+    constellations = (
+        db.query(ConstellationModel)
+        .order_by(ConstellationModel.constellation_id)
+        .all()
+    )
+
+    return [
+        {
+            "constellation_id": constellation.constellation_id,
+            "name_ko": constellation.name_ko,
+            "name_en": constellation.name_en,
+            "description": constellation.description,
+            "mythology": constellation.mythology,
+            "difficulty": constellation.difficulty,
+            "image_url": constellation.image_url,
+            "abbreviation": constellation.abbreviation,
+        }
+        for constellation in constellations
+    ]
