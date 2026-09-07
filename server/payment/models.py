@@ -73,6 +73,7 @@ class PaymentModel(Base):
         server_default=PaymentStatus.READY.value,
     )
     approved_at: Mapped[datetime | None] = mapped_column(DateTime)
+    access_expires_at: Mapped[datetime | None] = mapped_column(DateTime)
     cancelled_at: Mapped[datetime | None] = mapped_column(DateTime)
     created_at: Mapped[datetime] = mapped_column(
         DateTime,
