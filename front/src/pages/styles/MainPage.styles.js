@@ -60,15 +60,25 @@ export const Badge = styled.div`
 `
 
 export const Title = styled.h1`
-  font-size: 1.25rem;
+  font-size: 1.75rem;
   line-height: 1.2;
   letter-spacing: -0.02em;
   color: white;
   margin: 0;
 
+  /* 480px 이상: 소형 모바일 */
+  @media (min-width: 480px) {
+    font-size: 2rem;
+  }
+
+  /* 640px 이상: 모바일 */
+  @media (min-width: 640px) {
+    font-size: 2.25rem;
+  }
+
   /* 768px 이상: 태블릿 사이즈 */
   @media (min-width: 768px) {
-    font-size: 2.25rem;
+    font-size: 2.5rem;
   }
 
   /* 1024px 이상: 데스크톱 사이즈 */

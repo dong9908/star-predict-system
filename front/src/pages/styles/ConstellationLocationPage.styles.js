@@ -76,10 +76,13 @@ export const FormGroupContent = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+  position: relative;
 `
 
 export const Input = styled.input`
   padding: 0.75rem 1rem;
+  padding-left: ${props => props.style?.paddingLeft || '2.5rem'};
+  width: 100%;
   background: rgba(30, 41, 59, 0.8);
   border: 1px solid rgba(167, 139, 250, 0.3);
   border-radius: 0.5rem;
@@ -183,4 +186,72 @@ export const LocationNotice = styled.span`
   color: #64748b;
   font-size: 0.7rem;
   margin-top: 0.25rem;
+`
+
+export const SearchInputWrapper = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+`
+
+export const SearchIconWrapper = styled.div`
+  position: absolute;
+  left: 0.75rem;
+  display: flex;
+  align-items: center;
+  color: #64748b;
+  pointer-events: none;
+`
+
+export const ConstellationSuggestList = styled.div`
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid rgba(167, 139, 250, 0.3);
+  border-top: none;
+  border-radius: 0 0 0.5rem 0.5rem;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 10;
+  margin-top: -0.5rem;
+  padding-top: 0.5rem;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba(167, 139, 250, 0.1);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(167, 139, 250, 0.3);
+    border-radius: 3px;
+
+    &:hover {
+      background: rgba(167, 139, 250, 0.5);
+    }
+  }
+`
+
+export const ConstellationSuggestItem = styled.button`
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: none;
+  border: none;
+  color: #cbd5e1;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 150ms ease-in-out;
+
+  &:hover {
+    background: rgba(167, 139, 250, 0.1);
+    color: #a78bfa;
+  }
 `

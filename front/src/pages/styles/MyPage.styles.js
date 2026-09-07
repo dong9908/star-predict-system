@@ -40,7 +40,7 @@ export const ProfileIcon = styled.div`
 export const ProfileInfo = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 1rem;
 `
 
 export const UserName = styled.h1`
@@ -54,8 +54,9 @@ export const UserName = styled.h1`
 `
 
 export const ConstellationInfo = styled.div`
-  font-size: 0.875rem;
-  color: #cbd5e1;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #fbbf24;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -63,7 +64,7 @@ export const ConstellationInfo = styled.div`
 
 export const BadgeContainer = styled.div`
   display: flex;
-  gap: 0.5rem;
+  gap: 0.75rem;
   flex-wrap: wrap;
 `
 
@@ -71,12 +72,12 @@ export const Badge = styled.div`
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem 1rem;
+  padding: 0.75rem 1.25rem;
   border-radius: 9999px;
-  background: rgba(76, 29, 149, 0.4);
-  border: 1px solid ${props => props.$borderColor || 'rgba(147, 51, 234, 0.5)'};
-  color: #d8b4fe;
-  font-size: 0.75rem;
+  background: rgba(76, 29, 149, 0.5);
+  border: 1.5px solid ${props => props.$borderColor || 'rgba(147, 51, 234, 0.5)'};
+  color: white;
+  font-size: 0.875rem;
   font-weight: 600;
 `
 

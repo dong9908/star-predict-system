@@ -201,14 +201,16 @@ export const MobileMenuList = styled.div`
 export const MobileMenuItem = styled.button`
   background: none;
   border: none;
-  color: #cbd5e1;
+  color: ${props => (props.$active ? '#a78bfa' : '#cbd5e1')};
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: ${props => (props.$active ? 600 : 500)};
   cursor: pointer;
   padding: 1rem 0;
   text-align: left;
-  transition: color 150ms ease-in-out;
+  transition: all 150ms ease-in-out;
   border-bottom: 1px solid rgba(30, 41, 59, 0.5);
+  border-left: 3px solid ${props => (props.$active ? '#a78bfa' : 'transparent')};
+  padding-left: ${props => (props.$active ? 'calc(1rem - 3px)' : '1rem')};
 
   &:hover {
     color: white;
