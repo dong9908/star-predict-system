@@ -16,11 +16,6 @@ import {
   LinksGroup,
   SignupLink,
   ForgotLink,
-  Divider,
-  DividerText,
-  SocialButtonsGroup,
-  SocialButton,
-  SocialIcon,
 } from './styles/LoginPage.styles'
 
 function LoginPage() {
@@ -51,10 +46,17 @@ function LoginPage() {
         pwd: formData.password,
       })
 
-      // 2. 서버가 준 토큰을 Local Storage에 저장
+      // 2. 서버가 준 토큰을 Local Storage에 항상 저장 (다른 컴포넌트 충돌 방지)
       if (data.accessToken) {
         localStorage.setItem('accessToken', data.accessToken)
         localStorage.setItem('user', JSON.stringify(data.user))
+
+        // 로그인 유지 체크 여부에 따라 플래그 저장
+        if (formData.remember) {
+          localStorage.setItem('isRemembered', 'true')
+        } else {
+          localStorage.removeItem('isRemembered')
+        }
       }
 
       alert('로그인이 완료되었습니다!')

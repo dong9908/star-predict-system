@@ -24,6 +24,7 @@ class UserSignupItem(BaseModel):
 class UserLoginItem(BaseModel):
     email: EmailStr
     pwd: str
+    remember: Optional[bool] = False
 
 # 사용자 응답 DTO
 class UserResponse(BaseModel):

@@ -24,18 +24,18 @@ export const signupAPI = async ({ name, email, pwd, birthDate, phone }) => {
 };
 
 // 3. 로그인 요청
-export const loginAPI = async ({ email, pwd }) => {
+export const loginAPI = async ({ email, pwd, remember }) => {
   const response = await fetch('/api/member/login', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, pwd }),
-    credentials: 'include', // RefreshToken 쿠키 수신
+    body: JSON.stringify({ email, pwd, remember }), // remember 값 전송
+    credentials: 'include',
   });
   if (!response.ok) {
     const errorData = await response.json();
     throw new Error(errorData.detail || '이메일 또는 비밀번호가 올바르지 않습니다.');
   }
-  return response.json(); // { isLogin: true, accessToken, user }
+  return response.json();
 };
 
 // 4. 로그아웃 요청
