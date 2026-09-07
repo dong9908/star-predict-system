@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { Sparkles, Menu, X } from 'lucide-react'
 import { logoutAPI } from '../api/auth'
 import {
@@ -23,7 +23,10 @@ import {
 
 function Header() {
   const navigate = useNavigate()
+  const location = useLocation()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
+  const isActive = (path) => location.pathname === path
 
   const handleLogoClick = () => {
     navigate('/')
@@ -131,23 +134,23 @@ function Header() {
         )}
 
         <MobileMenuList>
-          <MobileMenuItem onClick={() => handleMobileNavigation('/')}>메인</MobileMenuItem>
-          <MobileMenuItem onClick={() => handleMobileNavigation('/constellation-find')}>
+          <MobileMenuItem $active={isActive('/')} onClick={() => handleMobileNavigation('/')}>메인</MobileMenuItem>
+          <MobileMenuItem $active={isActive('/constellation-find')} onClick={() => handleMobileNavigation('/constellation-find')}>
             별자리 찾기
           </MobileMenuItem>
-          <MobileMenuItem onClick={() => handleMobileNavigation('/constellation-location')}>
+          <MobileMenuItem $active={isActive('/constellation-location')} onClick={() => handleMobileNavigation('/constellation-location')}>
             별자리 위치 찾기
           </MobileMenuItem>
-          <MobileMenuItem onClick={() => handleMobileNavigation('/constellation-info')}>
+          <MobileMenuItem $active={isActive('/constellation-info')} onClick={() => handleMobileNavigation('/constellation-info')}>
             별자리 정보
           </MobileMenuItem>
-          <MobileMenuItem onClick={() => handleMobileNavigation('/constellation-catalog')}>
+          <MobileMenuItem $active={isActive('/constellation-catalog')} onClick={() => handleMobileNavigation('/constellation-catalog')}>
             도감
           </MobileMenuItem>
-          <MobileMenuItem onClick={() => handleMobileNavigation('/fortune-reading')}>
+          <MobileMenuItem $active={isActive('/fortune-reading')} onClick={() => handleMobileNavigation('/fortune-reading')}>
             운세
           </MobileMenuItem>
-          <MobileMenuItem onClick={() => handleMobileNavigation('/mypage')}>
+          <MobileMenuItem $active={isActive('/mypage')} onClick={() => handleMobileNavigation('/mypage')}>
             마이 페이지
           </MobileMenuItem>
         </MobileMenuList>
