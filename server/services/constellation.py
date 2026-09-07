@@ -1,43 +1,67 @@
-from pathlib import Path
 import pandas as pd
+
 from astropy.coordinates import SkyCoord, EarthLocation, AltAz
 from astropy.time import Time
 import astropy.units as u
 
-# 서버에서 실행 되는지 임시 테스트 경로. 나중에 DB에 추가하며 삭제 예정.
-CSV_PATH = Path(r"C:\dev\hyg\data\hyg\CURRENT\hyg_v44.csv.gz")
+from sqlalchemy.orm import Session
+
+from models.constellation import ConstellationModel
+from models.star import StarModel
 
 
-# 별자리 한글 이름 → HYG 데이터의 별자리 약어
-CONSTELLATION_MAP = {
-    "오리온자리": "Ori",
-    # 나중에 전체 별자리 추가
-}
+def get_constellation_stars(
+    db: Session,
+    constellation_name: str
+):
+    # 1. 별자리 이름으로 constellations 테이블 조회
+    constellation = (
+        db.query(ConstellationModel)
+        .filter(ConstellationModel.name_ko == constellation_name)
+        .first()
+    )
 
-
-def load_star_data():
-    df = pd.read_csv(CSV_PATH)
-
-    print("========== CSV 로딩 완료 ==========")
-    print("전체 데이터 개수:", len(df))
-    print("컬럼:", df.columns.tolist())
-
-    return df
-
-
-def get_constellation_stars(constellation_name: str):
-    abbreviation = CONSTELLATION_MAP.get(constellation_name)
-
-    if not abbreviation:
+    if not constellation:
         return None
 
-    df = load_star_data()
+    # 2. 별자리 약어 가져오기
+    abbreviation = constellation.abbreviation
 
-    stars = df[df["con"] == abbreviation]
-    # 가장 밝은 6개의 별만 사용. (이유: 오리온 자리의 경우 1977개의 별이 있음.)
-    bright_stars = stars[stars["mag"] <= 6]
+    # 3. 뱀자리 머리 / 꼬리는 통합 Ser로 계산
+    if abbreviation in ["SerH", "SerT"]:
+        abbreviation = "Ser"
+
+    # 4. star 테이블에서 해당 별자리의 별 조회
+    stars = (
+        db.query(StarModel)
+        .filter(StarModel.con == abbreviation)
+        .filter(StarModel.ra.isnot(None))
+        .filter(StarModel.dec_val.isnot(None))
+        .filter(StarModel.mag.isnot(None))
+        .all()
+    )
+
+    if not stars:
+        return None
+
+    # 5. DataFrame으로 변환
+    df = pd.DataFrame([
+        {
+            "id": star.id,
+            "proper": star.proper,
+            "ra": star.ra,
+            "dec": star.dec_val,
+            "mag": star.mag,
+            "con": star.con,
+        }
+        for star in stars
+    ])
+
+    # 6. 가장 밝은 별만 사용
+    bright_stars = df[df["mag"] <= 6]
 
     return bright_stars
+
 
 def calculate_star_positions(
     stars,
