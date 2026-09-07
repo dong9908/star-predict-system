@@ -67,15 +67,20 @@ async def login(item: UserLoginItem, response: Response, db: Session = Depends(g
     access_token = create_access_token(user.email, user.role if hasattr(user, 'role') else "USER")
     refresh_token = create_refresh_token(user.email, user.role if hasattr(user, 'role') else "USER")
 
-    # 4. Refresh Token 쿠키 설정
-    response.set_cookie(
-        key="refreshToken",
-        value=refresh_token,
-        httponly=True,
-        samesite="lax",
-        secure=False,
-        max_age=60 * 60 * 24 * 7
-    )
+    # 4. Refresh Token 쿠키 설정 (로그인 유지 체크 여부에 따른 분기)
+    cookie_params = {
+        "key": "refreshToken",
+        "value": refresh_token,
+        "httponly": True,
+        "samesite": "lax",
+        "secure": False,
+    }
+
+    # '로그인 유지'를 체크한 경우에만 7일간 유지, 체크 안 하면 세션 쿠키(브라우저 닫으면 삭제)
+    if getattr(item, "remember", False):
+        cookie_params["max_age"] = 60 * 60 * 24 * 7
+
+    response.set_cookie(**cookie_params)
 
     # 5. 응답 반환
     return {
@@ -88,6 +93,7 @@ async def login(item: UserLoginItem, response: Response, db: Session = Depends(g
             "name": user.name
         }
     }
+
 #3. 내 정보 조회 (토큰 검증)
 @member_router.get("/me")
 async def get_my_info(

@@ -71,6 +71,17 @@ function Header() {
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
+  if (!sessionStorage.getItem('sessionActive')) {
+  
+  const isRemembered = localStorage.getItem('isRemembered') === 'true';
+  
+  if (!isRemembered) {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('user');
+  }
+  }
+  sessionStorage.setItem('sessionActive', 'true');
+
   return (
     <HeaderWrapper>
       <HeaderContainer>
