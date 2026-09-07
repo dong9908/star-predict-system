@@ -48,14 +48,6 @@ function ConstellationLocationPage() {
   const [searchResult, setSearchResult] = useState(null)
   const [showSuggestions, setShowSuggestions] = useState(false)
 
-  const filteredConstellations = useMemo(() => {
-    if (!formData.constellation.trim()) return constellations
-    return constellations.filter(c =>
-      c.name.toLowerCase().includes(formData.constellation.toLowerCase()) ||
-      c.englishName.toLowerCase().includes(formData.constellation.toLowerCase())
-    )
-  }, [formData.constellation])
-
   const [constellations, setConstellations] = useState([])
   const [showConstellationList, setShowConstellationList] = useState(false)
 
