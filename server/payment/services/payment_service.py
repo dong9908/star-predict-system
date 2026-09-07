@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from uuid import uuid4
 
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
@@ -22,8 +22,10 @@ from payment.schemas import (
     KakaoPayReadyResponse,
 )
 from payment.services.entitlement_service import (
+    get_seoul_now,
     grant_fortune_access,
     revoke_fortune_access,
+    sync_fortune_access,
 )
 
 
@@ -174,18 +176,7 @@ async def refund_latest_fortune_payment(
 
         payment.status = PaymentStatus.REFUNDED
         payment.cancelled_at = cancellation.canceled_at
-        has_other_approved_payment = (
-            db.query(PaymentModel)
-            .filter(
-                PaymentModel.user_id == user.user_id,
-                PaymentModel.payment_id != payment.payment_id,
-                PaymentModel.status == PaymentStatus.APPROVED,
-            )
-            .first()
-            is not None
-        )
-        if not has_other_approved_payment:
-            revoke_fortune_access(user)
+        sync_fortune_access(db, user)
 
         db.commit()
         db.refresh(payment)
@@ -272,8 +263,9 @@ async def approve_fortune_payment(
     )
 
     if payment.status == PaymentStatus.APPROVED:
-        if not user.has_fortune_access:
-            grant_fortune_access(user)
+        previous_access = user.has_fortune_access
+        current_access = sync_fortune_access(db, user)
+        if previous_access != current_access:
             db.commit()
         return payment
     if payment.status != PaymentStatus.READY:
@@ -301,6 +293,7 @@ async def approve_fortune_payment(
         payment.aid = approval.aid
         payment.status = PaymentStatus.APPROVED
         payment.approved_at = approval.approved_at
+        payment.access_expires_at = get_seoul_now() + timedelta(hours=24)
         grant_fortune_access(user)
 
         db.commit()

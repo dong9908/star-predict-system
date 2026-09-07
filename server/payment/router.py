@@ -25,7 +25,11 @@ from payment.schemas import (
     PaymentRefundResponse,
     PaymentStatusResponse,
 )
-from payment.services.entitlement_service import has_fortune_access
+from payment.services.entitlement_service import (
+    get_active_fortune_payment,
+    has_fortune_access,
+    sync_fortune_access,
+)
 from payment.services.payment_service import (
     approve_fortune_payment,
     cancel_ready_payment,
@@ -94,10 +98,10 @@ async def approve_payment(
     except Exception as error:
         raise _to_http_exception(error) from error
 
-    if payment.approved_at is None:
+    if payment.approved_at is None or payment.access_expires_at is None:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="승인된 결제의 승인 시간이 없습니다.",
+            detail="승인된 결제의 이용권 시간이 없습니다.",
         )
 
     return PaymentApprovalResponse(
@@ -107,7 +111,8 @@ async def approve_payment(
         amount=payment.amount,
         status=payment.status,
         approved_at=payment.approved_at,
-        has_fortune_access=has_fortune_access(user),
+        access_expires_at=payment.access_expires_at,
+        has_fortune_access=has_fortune_access(db, user),
     )
 
 
@@ -185,7 +190,7 @@ async def refund_payment(
         partner_order_id=payment.partner_order_id,
         status=payment.status,
         cancelled_at=payment.cancelled_at,
-        has_fortune_access=has_fortune_access(user),
+        has_fortune_access=has_fortune_access(db, user),
     )
 
 
@@ -209,9 +214,20 @@ async def get_payment_history(
 )
 async def get_payment_access(
     user: UserModel = Depends(get_current_user),
+    db: Session = Depends(get_db),
 ) -> PaymentAccessResponse:
+    active_payment = get_active_fortune_payment(db, user.user_id)
+    previous_access = user.has_fortune_access
+    current_access = sync_fortune_access(db, user)
+    if previous_access != current_access:
+        db.commit()
     return PaymentAccessResponse(
-        has_fortune_access=has_fortune_access(user),
+        has_fortune_access=current_access,
+        expires_at=(
+            active_payment.access_expires_at
+            if active_payment is not None
+            else None
+        ),
     )
 
 

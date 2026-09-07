@@ -26,6 +26,10 @@ from fortune.services.ai_service import (
     generate_initial_fortune,
 )
 from fortune.services.context_service import build_fortune_context
+from fortune.services.daily_fortune_service import (
+    get_daily_fortune,
+    save_daily_fortune,
+)
 from fortune.services.conversation_service import (
     delete_user_conversation,
     get_or_create_conversation,
@@ -36,6 +40,7 @@ from fortune.services.conversation_service import (
     save_user_message,
 )
 from models.member import UserModel
+from payment.services.entitlement_service import sync_fortune_access
 
 
 fortune_router = APIRouter()
@@ -43,11 +48,16 @@ fortune_router = APIRouter()
 
 def require_fortune_access(
     user: UserModel = Depends(get_current_user),
+    db: Session = Depends(get_db),
 ) -> UserModel:
-    if not user.has_fortune_access:
+    previous_access = user.has_fortune_access
+    current_access = sync_fortune_access(db, user)
+    if previous_access != current_access:
+        db.commit()
+    if not current_access:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="결제 후 이용할 수 있는 운세 서비스입니다.",
+            detail="운세 이용권이 만료되었거나 존재하지 않습니다.",
         )
     return user
 
@@ -62,10 +72,24 @@ async def get_fortune_context(
 @fortune_router.post("/initial", response_model=InitialFortuneResponse)
 async def create_initial_fortune(
     user: UserModel = Depends(require_fortune_access),
+    db: Session = Depends(get_db),
 ) -> InitialFortuneResponse:
     try:
-        return await generate_initial_fortune(build_fortune_context(user))
+        context = build_fortune_context(user)
+        stored_result = get_daily_fortune(db, user.user_id, context.today)
+        if stored_result is not None:
+            return stored_result
+
+        generated_result = await generate_initial_fortune(context)
+        return save_daily_fortune(
+            db=db,
+            user_id=user.user_id,
+            fortune_date=context.today,
+            zodiac_code=context.zodiac.code,
+            result=generated_result,
+        )
     except Exception as error:
+        db.rollback()
         raise _to_http_exception(error) from error
 
 
