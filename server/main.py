@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from database.connection import engine, Base
 from routes.member import member_router
 from routes.constellation import constellation_router
+from routes.title import title_router
 from fortune.router import fortune_router
 from payment.router import payment_router
 
@@ -40,6 +41,9 @@ app.include_router(payment_router, prefix="/api/payment", tags=["Payment"])
 
 # 별자리 위치 조회 라우터 등록
 app.include_router(constellation_router, prefix="/api/constellation", tags=["Constellation"])
+
+# Title lookup and acquisition evaluation routes
+app.include_router(title_router, prefix="/api/titles", tags=["Titles"])
 
 @app.get("/")
 def root():

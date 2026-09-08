@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { Sparkles, Menu, X } from 'lucide-react'
 import { logoutAPI } from '../api/auth'
+import { getMyTitlesAPI } from '../api/title'
+import { getTitleTier } from '../utils/titleTier'
 import {
   HeaderWrapper,
   HeaderContainer,
@@ -19,12 +21,16 @@ import {
   MobileMenuItem,
   MobileAuthButtons,
   MobileMenuUserInfo,
+  UserIdentity,
+  UserNameText,
+  UserTitleText,
 } from './styles/Header.styles'
 
 function Header() {
   const navigate = useNavigate()
   const location = useLocation()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [selectedTitle, setSelectedTitle] = useState(null)
 
   const isActive = (path) => location.pathname === path
 
@@ -36,6 +42,42 @@ function Header() {
   // 1. 로컬 스토리지에서 로그인된 유저 정보 가져오기
   const userString = localStorage.getItem('user')
   const user = userString ? JSON.parse(userString) : null
+
+  useEffect(() => {
+    let active = true
+    const accessToken = localStorage.getItem('accessToken')
+
+    const loadSelectedTitle = async () => {
+      if (!user || !accessToken) {
+        setSelectedTitle(null)
+        return
+      }
+
+      try {
+        const result = await getMyTitlesAPI(accessToken)
+        if (active) {
+          setSelectedTitle(result.titles?.find(title => title.selected) || null)
+        }
+      } catch {
+        if (active) setSelectedTitle(null)
+      }
+    }
+
+    const handleSelectedTitleChange = event => {
+      setSelectedTitle(event.detail || null)
+    }
+
+    loadSelectedTitle()
+    window.addEventListener('astra:selected-title-changed', handleSelectedTitleChange)
+    return () => {
+      active = false
+      window.removeEventListener('astra:selected-title-changed', handleSelectedTitleChange)
+    }
+  }, [userString])
+
+  const selectedTitleTier = selectedTitle
+    ? getTitleTier(selectedTitle.id).key
+    : 'common'
 
   // 2. 로그아웃 핸들러 (백엔드 쿠키 삭제 + 로컬 스토리지 삭제)
   const handleLogout = async () => {
@@ -104,9 +146,12 @@ function Header() {
           {user ? (
             // 로그인 상태일 때 표시할 UI
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-              <span style={{ fontSize: '0.9rem', color: '#e2e8f0' }}>
-                <strong style={{ color: '#a78bfa' }}>{user.name}</strong>님
-              </span>
+              <UserIdentity>
+                <UserNameText>{user.name}님</UserNameText>
+                {selectedTitle && (
+                  <UserTitleText $tier={selectedTitleTier}>✦ {selectedTitle.name}</UserTitleText>
+                )}
+              </UserIdentity>
               <AuthButton $variant="outline" onClick={handleLogout}>
                 로그아웃
               </AuthButton>
@@ -138,9 +183,12 @@ function Header() {
 
         {user && (
           <MobileMenuUserInfo>
-            <span>
-              <strong style={{ color: '#a78bfa' }}>{user.name}</strong>님
-            </span>
+            <UserIdentity $mobile>
+              <UserNameText>{user.name}님</UserNameText>
+              {selectedTitle && (
+                <UserTitleText $tier={selectedTitleTier}>✦ {selectedTitle.name}</UserTitleText>
+              )}
+            </UserIdentity>
           </MobileMenuUserInfo>
         )}
 

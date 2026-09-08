@@ -51,3 +51,18 @@ def save_daily_fortune(
         if existing_result is None:
             raise
         return existing_result
+
+
+def delete_daily_fortune(
+    db: Session,
+    user_id: int,
+    fortune_date: date,
+) -> None:
+    (
+        db.query(FortuneDailyResultModel)
+        .filter(
+            FortuneDailyResultModel.user_id == user_id,
+            FortuneDailyResultModel.fortune_date == fortune_date,
+        )
+        .delete(synchronize_session=False)
+    )

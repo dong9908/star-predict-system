@@ -28,11 +28,33 @@ export const FormWrapper = styled.div`
 export const PageHeader = styled.div`
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 1rem;
   margin-bottom: 2rem;
 
   @media (max-width: 768px) {
     margin-bottom: 1.5rem;
+  }
+`
+
+export const DeleteAccountButton = styled.button`
+  padding: 0.4rem 0.65rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(248, 113, 113, 0.45);
+  background: transparent;
+  color: #fca5a5;
+  font-size: 0.7rem;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:hover {
+    background: rgba(127, 29, 29, 0.25);
+    border-color: #f87171;
+  }
+
+  @media (max-width: 768px) {
+    padding: 0.35rem 0.55rem;
+    font-size: 0.68rem;
   }
 `
 
@@ -269,4 +291,59 @@ export const InfoText = styled.p`
   margin: 0;
   margin-top: 2rem;
   text-align: center;
+`
+
+export const ModalBackdrop = styled.div`
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(2, 6, 23, 0.82);
+`
+
+export const ModalCard = styled.div`
+  width: min(100%, 440px);
+  padding: 2rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(248, 113, 113, 0.4);
+  background: #111827;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+`
+
+export const ModalTitle = styled.h2`
+  margin: 0 0 0.75rem;
+  color: #fecaca;
+  font-size: 1.25rem;
+`
+
+export const ModalDescription = styled.p`
+  margin: 0 0 1.25rem;
+  color: #cbd5e1;
+  font-size: 0.875rem;
+  line-height: 1.65;
+`
+
+export const ModalActions = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+`
+
+export const ModalButton = styled.button`
+  padding: 0.7rem 1rem;
+  border-radius: 0.5rem;
+  border: ${({ $danger }) => ($danger ? 'none' : '1px solid #475569')};
+  background: ${({ $danger }) => ($danger ? '#b91c1c' : 'transparent')};
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 `
