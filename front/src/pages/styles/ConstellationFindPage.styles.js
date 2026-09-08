@@ -75,6 +75,12 @@ export const StepCircle = styled.div`
     color: white;
     box-shadow: 0 0 20px rgba(167, 139, 250, 0.5);
   `}
+
+  ${props => props.$completed && `
+    background: rgba(16, 185, 129, 0.18);
+    border-color: #34d399;
+    color: #a7f3d0;
+  `}
 `
 
 export const StepLabel = styled.span`
@@ -112,17 +118,17 @@ export const MainDescription = styled.p`
 export const UploadArea = styled.div`
   border: 2px dashed #9333ea;
   border-radius: 1rem;
-  padding: 3rem;
+  padding: ${props => (props.$hasPreview ? '0.875rem' : '3rem')};
   background: rgba(167, 139, 250, 0.05);
   text-align: center;
   cursor: pointer;
   transition: all 300ms ease;
-  margin-bottom: 3rem;
+  margin-bottom: ${props => (props.$hasPreview ? '1.25rem' : '3rem')};
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 300px;
+  gap: ${props => (props.$hasPreview ? '0.75rem' : '0')};
 
   &:hover {
     background: rgba(167, 139, 250, 0.1);
@@ -140,6 +146,32 @@ export const UploadArea = styled.div`
     height: 200px;
     margin-bottom: 2rem;
   }
+`
+
+export const PreviewImage = styled.img`
+  display: block;
+  width: 100%;
+  height: clamp(230px, 32vh, 320px);
+  object-fit: contain;
+  border-radius: 0.75rem;
+  background: rgba(2, 6, 23, 0.55);
+  pointer-events: none;
+
+  @media (max-width: 768px) {
+    height: 240px;
+  }
+`
+
+export const SelectedFileName = styled.p`
+  width: 100%;
+  margin: 0;
+  color: #10b981;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `
 
 export const UploadIcon = styled.div`

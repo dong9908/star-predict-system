@@ -1,11 +1,18 @@
 import styled from 'styled-components'
 
+export const ResultPageShell = styled.div`
+  width: 100%;
+  max-width: 1800px;
+  margin: 0 auto;
+  padding-top: 2rem;
+`
+
 export const PageWrapper = styled.div`
   display: flex;
   gap: 2rem;
   padding: 2rem;
   background: linear-gradient(135deg, #0f0f2e 0%, #1a0f3d 100%);
-  min-height: 100vh;
+  min-height: calc(100vh - 190px);
   max-width: 1800px;
   margin: 0 auto;
 
@@ -31,17 +38,101 @@ export const ImageVisualizationPanel = styled.div`
   background: rgba(20, 10, 50, 0.6);
   border: 2px solid #a78bfa;
   border-radius: 12px;
-  padding: 2rem;
-  height: 400px;
+  padding: 1rem;
+  height: 560px;
   display: flex;
+  flex-direction: column;
+  gap: 1rem;
   align-items: center;
   justify-content: center;
   position: relative;
   overflow: hidden;
 
   @media (max-width: 1024px) {
-    height: 300px;
+    height: 520px;
   }
+`
+
+export const EmptyResultCard = styled.section`
+  width: calc(100% - 2.5rem);
+  max-width: 760px;
+  min-height: 610px;
+  margin: 0 auto 4rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  color: #e2e8f0;
+  text-align: center;
+  border: 1px solid rgba(167, 139, 250, 0.42);
+  border-radius: 1.25rem;
+  background: linear-gradient(145deg, rgba(20, 10, 50, 0.9), rgba(15, 23, 42, 0.84));
+  box-shadow: 0 24px 70px rgba(15, 5, 40, 0.42);
+
+  h2 { margin: 0; color: white; font-size: 1.7rem; }
+  > p { margin: 0; color: #cbd5e1; line-height: 1.6; }
+`
+
+export const EmptyPreview = styled.img`
+  width: 100%;
+  height: 210px;
+  object-fit: contain;
+  border-radius: 0.85rem;
+  background: rgba(2, 6, 23, 0.64);
+`
+
+export const EmptyTipGrid = styled.div`
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+
+  @media (max-width: 680px) { grid-template-columns: 1fr; }
+`
+
+export const EmptyTipItem = styled.div`
+  min-height: 135px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  border: 1px solid rgba(167, 139, 250, 0.28);
+  border-radius: 0.85rem;
+  background: rgba(167, 139, 250, 0.07);
+
+  span { font-size: 1.55rem; }
+  strong { color: #f5f3ff; font-size: 0.9rem; }
+  small { color: #94a3b8; line-height: 1.45; }
+`
+
+export const ImageStage = styled.div`
+  position: relative;
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 8px;
+  cursor: ${props => (props.$canPan ? (props.$dragging ? 'grabbing' : 'grab') : 'default')};
+  touch-action: none;
+  user-select: none;
+`
+
+export const PanZoomLayer = styled.div`
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-origin: center center;
+  will-change: transform;
 `
 
 export const UploadedImage = styled.img`
@@ -49,6 +140,63 @@ export const UploadedImage = styled.img`
   height: 100%;
   object-fit: contain;
   border-radius: 8px;
+  pointer-events: none;
+`
+
+export const ConstellationOverlay = styled.svg`
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+
+  .major-star {
+    filter: drop-shadow(0 0 5px currentColor) drop-shadow(0 0 12px currentColor);
+    animation: majorStarPulse 2.2s ease-in-out infinite;
+  }
+
+  .active-star {
+    animation: selectedStarFlash 0.6s ease-in-out 3;
+  }
+
+  @keyframes majorStarPulse {
+    0%, 100% { opacity: 0.78; }
+    50% { opacity: 1; }
+  }
+
+  @keyframes selectedStarFlash {
+    0%, 100% { opacity: 0.85; transform: scale(1); }
+    50% { opacity: 1; transform: scale(2.4); }
+  }
+`
+
+export const OverlayLegend = styled.div`
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+  flex-shrink: 0;
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
+`
+
+export const OverlayLegendItem = styled.div`
+  padding: 0.5rem 0.85rem;
+  border-radius: 999px;
+  color: white;
+  font-size: 0.78rem;
+  font-weight: 700;
+  background: ${props => props.$color};
+  border: 1px solid ${props => props.$borderColor};
+  box-shadow: 0 0 10px ${props => props.$glowColor}, 0 0 24px ${props => props.$glowColor};
+  backdrop-filter: blur(8px);
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `
 
 export const ImagePlaceholder = styled.div`
@@ -64,12 +212,10 @@ export const ImagePlaceholder = styled.div`
 `
 
 export const ControlButtons = styled.div`
-  position: absolute;
-  bottom: 1rem;
-  right: 1rem;
   display: flex;
+  justify-content: center;
   gap: 0.5rem;
-  z-index: 10;
+  flex-shrink: 0;
 `
 
 export const ControlButton = styled.button`
@@ -184,13 +330,19 @@ export const StarChip = styled.span`
   padding: 0.5rem 1rem;
   border-radius: 20px;
   font-size: 0.85rem;
-  cursor: pointer;
+  cursor: ${props => (props.$available ? 'pointer' : 'default')};
   transition: all 0.3s ease;
 
   &:hover {
     background: rgba(167, 139, 250, 0.3);
-    transform: translateY(-2px);
+    transform: ${props => (props.$available ? 'translateY(-2px)' : 'none')};
   }
+
+  ${props => props.$active && `
+    color: white;
+    background: rgba(167, 139, 250, 0.48);
+    box-shadow: 0 0 10px rgba(196, 181, 253, 0.75);
+  `}
 `
 
 export const StorySection = styled.div`

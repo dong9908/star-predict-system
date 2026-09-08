@@ -1,6 +1,5 @@
-import { useState, useRef } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Cloud, MapPin, Zap } from 'lucide-react'
 import {
   PageContainer,
   ContentWrapper,
@@ -15,6 +14,8 @@ import {
   UploadLabel,
   UploadText,
   UploadSubText,
+  PreviewImage,
+  SelectedFileName,
   FileInput,
   SelectButton,
   FeaturesGrid,
@@ -29,6 +30,18 @@ function ConstellationFindPage() {
   const [dragActive, setDragActive] = useState(false)
   const [uploadedFile, setUploadedFile] = useState(null)
   const fileInputRef = useRef(null)
+  const [previewUrl, setPreviewUrl] = useState('')
+
+  useEffect(() => {
+    if (!uploadedFile) {
+      setPreviewUrl('')
+      return undefined
+    }
+
+    const url = URL.createObjectURL(uploadedFile)
+    setPreviewUrl(url)
+    return () => URL.revokeObjectURL(url)
+  }, [uploadedFile])
 
   const handleDrag = (e) => {
     e.preventDefault()
@@ -51,11 +64,18 @@ function ConstellationFindPage() {
   }
 
   const handleFile = (file) => {
-    if (file.type.startsWith('image/')) {
-      setUploadedFile(file)
+    if (!['image/jpeg', 'image/png'].includes(file.type)) {
+      alert('JPG 또는 PNG 이미지만 업로드 가능합니다.')
+    } else if (file.size > 10 * 1024 * 1024) {
+      alert('이미지 크기는 최대 10MB입니다.')
     } else {
-      alert('이미지 파일만 업로드 가능합니다.')
+      setUploadedFile(file)
     }
+  }
+
+  const handleAnalyze = () => {
+    if (!uploadedFile) return
+    navigate('/constellation-find-analyzing', { state: { image: uploadedFile } })
   }
 
   const handleFileInput = (e) => {
@@ -64,7 +84,8 @@ function ConstellationFindPage() {
     }
   }
 
-  const handleSelectFile = () => {
+  const handleSelectFile = (e) => {
+    e?.stopPropagation()
     fileInputRef.current?.click()
   }
 
@@ -108,25 +129,35 @@ function ConstellationFindPage() {
         {/* Main Content */}
         <MainTitle>밤하늘 사진을 올려주세요</MainTitle>
         <MainDescription>
-          사진 속 별자리를 AI가 찾아 암면주세요.
+          사진 속 별자리를 AI가 찾아 드립니다.
         </MainDescription>
 
         {/* Upload Area */}
         <UploadArea
           $dragActive={dragActive}
+          $hasPreview={Boolean(previewUrl)}
           onDragEnter={handleDrag}
           onDragLeave={handleDrag}
           onDragOver={handleDrag}
           onDrop={handleDrop}
+          onClick={handleSelectFile}
         >
-          <UploadIcon>📸</UploadIcon>
-          <UploadLabel>
-            <UploadText>사진을 드래그하거나 클릭해 업로드</UploadText>
-            <UploadSubText>JPG, PNG · 최대 10MB</UploadSubText>
-            <SelectButton onClick={handleSelectFile}>
-              사진 선택
-            </SelectButton>
-          </UploadLabel>
+          {previewUrl ? (
+            <>
+              <PreviewImage src={previewUrl} alt="선택한 밤하늘 사진 미리보기" />
+              <SelectedFileName title={uploadedFile.name}>✓ {uploadedFile.name} 선택됨</SelectedFileName>
+              <SelectButton type="button" onClick={handleSelectFile}>사진 선택</SelectButton>
+            </>
+          ) : (
+            <>
+              <UploadIcon>📸</UploadIcon>
+              <UploadLabel>
+                <UploadText>사진을 드래그하거나 클릭해 업로드</UploadText>
+                <UploadSubText>JPG, PNG · 최대 10MB</UploadSubText>
+                <SelectButton type="button" onClick={handleSelectFile}>사진 선택</SelectButton>
+              </UploadLabel>
+            </>
+          )}
           <FileInput
             ref={fileInputRef}
             type="file"
@@ -137,11 +168,8 @@ function ConstellationFindPage() {
 
         {uploadedFile && (
           <div style={{ textAlign: 'center' }}>
-            <p style={{ color: '#10b981', fontSize: '0.875rem', marginBottom: '1rem' }}>
-              ✓ {uploadedFile.name} 선택됨
-            </p>
             <button
-              onClick={() => navigate('/constellation-find-result', { state: { image: uploadedFile } })}
+              onClick={handleAnalyze}
               style={{
                 padding: '0.75rem 2rem',
                 background: '#a78bfa',
@@ -151,6 +179,7 @@ function ConstellationFindPage() {
                 fontSize: '1rem',
                 fontWeight: '600',
                 cursor: 'pointer',
+                opacity: 1,
                 transition: 'all 0.3s ease',
               }}
               onMouseOver={(e) => {
