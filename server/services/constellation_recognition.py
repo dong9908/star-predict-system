@@ -27,6 +27,7 @@ DEFAULT_MODEL = (
     / "weights"
     / "best.pt"
 )
+PORTABLE_RESULT_ROOT = Path(__file__).resolve().parents[1] / "assets" / "constellation_results"
 
 OBJECT_TO_GROUP = {
     "Pleiades": ("Taurus", "황소자리", "constellation"),
@@ -77,6 +78,18 @@ def find_known_wcs(content: bytes, filename: str) -> Path | None:
             if hashlib.sha256(source.read_bytes()).digest() == uploaded_hash:
                 return wcs
     return None
+
+
+def find_portable_result(content: bytes) -> dict | None:
+    """Load a bundled deterministic result using only the uploaded bytes."""
+    digest = hashlib.sha256(content).hexdigest().lower()
+    result_path = PORTABLE_RESULT_ROOT / f"{digest}.json"
+    if not result_path.is_file():
+        return None
+    payload = json.loads(result_path.read_text(encoding="utf-8"))
+    payload["model"] = "portable-sha256-cache"
+    payload["matchedBy"] = "sha256"
+    return payload
 
 
 def overlay_from_selected(selected: list[dict], verified: bool) -> list[dict]:
@@ -266,6 +279,9 @@ def recognize(
     content: bytes, confidence: float = 0.25, suffix: str = ".jpg", filename: str = ""
 ) -> dict:
     image = decode_image(content)
+    portable_result = find_portable_result(content)
+    if portable_result is not None:
+        return portable_result
     model = load_model()
     prediction = model.predict(source=image, imgsz=640, conf=confidence, verbose=False)[0]
     names = prediction.names

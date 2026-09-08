@@ -1,0 +1,10 @@
+{
+  "image": {"width": 1440, "height": 1920},
+  "detectionCount": 0,
+  "detections": [],
+  "results": [],
+  "graphOverlay": {"status": "unavailable", "reason": "별 구조 후보를 찾지 못했습니다."},
+  "graphOverlays": [],
+  "wcsVerified": false,
+  "message": "사진에서 별자리를 확인하지 못했습니다."
+}
