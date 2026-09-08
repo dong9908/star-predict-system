@@ -167,7 +167,7 @@ export const getConstellationsAPI = async () => {
   return response.json();
 };
 
-// 8. 개인 도감용 별자리 목록 조회
+// 10. 개인 도감용 별자리 목록 조회
 export const getCatalogMyAPI = async (accessToken) => {
   const response = await fetch('/api/constellation/catalog/my', {
     method: 'GET',
