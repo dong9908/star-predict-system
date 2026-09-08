@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { User, Star } from 'lucide-react'
+import TitlePage from './TitlePage'
+import { getTitleTier } from '../utils/titleTier'
 import {
   PageContainer,
   ProfileSection,
@@ -8,77 +10,33 @@ import {
   ProfileInfo,
   UserName,
   ConstellationInfo,
-  BadgeContainer,
-  Badge,
+  SelectedTitle,
   EditButton,
   TabMenu,
   Tab,
   ContentArea,
-  SectionTitle,
-  CardGrid,
-  CharacteristicCard,
-  CardIcon,
-  CardContent,
-  CardTitle,
-  CardDescription,
-  FooterText,
 } from './styles/MyPage.styles'
 
-const characteristics = [
-  {
-    id: 1,
-    title: '별자리 알은',
-    description: '별자리 여정을 시작한 탐험가',
-    icon: '✦',
-    borderColor: '#c084fc',
-  },
-  {
-    id: 2,
-    title: '별빛 관측자',
-    description: '밤하늘을 구종한 바라본 관측가',
-    icon: '✦',
-    borderColor: '#60a5fa',
-  },
-  {
-    id: 3,
-    title: '별빛 추적자',
-    description: '어린 별자리를 자아낸 탐험가',
-    icon: '✦',
-    borderColor: '#34d399',
-  },
-  {
-    id: 4,
-    title: '별자리 수집가',
-    description: '다양한 별자리를 모은 수집가',
-    icon: '✦',
-    borderColor: '#fbbf24',
-  },
-  {
-    id: 5,
-    title: '우주 탐험가',
-    description: '밤하늘 너머의 궁금 욕망',
-    icon: '✦',
-    borderColor: '#f87171',
-  },
-]
-
-const badges = [
-  { id: 1, label: '별자리 수집가', borderColor: '#fbbf24' },
-]
-
 const tabs = [
-  { id: 'audience', label: '청중' },
+  { id: 'titles', label: '칭호' },
   { id: 'background', label: '배경' },
   { id: 'profile', label: '프로필' },
 ]
 
 function MyPage() {
   const navigate = useNavigate()
-  const [activeTab, setActiveTab] = useState('audience')
+  const [activeTab, setActiveTab] = useState('titles')
+  const [titleSummary, setTitleSummary] = useState({
+    discoveredCount: 0,
+    totalConstellations: 0,
+    titles: [],
+  })
 
   // 로컬 스토리지에서 로그인된 유저 정보 가져오기
   const userString = localStorage.getItem('user')
   const user = userString ? JSON.parse(userString) : null
+  const selectedTitle = titleSummary.titles.find(title => title.selected)
+  const selectedTitleTier = selectedTitle ? getTitleTier(selectedTitle.id).key : 'common'
 
   // 로그인하지 않은 경우 로그인 페이지로 리다이렉트
   if (!user) {
@@ -116,17 +74,13 @@ function MyPage() {
 
         <ProfileInfo>
           <UserName>{user.name}</UserName>
+          <SelectedTitle $selected={Boolean(selectedTitle)} $tier={selectedTitleTier}>
+            {selectedTitle ? `✦ ${selectedTitle.name}` : '대표 칭호를 선택해주세요'}
+          </SelectedTitle>
           <ConstellationInfo>
             <Star size={16} color="#fbbf24" />
-            획득한 별자리 6/88
+            발견한 별자리 {titleSummary.discoveredCount}/{titleSummary.totalConstellations}
           </ConstellationInfo>
-          <BadgeContainer>
-            {badges.map(badge => (
-              <Badge key={badge.id} $borderColor={badge.borderColor}>
-                {badge.label}
-              </Badge>
-            ))}
-          </BadgeContainer>
         </ProfileInfo>
 
         <EditButton onClick={() => navigate('/edit-profile')}>회원 정보 수정</EditButton>
@@ -147,25 +101,7 @@ function MyPage() {
 
       {/* 콘텐츠 영역 */}
       <ContentArea>
-        {activeTab === 'audience' && (
-          <>
-            <SectionTitle>최극한 징조</SectionTitle>
-            <CardGrid>
-              {characteristics.map(char => (
-                <CharacteristicCard key={char.id} $borderColor={char.borderColor}>
-                  <CardIcon $borderColor={char.borderColor}>{char.icon}</CardIcon>
-                  <CardContent>
-                    <CardTitle>{char.title}</CardTitle>
-                    <CardDescription>{char.description}</CardDescription>
-                  </CardContent>
-                </CharacteristicCard>
-              ))}
-            </CardGrid>
-            <FooterText>
-              최극한 징조를 선택하면 다른 징조로 정정할 수 있습니다.
-            </FooterText>
-          </>
-        )}
+        {activeTab === 'titles' && <TitlePage onDataLoaded={setTitleSummary} />}
 
         {activeTab === 'background' && (
           <div style={{ padding: '2rem', textAlign: 'center', color: '#cbd5e1' }}>

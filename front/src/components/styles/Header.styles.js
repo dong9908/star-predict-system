@@ -1,5 +1,11 @@
 import styled from 'styled-components'
 
+const titleTextColors = {
+  common: '#7dd3fc',
+  rare: '#d8b4fe',
+  legendary: '#fcd34d',
+}
+
 export const HeaderWrapper = styled.header`
   border-bottom: 1px solid rgba(30, 41, 59, 0.8);
   background: rgba(15, 23, 42, 0.5);
@@ -81,6 +87,32 @@ export const AuthButtonsGroup = styled.div`
   @media (max-width: 768px) {
     display: none;
   }
+`
+
+export const UserIdentity = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: ${props => props.$mobile ? 'flex-start' : 'flex-end'};
+  gap: 0.15rem;
+  min-width: 0;
+`
+
+export const UserNameText = styled.span`
+  color: #a78bfa;
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.2;
+`
+
+export const UserTitleText = styled.span`
+  max-width: 150px;
+  overflow: hidden;
+  color: ${props => titleTextColors[props.$tier] || titleTextColors.common};
+  font-size: 0.68rem;
+  font-weight: 600;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `
 
 export const AuthButton = styled.button`

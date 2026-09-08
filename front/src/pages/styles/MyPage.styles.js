@@ -1,5 +1,13 @@
 import styled from 'styled-components'
 
+const selectedTitleColors = {
+  common: { border: '#38bdf8', background: 'linear-gradient(135deg, rgba(14, 116, 144, 0.32), rgba(34, 211, 238, 0.12))', text: '#7dd3fc' },
+  rare: { border: '#a855f7', background: 'linear-gradient(135deg, rgba(107, 33, 168, 0.36), rgba(236, 72, 153, 0.16))', text: '#e9d5ff' },
+  legendary: { border: '#f59e0b', background: 'linear-gradient(135deg, rgba(146, 64, 14, 0.42), rgba(249, 115, 22, 0.18))', text: '#fde68a' },
+}
+
+const getSelectedTitleColor = tier => selectedTitleColors[tier] || selectedTitleColors.common
+
 export const PageContainer = styled.div`
   width: 100%;
   max-width: 1200px;
@@ -51,6 +59,26 @@ export const UserName = styled.h1`
   display: flex;
   align-items: center;
   gap: 1rem;
+`
+
+export const SelectedTitle = styled.div`
+  width: fit-content;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid ${props => props.$selected
+    ? getSelectedTitleColor(props.$tier).border
+    : 'rgba(148, 163, 184, 0.3)'};
+  border-radius: 9999px;
+  background: ${props => props.$selected
+    ? getSelectedTitleColor(props.$tier).background
+    : 'rgba(30, 41, 59, 0.45)'};
+  color: ${props => props.$selected
+    ? getSelectedTitleColor(props.$tier).text
+    : '#94a3b8'};
+  font-size: 0.82rem;
+  font-weight: 600;
+  box-shadow: ${props => props.$selected
+    ? `0 0 18px ${getSelectedTitleColor(props.$tier).border}22`
+    : 'none'};
 `
 
 export const ConstellationInfo = styled.div`
