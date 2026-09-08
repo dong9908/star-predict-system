@@ -49,6 +49,7 @@ def get_constellation_stars(
         {
             "id": star.id,
             "proper": star.proper,
+            "proper_ko": star.proper_ko,
             "ra": star.ra,
             "dec": star.dec_val,
             "mag": star.mag,
@@ -57,10 +58,40 @@ def get_constellation_stars(
         for star in stars
     ])
 
-    # 6. 가장 밝은 별만 사용
+    # 6. 6등급 이하의 별만 사용
     bright_stars = df[df["mag"] <= 6]
 
     return bright_stars
+
+
+def get_main_stars(
+    db: Session,
+    abbreviation: str
+):
+    # 뱀자리 머리 / 꼬리 처리
+    if abbreviation in ["SerH", "SerT"]:
+        abbreviation = "Ser"
+
+    # 별자리의 밝은 별 최대 3개 조회
+    main_stars = (
+        db.query(StarModel)
+        .filter(StarModel.con == abbreviation)
+        .filter(StarModel.proper.isnot(None))
+        .filter(StarModel.proper != "")
+        .filter(StarModel.mag.isnot(None))
+        .order_by(StarModel.mag.asc())
+        .limit(3)
+        .all()
+    )
+
+    return [
+        {
+            "name": star.proper_ko,
+            "name_en": star.proper,
+            "mag": star.mag,
+        }
+        for star in main_stars
+    ]
 
 
 def calculate_star_positions(
@@ -101,3 +132,39 @@ def calculate_star_positions(
     result["azimuth"] = altaz.az.deg
 
     return result
+
+
+def get_constellation_detail(
+    db: Session,
+    constellation_id: int
+):
+    # 1. 별자리 정보 조회
+    constellation = (
+        db.query(ConstellationModel)
+        .filter(
+            ConstellationModel.constellation_id == constellation_id
+        )
+        .first()
+    )
+
+    if not constellation:
+        return None
+
+    # 2. 밝은 주요 별 최대 3개 조회
+    main_stars = get_main_stars(
+        db,
+        constellation.abbreviation
+    )
+
+    return {
+        "constellation_id": constellation.constellation_id,
+        "name_ko": constellation.name_ko,
+        "name_en": constellation.name_en,
+        "description": constellation.description,
+        "mythology": constellation.mythology,
+        "difficulty": constellation.difficulty,
+        "image_url": constellation.image_url,
+        "abbreviation": constellation.abbreviation,
+
+        "main_stars": main_stars,
+    }
