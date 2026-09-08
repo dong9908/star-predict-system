@@ -1,5 +1,13 @@
 import styled from 'styled-components'
 
+const selectedTitleColors = {
+  common: { border: '#38bdf8', background: 'linear-gradient(135deg, rgba(14, 116, 144, 0.32), rgba(34, 211, 238, 0.12))', text: '#7dd3fc' },
+  rare: { border: '#a855f7', background: 'linear-gradient(135deg, rgba(107, 33, 168, 0.36), rgba(236, 72, 153, 0.16))', text: '#e9d5ff' },
+  legendary: { border: '#f59e0b', background: 'linear-gradient(135deg, rgba(146, 64, 14, 0.42), rgba(249, 115, 22, 0.18))', text: '#fde68a' },
+}
+
+const getSelectedTitleColor = tier => selectedTitleColors[tier] || selectedTitleColors.common
+
 export const PageContainer = styled.div`
   width: 100%;
   max-width: 1200px;
@@ -40,7 +48,7 @@ export const ProfileIcon = styled.div`
 export const ProfileInfo = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 1rem;
 `
 
 export const UserName = styled.h1`
@@ -53,9 +61,30 @@ export const UserName = styled.h1`
   gap: 1rem;
 `
 
+export const SelectedTitle = styled.div`
+  width: fit-content;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid ${props => props.$selected
+    ? getSelectedTitleColor(props.$tier).border
+    : 'rgba(148, 163, 184, 0.3)'};
+  border-radius: 9999px;
+  background: ${props => props.$selected
+    ? getSelectedTitleColor(props.$tier).background
+    : 'rgba(30, 41, 59, 0.45)'};
+  color: ${props => props.$selected
+    ? getSelectedTitleColor(props.$tier).text
+    : '#94a3b8'};
+  font-size: 0.82rem;
+  font-weight: 600;
+  box-shadow: ${props => props.$selected
+    ? `0 0 18px ${getSelectedTitleColor(props.$tier).border}22`
+    : 'none'};
+`
+
 export const ConstellationInfo = styled.div`
-  font-size: 0.875rem;
-  color: #cbd5e1;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #fbbf24;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -63,7 +92,7 @@ export const ConstellationInfo = styled.div`
 
 export const BadgeContainer = styled.div`
   display: flex;
-  gap: 0.5rem;
+  gap: 0.75rem;
   flex-wrap: wrap;
 `
 
@@ -71,12 +100,12 @@ export const Badge = styled.div`
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem 1rem;
+  padding: 0.75rem 1.25rem;
   border-radius: 9999px;
-  background: rgba(76, 29, 149, 0.4);
-  border: 1px solid ${props => props.$borderColor || 'rgba(147, 51, 234, 0.5)'};
-  color: #d8b4fe;
-  font-size: 0.75rem;
+  background: rgba(76, 29, 149, 0.5);
+  border: 1.5px solid ${props => props.$borderColor || 'rgba(147, 51, 234, 0.5)'};
+  color: white;
+  font-size: 0.875rem;
   font-weight: 600;
 `
 

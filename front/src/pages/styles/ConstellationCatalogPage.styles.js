@@ -144,11 +144,25 @@ export const ContentSection = styled.div`
 
 export const FilterBar = styled.div`
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+`
+
+export const FilterGroup = styled.div`
+  display: flex;
   gap: 0.75rem;
   flex-wrap: wrap;
+`
+
+export const FilterInfo = styled.span`
+  color: rgba(255,255,255,0.7);
+  font-size: 0.75rem;
+  white-space: nowrap;
 
   @media (max-width: 768px) {
-    gap: 0.5rem;
+    width: 100%;
   }
 `
 
@@ -205,17 +219,46 @@ export const ConstellationGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 1rem;
+  max-height: 600px;
+  overflow-y: auto;
+  padding: 1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.02);
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba(167, 139, 250, 0.1);
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(167, 139, 250, 0.3);
+    border-radius: 4px;
+
+    &:hover {
+      background: rgba(167, 139, 250, 0.5);
+    }
+  }
 
   @media (max-width: 1024px) {
     grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    max-height: 500px;
   }
 
   @media (max-width: 768px) {
     grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    max-height: 400px;
   }
 `
 
 export const ConstellationCard = styled.div`
+  height: 210px;
+  display: flex;
+  flex-direction: column;
   border: 1px solid rgba(167, 139, 250, 0.3);
   border-radius: 0.75rem;
   padding: 1rem;
@@ -224,6 +267,7 @@ export const ConstellationCard = styled.div`
   transition: all 300ms ease;
   cursor: pointer;
   position: relative;
+  overflow: hidden;
 
   &:hover {
     border-color: #a78bfa;
@@ -239,19 +283,63 @@ export const ConstellationCard = styled.div`
 
 export const CardImage = styled.div`
   width: 100%;
-  aspect-ratio: 1;
+  aspect-ratio: 1 / 1;
+  height: auto;
+
   background: linear-gradient(135deg, #1e293b, #0f172a);
   border-radius: 0.5rem;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   margin-bottom: 0.75rem;
+
   font-size: 2rem;
   position: relative;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
 
   ${props => props.$discovered && `
-    background: linear-gradient(135deg, rgba(167, 139, 250, 0.2), rgba(167, 139, 250, 0.05));
+    background: linear-gradient(
+      135deg,
+      rgba(167,139,250,0.2),
+      rgba(167,139,250,0.05)
+    );
   `}
+
+  .difficulty {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+  }
+
+  .difficulty-1 {
+    color: #3b82f6;
+  }
+
+  .difficulty-2 {
+    color: #22c55e;
+  }
+
+  .difficulty-3 {
+    color: #eab308;
+  }
+
+  .difficulty-4 {
+    color: #ef4444;
+  }
+
+  .unavailable {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #94a3b8;
+  }
 `
 
 export const NewBadge = styled.span`

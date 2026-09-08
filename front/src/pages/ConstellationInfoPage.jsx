@@ -1,5 +1,5 @@
-import { useState, useMemo } from 'react'
-import { constellations } from '../data/constellations'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import {
   PageWrapper,
   LeftSection,
@@ -10,8 +10,6 @@ import {
   SectionLabel,
   MainStarsContainer,
   StarChip,
-  ObservationInfo,
-  InfoCard,
   StorySection,
   RightSection,
   SearchContainer,
@@ -25,268 +23,464 @@ import {
   EmptyState,
   ControlButtons,
   ControlButton,
+  LoadingState,
+  ConstellationImage,
+  StarEnglish,
+  ConstellationCardLoading,
 } from './styles/ConstellationInfoPage.styles'
 
+const DEFAULT_CONSTELLATION_ID = 1
+
 function ConstellationVisualization({ constellation }) {
-  const padding = 40
-  const width = 300
-  const height = 300
-  const viewBox = `0 0 ${width} ${height}`
+  const [zoom, setZoom] = useState(1)
+  const [pan, setPan] = useState({ x: 0, y: 0 })
+  const [isDragging, setIsDragging] = useState(false)
 
-  const generateStarPositions = (name) => {
-    const positions = {
-      '오리온자리': [
-        { x: 150, y: 80, size: 6 },
-        { x: 120, y: 120, size: 8 },
-        { x: 180, y: 140, size: 8 },
-        { x: 100, y: 160, size: 5 },
-        { x: 200, y: 160, size: 5 },
-        { x: 150, y: 200, size: 7 },
-      ],
-      '큰개자리': [
-        { x: 150, y: 100, size: 10 },
-        { x: 120, y: 140, size: 6 },
-        { x: 180, y: 160, size: 5 },
-        { x: 100, y: 200, size: 5 },
-        { x: 200, y: 220, size: 4 },
-      ],
-      '쌍둥이자리': [
-        { x: 120, y: 80, size: 7 },
-        { x: 180, y: 80, size: 7 },
-        { x: 115, y: 150, size: 6 },
-        { x: 185, y: 150, size: 6 },
-        { x: 120, y: 220, size: 5 },
-        { x: 180, y: 220, size: 5 },
-      ],
-      '황소자리': [
-        { x: 150, y: 80, size: 8 },
-        { x: 130, y: 120, size: 6 },
-        { x: 170, y: 120, size: 5 },
-        { x: 100, y: 160, size: 4 },
-        { x: 200, y: 160, size: 4 },
-        { x: 150, y: 200, size: 5 },
-      ],
-      '작은개자리': [
-        { x: 150, y: 100, size: 8 },
-        { x: 130, y: 150, size: 5 },
-        { x: 170, y: 200, size: 4 },
-      ],
-      '마차부자리': [
-        { x: 150, y: 90, size: 9 },
-        { x: 110, y: 130, size: 6 },
-        { x: 190, y: 130, size: 5 },
-        { x: 120, y: 190, size: 5 },
-        { x: 180, y: 210, size: 4 },
-      ],
-      '페르세우스자리': [
-        { x: 150, y: 100, size: 7 },
-        { x: 100, y: 140, size: 6 },
-        { x: 200, y: 140, size: 5 },
-        { x: 130, y: 180, size: 5 },
-        { x: 170, y: 200, size: 4 },
-      ],
-      '카시오페이아자리': [
-        { x: 80, y: 100, size: 6 },
-        { x: 120, y: 120, size: 7 },
-        { x: 150, y: 100, size: 6 },
-        { x: 180, y: 120, size: 5 },
-        { x: 220, y: 100, size: 5 },
-      ],
-      '기린자리': [
-        { x: 150, y: 80, size: 5 },
-        { x: 110, y: 130, size: 6 },
-        { x: 190, y: 150, size: 5 },
-        { x: 120, y: 200, size: 4 },
-        { x: 180, y: 210, size: 4 },
-      ],
-      '용자리': [
-        { x: 100, y: 80, size: 5 },
-        { x: 150, y: 100, size: 6 },
-        { x: 200, y: 80, size: 5 },
-        { x: 140, y: 150, size: 5 },
-        { x: 180, y: 180, size: 6 },
-        { x: 120, y: 220, size: 4 },
-      ],
-      '백조자리': [
-        { x: 150, y: 80, size: 8 },
-        { x: 100, y: 140, size: 6 },
-        { x: 150, y: 150, size: 5 },
-        { x: 200, y: 140, size: 6 },
-        { x: 150, y: 220, size: 7 },
-      ],
-      '독수리자리': [
-        { x: 150, y: 90, size: 8 },
-        { x: 120, y: 150, size: 5 },
-        { x: 180, y: 150, size: 5 },
-        { x: 100, y: 200, size: 4 },
-        { x: 200, y: 200, size: 4 },
-      ],
-    }
+  const dragStartRef = useRef({
+    pointerX: 0,
+    pointerY: 0,
+    panX: 0,
+    panY: 0,
+  })
 
-    return positions[name] || positions['오리온자리']
+  // 축소
+  const handleZoomOut = () => {
+    setZoom((value) => {
+      const next = Math.max(1, value - 0.25)
+
+      if (next === 1) {
+        setPan({ x: 0, y: 0 })
+      }
+
+      return next
+    })
   }
 
-  const stars = generateStarPositions(constellation.name)
+  // 확대
+  const handleZoomIn = () => {
+    setZoom((value) => Math.min(4, value + 0.25))
+  }
+
+  // 초기화
+  const handleResetView = () => {
+    setZoom(1)
+    setPan({ x: 0, y: 0 })
+  }
+
+  // 드래그 시작
+  const handlePointerDown = (event) => {
+    if (zoom <= 1) return
+
+    event.currentTarget.setPointerCapture(event.pointerId)
+
+    dragStartRef.current = {
+      pointerX: event.clientX,
+      pointerY: event.clientY,
+      panX: pan.x,
+      panY: pan.y,
+    }
+
+    setIsDragging(true)
+  }
+
+  // 드래그 중
+  const handlePointerMove = (event) => {
+    if (!isDragging || zoom <= 1) return
+
+    const start = dragStartRef.current
+    const DRAG_SPEED = 7
+
+    setPan({
+      x: start.panX + (event.clientX - start.pointerX) * DRAG_SPEED ,
+      y: start.panY + (event.clientY - start.pointerY) * DRAG_SPEED,
+    })
+  }
+
+  // 드래그 종료
+  const handlePointerUp = (event) => {
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId)
+    }
+
+    setIsDragging(false)
+  }
 
   return (
     <VisualizationPanel>
-      <svg viewBox={viewBox} width={width} height={height}>
-        {/* 별 사이의 선 */}
-        {stars.length > 1 && (
-          <g stroke="rgba(167, 139, 250, 0.3)" strokeWidth="1">
-            {stars.map((star, idx) =>
-              idx < stars.length - 1 ? (
-                <line
-                  key={`line-${idx}`}
-                  x1={star.x}
-                  y1={star.y}
-                  x2={stars[idx + 1].x}
-                  y2={stars[idx + 1].y}
-                />
-              ) : null,
-            )}
-          </g>
+
+      <div
+        style={{
+          position: 'relative',
+          width: '100%',
+          height: '100%',
+          overflow: 'hidden',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          cursor:
+            zoom > 1
+              ? (isDragging ? 'grabbing' : 'grab')
+              : 'default',
+          touchAction: 'none',
+          userSelect: 'none',
+        }}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerCancel={handlePointerUp}
+        onDoubleClick={handleResetView}
+      >
+
+        {constellation.image_url ? (
+          <div
+            style={{
+              position: 'relative',
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
+              transformOrigin: 'center center',
+              transition: isDragging
+                ? 'none'
+                : 'transform 0.2s ease',
+            }}
+          >
+            <ConstellationImage
+              src={constellation.image_url}
+              alt={`${constellation.name_ko} 별자리`}
+            />
+          </div>
+        ) : (
+          <div
+            style={{
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            별자리 이미지가 없습니다.
+          </div>
         )}
 
-        {/* 별 */}
-        {stars.map((star, idx) => (
-          <circle
-            key={`star-${idx}`}
-            cx={star.x}
-            cy={star.y}
-            r={star.size}
-            fill="#a78bfa"
-            opacity="0.9"
-            filter="drop-shadow(0 0 3px #a78bfa)"
-          />
-        ))}
-      </svg>
+      </div>
+
       <ControlButtons>
-        <ControlButton>-</ControlButton>
-        <ControlButton>+</ControlButton>
-        <ControlButton>🔄</ControlButton>
+        <ControlButton
+          title="축소"
+          onClick={handleZoomOut}
+        >
+          -
+        </ControlButton>
+
+        <ControlButton
+          title="확대"
+          onClick={handleZoomIn}
+        >
+          +
+        </ControlButton>
+
+        <ControlButton
+          title="초기화"
+          onClick={handleResetView}
+        >
+          🔄
+        </ControlButton>
       </ControlButtons>
+
     </VisualizationPanel>
   )
 }
 
+
 function ConstellationInfoPage() {
-  const [selectedId, setSelectedId] = useState(1)
+  const [constellations, setConstellations] = useState([])
+  const [searchParams] = useSearchParams()
+  const urlConstellationId =
+    Number(searchParams.get('constellation_id')) ||
+    DEFAULT_CONSTELLATION_ID
+  const [selectedId, setSelectedId] = useState(urlConstellationId)
+  const [selectedConstellation, setSelectedConstellation] = useState(null)
   const [searchTerm, setSearchTerm] = useState('')
+  const [loading, setLoading] = useState(true)
+  const [loadingId, setLoadingId] = useState(null)
+  const [error, setError] = useState('')
 
-  const selectedConstellation = constellations.find((c) => c.id === selectedId)
+  // 별자리 전체 목록 조회
+  useEffect(() => {
+    const fetchCatalog = async () => {
+      try {
+        setLoading(true)
 
-  const filteredConstellations = useMemo(() => {
-    return constellations.filter((c) =>
-      c.name.includes(searchTerm) || c.englishName.toLowerCase().includes(searchTerm.toLowerCase()),
-    )
-  }, [searchTerm])
+        // 목록 조회
+        const catalogResponse = await fetch(
+          '/api/constellation/catalog'
+        )
 
-  const getDirectionIcon = (direction) => {
-    const icons = {
-      '북쪽': '⬆️',
-      '남쪽': '⬇️',
-      '동쪽': '➡️',
-      '서쪽': '⬅️',
-      '북동쪽': '↗️',
-      '남동쪽': '↘️',
-      '남서쪽': '↙️',
-      '북서쪽': '↖️',
+        const catalogData = await catalogResponse.json()
+
+        setConstellations(catalogData)
+
+
+        // URL에 전달된 별자리 선택 (없으면 기본값)
+        const detailResponse = await fetch(
+          `/api/constellation/${urlConstellationId}`
+        )
+
+        const detailData = await detailResponse.json()
+
+        setSelectedConstellation(detailData)
+        setSelectedId(urlConstellationId)
+
+
+      } catch(error) {
+        console.error(error)
+        setError(error.message)
+
+      } finally {
+        setLoading(false)
+      }
     }
-    return icons[direction] || '📍'
+
+    fetchCatalog()
+
+  }, [urlConstellationId])
+
+  // 검색 결과
+  const filteredConstellations = useMemo(() => {
+    const keyword = searchTerm.toLowerCase().trim()
+
+    if (!keyword) {
+      return constellations
+    }
+
+    return constellations.filter(
+      (constellation) =>
+        constellation.name_ko.toLowerCase().includes(keyword) ||
+        constellation.name_en.toLowerCase().includes(keyword)
+    )
+  }, [constellations, searchTerm])
+
+
+  // 로딩
+  if (loading) {
+    return (
+      <LoadingState>
+        별자리 정보를 불러오는 중입니다...
+      </LoadingState>
+    )
   }
 
-  const getCurrentTime = () => {
-    const now = new Date()
-    return now.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })
+
+  // 에러
+  if (error) {
+    return (
+      <PageWrapper>
+        {error}
+      </PageWrapper>
+    )
   }
 
+
+  // 데이터 없음
   if (!selectedConstellation) {
-    return <PageWrapper>별자리 정보를 로드할 수 없습니다.</PageWrapper>
+    return (
+      <PageWrapper>
+        별자리 정보를 로드할 수 없습니다.
+      </PageWrapper>
+    )
   }
+
 
   return (
     <PageWrapper>
+
+      {/* =========================
+          왼쪽 영역
+      ========================= */}
       <LeftSection>
-        <ConstellationVisualization constellation={selectedConstellation} />
+
+        {/* 별자리 이미지 */}
+        <ConstellationVisualization
+          constellation={selectedConstellation}
+        />
+
 
         <DetailSection>
+
+          {/* 별자리 이름 */}
           <ConstellationTitle>
-            <h2>{selectedConstellation.name}</h2>
-            <p>{selectedConstellation.englishName}</p>
+            <h2>
+              {selectedConstellation.name_ko}
+            </h2>
+
+            <p>
+              {selectedConstellation.name_en}
+            </p>
           </ConstellationTitle>
 
-          <ConstellationDescription>{selectedConstellation.description}</ConstellationDescription>
 
-          <SectionLabel>🌟 주요 별들</SectionLabel>
+          {/* 별자리 설명 */}
+          <ConstellationDescription>
+            {selectedConstellation.description}
+          </ConstellationDescription>
+
+
+          {/* 주요 별 */}
+          <SectionLabel>
+            🌟 주요 별들
+          </SectionLabel>
+
           <MainStarsContainer>
-            {selectedConstellation.mainStars.map((star, idx) => (
-              <StarChip key={idx}>
-                {star.ko} <span style={{ fontSize: '0.75rem', opacity: 0.7 }}>({star.en})</span>
-              </StarChip>
-            ))}
+            {selectedConstellation.main_stars &&
+            selectedConstellation.main_stars.length > 0 ? (
+              selectedConstellation.main_stars.map(
+                (star, idx) => (
+                  <StarChip key={idx}>
+                    {star.name}{' '}
+
+                    <StarEnglish>
+                      ({star.name_en})
+                    </StarEnglish>
+
+                    <span
+                      style={{
+                        fontSize: '0.75rem',
+                        opacity: 0.7,
+                      }}
+                    >
+                      {' '}
+                      (밝기 {star.mag})
+                    </span>
+                  </StarChip>
+                )
+              )
+            ) : (
+              <span>
+                주요 별 정보가 없습니다.
+              </span>
+            )}
           </MainStarsContainer>
 
-          <SectionLabel>📊 관측 정보</SectionLabel>
-          <ObservationInfo>
-            <InfoCard>
-              <div className="label">현재 시간</div>
-              <div className="value">{getCurrentTime()}</div>
-            </InfoCard>
-            <InfoCard>
-              <div className="label">고도</div>
-              <div className="value">{selectedConstellation.altitude}°</div>
-            </InfoCard>
-            <InfoCard>
-              <div className="label">방향</div>
-              <div className="value">{getDirectionIcon(selectedConstellation.direction)}</div>
-              <div style={{ fontSize: '0.85rem', color: '#cbd5e1', marginTop: '0.25rem' }}>
-                {selectedConstellation.direction}
-              </div>
-            </InfoCard>
-          </ObservationInfo>
 
-          <SectionLabel>📖 별자리 이야기</SectionLabel>
+          {/* 별자리 이야기 */}
+          <SectionLabel>
+            📖 별자리 이야기
+          </SectionLabel>
+
           <StorySection>
-            {selectedConstellation.story.split('\n').map((paragraph, idx) => (
-              <p key={idx}>{paragraph}</p>
-            ))}
+            {selectedConstellation.mythology ? (
+              selectedConstellation.mythology
+                .split('\n')
+                .map((paragraph, idx) => (
+                  <p key={idx}>
+                    {paragraph}
+                  </p>
+                ))
+            ) : (
+              <p>
+                별자리 이야기가 없습니다.
+              </p>
+            )}
           </StorySection>
+
         </DetailSection>
       </LeftSection>
 
+
+      {/* =========================
+          오른쪽 영역
+      ========================= */}
       <RightSection>
+
+        {/* 검색 */}
         <SearchContainer>
           <SearchInput
             type="text"
             placeholder="별자리를 검색해보세요"
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e) =>
+              setSearchTerm(e.target.value)
+            }
           />
         </SearchContainer>
 
+
+        {/* 별자리 목록 */}
         <ConstellationListContainer>
+
           {filteredConstellations.length > 0 ? (
-            filteredConstellations.map((constellation) => (
-              <ConstellationCard
-                key={constellation.id}
-                $isSelected={selectedId === constellation.id}
-                onClick={() => setSelectedId(constellation.id)}
-              >
-                <ConstellationIcon>✦</ConstellationIcon>
-                <ConstellationInfo>
-                  <ConstellationName>{constellation.name}</ConstellationName>
-                  <ConstellationEnglish>{constellation.englishName}</ConstellationEnglish>
-                </ConstellationInfo>
-              </ConstellationCard>
-            ))
+            filteredConstellations.map(
+              (constellation) => (
+                <ConstellationCard
+                  key={constellation.constellation_id}
+                  $isSelected={
+                    selectedId ===
+                    constellation.constellation_id
+                  }
+                  onClick={async () => {
+                    const id = constellation.constellation_id
+
+                    setSelectedId(id)
+                    setLoadingId(id)
+
+                    try {
+                      const response = await fetch(
+                        `/api/constellation/${id}`
+                      )
+
+                      const data = await response.json()
+
+                      setSelectedConstellation(data)
+
+                    } catch(error) {
+                      console.error(error)
+
+                    } finally {
+                      setLoadingId(null)
+                    }
+                  }}
+                >
+                  <ConstellationIcon>
+                    <img
+                      src={constellation.image_url}
+                      alt={`${constellation.name_ko} 별자리`}
+                    />
+                  </ConstellationIcon>
+
+                  <ConstellationInfo>
+                    <ConstellationName>
+                      {constellation.name_ko}
+                    </ConstellationName>
+
+                    <ConstellationEnglish>
+                      {constellation.name_en}
+                    </ConstellationEnglish>
+                  </ConstellationInfo>
+                  {loadingId === constellation.constellation_id && (
+                    <ConstellationCardLoading>
+                      별자리를 불러오고 있습니다.
+                    </ConstellationCardLoading>
+                  )}
+                </ConstellationCard>
+              )
+            )
           ) : (
-            <EmptyState>검색 결과가 없습니다</EmptyState>
+            <EmptyState>
+              검색 결과가 없습니다
+            </EmptyState>
           )}
+
         </ConstellationListContainer>
+
       </RightSection>
+
     </PageWrapper>
   )
 }
+
 
 export default ConstellationInfoPage

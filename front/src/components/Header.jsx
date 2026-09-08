@@ -1,6 +1,9 @@
-import { useNavigate } from 'react-router-dom'
-import { Sparkles } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
+import { Sparkles, Menu, X } from 'lucide-react'
 import { logoutAPI } from '../api/auth'
+import { getMyTitlesAPI } from '../api/title'
+import { getTitleTier } from '../utils/titleTier'
 import {
   HeaderWrapper,
   HeaderContainer,
@@ -10,16 +13,71 @@ import {
   NavButton,
   AuthButtonsGroup,
   AuthButton,
+  HamburgerButton,
+  MobileMenuOverlay,
+  MobileMenu,
+  MobileMenuClose,
+  MobileMenuList,
+  MobileMenuItem,
+  MobileAuthButtons,
+  MobileMenuUserInfo,
+  UserIdentity,
+  UserNameText,
+  UserTitleText,
 } from './styles/Header.styles'
 
 function Header() {
   const navigate = useNavigate()
+  const location = useLocation()
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [selectedTitle, setSelectedTitle] = useState(null)
 
-  const handleLogoClick = () => navigate('/')
+  const isActive = (path) => location.pathname === path
+
+  const handleLogoClick = () => {
+    navigate('/')
+    setMobileMenuOpen(false)
+  }
 
   // 1. 로컬 스토리지에서 로그인된 유저 정보 가져오기
   const userString = localStorage.getItem('user')
   const user = userString ? JSON.parse(userString) : null
+
+  useEffect(() => {
+    let active = true
+    const accessToken = localStorage.getItem('accessToken')
+
+    const loadSelectedTitle = async () => {
+      if (!user || !accessToken) {
+        setSelectedTitle(null)
+        return
+      }
+
+      try {
+        const result = await getMyTitlesAPI(accessToken)
+        if (active) {
+          setSelectedTitle(result.titles?.find(title => title.selected) || null)
+        }
+      } catch {
+        if (active) setSelectedTitle(null)
+      }
+    }
+
+    const handleSelectedTitleChange = event => {
+      setSelectedTitle(event.detail || null)
+    }
+
+    loadSelectedTitle()
+    window.addEventListener('astra:selected-title-changed', handleSelectedTitleChange)
+    return () => {
+      active = false
+      window.removeEventListener('astra:selected-title-changed', handleSelectedTitleChange)
+    }
+  }, [userString])
+
+  const selectedTitleTier = selectedTitle
+    ? getTitleTier(selectedTitle.id).key
+    : 'common'
 
   // 2. 로그아웃 핸들러 (백엔드 쿠키 삭제 + 로컬 스토리지 삭제)
   const handleLogout = async () => {
@@ -30,11 +88,41 @@ function Header() {
     } finally {
       localStorage.removeItem('accessToken')
       localStorage.removeItem('user')
+      sessionStorage.removeItem('fortuneResult')
+      sessionStorage.removeItem('fortuneConversationId')
       alert('로그아웃 되었습니다.')
+      setMobileMenuOpen(false)
       navigate('/')
       window.location.reload() // 화면 상태 갱신을 위해 새로고침
     }
   }
+
+  const handleMobileNavigation = (path) => {
+    navigate(path)
+    setMobileMenuOpen(false)
+  }
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 768) {
+        setMobileMenuOpen(false)
+      }
+    }
+
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  if (!sessionStorage.getItem('sessionActive')) {
+  
+  const isRemembered = localStorage.getItem('isRemembered') === 'true';
+  
+  if (!isRemembered) {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('user');
+  }
+  }
+  sessionStorage.setItem('sessionActive', 'true');
 
   return (
     <HeaderWrapper>
@@ -58,9 +146,12 @@ function Header() {
           {user ? (
             // 로그인 상태일 때 표시할 UI
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-              <span style={{ fontSize: '0.9rem', color: '#e2e8f0' }}>
-                <strong style={{ color: '#a78bfa' }}>{user.name}</strong>님
-              </span>
+              <UserIdentity>
+                <UserNameText>{user.name}님</UserNameText>
+                {selectedTitle && (
+                  <UserTitleText $tier={selectedTitleTier}>✦ {selectedTitle.name}</UserTitleText>
+                )}
+              </UserIdentity>
               <AuthButton $variant="outline" onClick={handleLogout}>
                 로그아웃
               </AuthButton>
@@ -77,7 +168,77 @@ function Header() {
             </>
           )}
         </AuthButtonsGroup>
+
+        <HamburgerButton onClick={() => setMobileMenuOpen(true)}>
+          <Menu size={24} />
+        </HamburgerButton>
       </HeaderContainer>
+
+      <MobileMenuOverlay isOpen={mobileMenuOpen} onClick={() => setMobileMenuOpen(false)} />
+
+      <MobileMenu isOpen={mobileMenuOpen}>
+        <MobileMenuClose onClick={() => setMobileMenuOpen(false)}>
+          <X size={24} />
+        </MobileMenuClose>
+
+        {user && (
+          <MobileMenuUserInfo>
+            <UserIdentity $mobile>
+              <UserNameText>{user.name}님</UserNameText>
+              {selectedTitle && (
+                <UserTitleText $tier={selectedTitleTier}>✦ {selectedTitle.name}</UserTitleText>
+              )}
+            </UserIdentity>
+          </MobileMenuUserInfo>
+        )}
+
+        <MobileMenuList>
+          <MobileMenuItem $active={isActive('/')} onClick={() => handleMobileNavigation('/')}>메인</MobileMenuItem>
+          <MobileMenuItem $active={isActive('/constellation-find')} onClick={() => handleMobileNavigation('/constellation-find')}>
+            별자리 찾기
+          </MobileMenuItem>
+          <MobileMenuItem $active={isActive('/constellation-location')} onClick={() => handleMobileNavigation('/constellation-location')}>
+            별자리 위치 찾기
+          </MobileMenuItem>
+          <MobileMenuItem $active={isActive('/constellation-info')} onClick={() => handleMobileNavigation('/constellation-info')}>
+            별자리 정보
+          </MobileMenuItem>
+          <MobileMenuItem $active={isActive('/constellation-catalog')} onClick={() => handleMobileNavigation('/constellation-catalog')}>
+            도감
+          </MobileMenuItem>
+          <MobileMenuItem $active={isActive('/fortune-reading')} onClick={() => handleMobileNavigation('/fortune-reading')}>
+            운세
+          </MobileMenuItem>
+          <MobileMenuItem $active={isActive('/mypage')} onClick={() => handleMobileNavigation('/mypage')}>
+            마이 페이지
+          </MobileMenuItem>
+        </MobileMenuList>
+
+        <MobileAuthButtons>
+          {user ? (
+            <AuthButton $variant="primary" onClick={handleLogout} style={{ width: '100%' }}>
+              로그아웃
+            </AuthButton>
+          ) : (
+            <>
+              <AuthButton
+                $variant="outline"
+                onClick={() => handleMobileNavigation('/login')}
+                style={{ width: '100%' }}
+              >
+                로그인
+              </AuthButton>
+              <AuthButton
+                $variant="primary"
+                onClick={() => handleMobileNavigation('/signup')}
+                style={{ width: '100%' }}
+              >
+                회원가입
+              </AuthButton>
+            </>
+          )}
+        </MobileAuthButtons>
+      </MobileMenu>
     </HeaderWrapper>
   )
 }

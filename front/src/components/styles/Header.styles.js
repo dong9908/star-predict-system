@@ -1,5 +1,11 @@
 import styled from 'styled-components'
 
+const titleTextColors = {
+  common: '#7dd3fc',
+  rare: '#d8b4fe',
+  legendary: '#fcd34d',
+}
+
 export const HeaderWrapper = styled.header`
   border-bottom: 1px solid rgba(30, 41, 59, 0.8);
   background: rgba(15, 23, 42, 0.5);
@@ -17,6 +23,10 @@ export const HeaderContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  @media (max-width: 768px) {
+    padding: 0 1rem;
+  }
 `
 
 export const Logo = styled.div`
@@ -36,6 +46,10 @@ export const LogoText = styled.span`
   font-weight: 700;
   letter-spacing: 0.125rem;
   color: white;
+
+  @media (max-width: 768px) {
+    font-size: 1.1rem;
+  }
 `
 
 export const Nav = styled.nav`
@@ -45,6 +59,10 @@ export const Nav = styled.nav`
   font-size: 0.875rem;
   font-weight: 500;
   color: #cbd5e1;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
 `
 
 export const NavButton = styled.button`
@@ -65,6 +83,36 @@ export const AuthButtonsGroup = styled.div`
   display: flex;
   align-items: center;
   gap: 0.75rem;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+`
+
+export const UserIdentity = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: ${props => props.$mobile ? 'flex-start' : 'flex-end'};
+  gap: 0.15rem;
+  min-width: 0;
+`
+
+export const UserNameText = styled.span`
+  color: #a78bfa;
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.2;
+`
+
+export const UserTitleText = styled.span`
+  max-width: 150px;
+  overflow: hidden;
+  color: ${props => titleTextColors[props.$tier] || titleTextColors.common};
+  font-size: 0.68rem;
+  font-weight: 600;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `
 
 export const AuthButton = styled.button`
@@ -100,4 +148,123 @@ export const AuthButton = styled.button`
       `
     }
   }}
+`
+
+export const HamburgerButton = styled.button`
+  display: none;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  transition: color 150ms ease-in-out;
+
+  &:hover {
+    color: #a855f7;
+  }
+
+  @media (max-width: 768px) {
+    display: block;
+  }
+`
+
+export const MobileMenuOverlay = styled.div`
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  opacity: 0;
+  transition: opacity 300ms ease-in-out;
+
+  @media (max-width: 768px) {
+    display: ${props => (props.isOpen ? 'block' : 'none')};
+    opacity: ${props => (props.isOpen ? 1 : 0)};
+  }
+`
+
+export const MobileMenu = styled.div`
+  display: none;
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 80%;
+  max-width: 300px;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(12px);
+  transform: translateX(${props => (props.isOpen ? '0' : '100%')});
+  transition: transform 300ms ease-in-out;
+  z-index: 1000;
+  padding: 1.5rem;
+  overflow-y: auto;
+
+  @media (max-width: 768px) {
+    display: block;
+  }
+`
+
+export const MobileMenuClose = styled.button`
+  display: none;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  align-self: flex-end;
+  margin-bottom: 1rem;
+
+  @media (max-width: 768px) {
+    display: block;
+  }
+`
+
+export const MobileMenuList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`
+
+export const MobileMenuItem = styled.button`
+  background: none;
+  border: none;
+  color: ${props => (props.$active ? '#a78bfa' : '#cbd5e1')};
+  font-size: 1rem;
+  font-weight: ${props => (props.$active ? 600 : 500)};
+  cursor: pointer;
+  padding: 1rem 0;
+  text-align: left;
+  transition: all 150ms ease-in-out;
+  border-bottom: 1px solid rgba(30, 41, 59, 0.5);
+  border-left: 3px solid ${props => (props.$active ? '#a78bfa' : 'transparent')};
+  padding-left: ${props => (props.$active ? 'calc(1rem - 3px)' : '1rem')};
+
+  &:hover {
+    color: white;
+  }
+`
+
+export const MobileAuthButtons = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  border-top: 1px solid rgba(30, 41, 59, 0.5);
+  padding-top: 1rem;
+`
+
+export const MobileMenuUserInfo = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(30, 41, 59, 0.5);
+  margin-bottom: 1rem;
+  color: #cbd5e1;
+  font-size: 0.9rem;
 `

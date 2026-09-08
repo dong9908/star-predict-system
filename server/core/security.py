@@ -14,8 +14,21 @@ from models.member import UserModel
 BASE_DIR = Path(__file__).resolve().parents[1]
 load_dotenv(BASE_DIR / ".env")
 
-ACCESS_SECRET = os.getenv("ACCESS_SECRET", "dev-access-secret-key-astra-2026")
-REFRESH_SECRET = os.getenv("REFRESH_SECRET", "dev-refresh-secret-key-astra-2026")
+
+def _required_secret(name: str) -> str:
+    value = os.getenv(name, "").strip()
+    if not value:
+        raise RuntimeError(f"{name} 환경변수가 설정되지 않았습니다.")
+    if len(value) < 32:
+        raise RuntimeError(f"{name}은 32자 이상이어야 합니다.")
+    return value
+
+
+ACCESS_SECRET = _required_secret("ACCESS_SECRET")
+REFRESH_SECRET = _required_secret("REFRESH_SECRET")
+if ACCESS_SECRET == REFRESH_SECRET:
+    raise RuntimeError("ACCESS_SECRET과 REFRESH_SECRET은 서로 달라야 합니다.")
+
 ALGORITHM = os.getenv("ALGORITHM", "HS256")
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "60"))
 REFRESH_TOKEN_EXPIRE_DAYS = int(os.getenv("REFRESH_TOKEN_EXPIRE_DAYS", "7"))

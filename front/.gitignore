@@ -44,3 +44,6 @@ Thumbs.db
 
 # testing
 /coverage
+
+# image
+/public/img/

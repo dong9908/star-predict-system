@@ -8,18 +8,54 @@ export const PageContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+    align-items: flex-start;
+    padding-top: 6rem;
+  }
 `
 
 export const FormWrapper = styled.div`
   width: 100%;
   max-width: 600px;
+
+  @media (max-width: 768px) {
+    max-width: 100%;
+  }
 `
 
 export const PageHeader = styled.div`
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 1rem;
   margin-bottom: 2rem;
+
+  @media (max-width: 768px) {
+    margin-bottom: 1.5rem;
+  }
+`
+
+export const DeleteAccountButton = styled.button`
+  padding: 0.4rem 0.65rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(248, 113, 113, 0.45);
+  background: transparent;
+  color: #fca5a5;
+  font-size: 0.7rem;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:hover {
+    background: rgba(127, 29, 29, 0.25);
+    border-color: #f87171;
+  }
+
+  @media (max-width: 768px) {
+    padding: 0.35rem 0.55rem;
+    font-size: 0.68rem;
+  }
 `
 
 export const BackButton = styled.button`
@@ -41,6 +77,11 @@ export const BackButton = styled.button`
     border-color: rgba(147, 51, 234, 0.8);
     color: #d8b4fe;
   }
+
+  @media (max-width: 768px) {
+    padding: 0.625rem 1rem;
+    font-size: 0.75rem;
+  }
 `
 
 export const PageTitle = styled.h1`
@@ -48,6 +89,10 @@ export const PageTitle = styled.h1`
   font-weight: 700;
   color: white;
   margin: 0;
+
+  @media (max-width: 768px) {
+    font-size: 1.25rem;
+  }
 `
 
 export const FormCard = styled.div`
@@ -55,6 +100,11 @@ export const FormCard = styled.div`
   border-radius: 0.75rem;
   background: rgba(30, 41, 59, 0.6);
   border: 1px solid rgba(147, 51, 234, 0.3);
+
+  @media (max-width: 768px) {
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+  }
 `
 
 export const FormGroup = styled.div`
@@ -66,6 +116,10 @@ export const FormGroup = styled.div`
   &:last-of-type {
     margin-bottom: 0;
   }
+
+  @media (max-width: 768px) {
+    margin-bottom: 1.25rem;
+  }
 `
 
 export const Label = styled.label`
@@ -73,12 +127,22 @@ export const Label = styled.label`
   font-weight: 600;
   color: #cbd5e1;
   text-transform: capitalize;
+
+  @media (max-width: 768px) {
+    font-size: 0.875rem;
+  }
 `
 
 export const InputWrapper = styled.div`
   display: ${props => (props.$flex ? 'flex' : 'block')};
   gap: ${props => (props.$gap ? props.$gap : '0')};
   align-items: ${props => (props.$flex ? 'center' : 'stretch')};
+
+  @media (max-width: 768px) {
+    display: ${props => (props.$flex ? 'flex' : 'block')};
+    flex-direction: column;
+    align-items: stretch;
+  }
 `
 
 export const Input = styled.input`
@@ -91,6 +155,7 @@ export const Input = styled.input`
   font-family: inherit;
   transition: all 150ms ease-in-out;
   flex: ${props => (props.$flex ? props.$flex : '1')};
+  height: auto;
 
   &:focus {
     outline: none;
@@ -105,6 +170,12 @@ export const Input = styled.input`
   &:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+  }
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+    height: 3.5rem;
+    font-size: 1rem;
   }
 `
 
@@ -153,6 +224,7 @@ export const SubmitButton = styled.button`
   cursor: pointer;
   transition: all 150ms ease-in-out;
   margin-top: 2rem;
+  height: auto;
 
   &:hover:not(:disabled) {
     background-color: #a855f7;
@@ -162,6 +234,14 @@ export const SubmitButton = styled.button`
   &:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+  }
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+    height: 3.5rem;
+    font-size: 1rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
   }
 `
 
@@ -211,4 +291,59 @@ export const InfoText = styled.p`
   margin: 0;
   margin-top: 2rem;
   text-align: center;
+`
+
+export const ModalBackdrop = styled.div`
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(2, 6, 23, 0.82);
+`
+
+export const ModalCard = styled.div`
+  width: min(100%, 440px);
+  padding: 2rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(248, 113, 113, 0.4);
+  background: #111827;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+`
+
+export const ModalTitle = styled.h2`
+  margin: 0 0 0.75rem;
+  color: #fecaca;
+  font-size: 1.25rem;
+`
+
+export const ModalDescription = styled.p`
+  margin: 0 0 1.25rem;
+  color: #cbd5e1;
+  font-size: 0.875rem;
+  line-height: 1.65;
+`
+
+export const ModalActions = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+`
+
+export const ModalButton = styled.button`
+  padding: 0.7rem 1rem;
+  border-radius: 0.5rem;
+  border: ${({ $danger }) => ($danger ? 'none' : '1px solid #475569')};
+  background: ${({ $danger }) => ($danger ? '#b91c1c' : 'transparent')};
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 `

@@ -12,6 +12,8 @@ import {
   PrimaryButton,
   SecondaryButton,
   ButtonIcon,
+  ConstellationContainer,
+  ImageSection,
   FeatureGrid,
 } from './styles/MainPage.styles'
 
@@ -31,12 +33,6 @@ function MainPage() {
       description: '현재 위치와 시간 기준으로 별이 있는 정확한 방향과 고도를 확인해요.',
       linkText: '하늘 지도 열기',
     },
-    {
-      number: '03',
-      title: '별자리 정보',
-      description: '88개 별자리의 역사, 밝은 별 정보, 설화 및 신화 도감을 한눈에 조회하세요.',
-      linkText: '별자리 정보 보기',
-    },
   ]
 
   return (
@@ -51,26 +47,16 @@ function MainPage() {
             <Title>
               밤하늘을 올려다보는 순간,<br />별자리가 이야기가 됩니다
             </Title>
-            <ButtonGroup>
-              <PrimaryButton onClick={() => navigate('/constellation-find')}>
-                사진으로 별자리 찾기
-                <ButtonIcon>
-                  <ArrowRight size={16} />
-                </ButtonIcon>
-              </PrimaryButton>
-              <SecondaryButton onClick={() => navigate('/constellation-location')}>
-                내 위치에서 찾아보기
-              </SecondaryButton>
-            </ButtonGroup>
           </HeroContent>
 
-          <div style={{ gridColumn: 'span 5' }}>
-            <ConstellationViewer onCardClick={() => navigate('/constellation-location')} />
-          </div>
+          <ConstellationContainer>
+            <ConstellationViewer/>
+          </ConstellationContainer>
         </HeroGrid>
       </HeroSection>
 
-      {/* Feature Cards Grid */}
+
+      {/* Feature Cards Grid - 2 Columns */}
       <FeatureGrid>
         {features.map((feature) => (
           <FeatureCard
@@ -84,8 +70,6 @@ function MainPage() {
                 navigate('/constellation-find')
               } else if (feature.number === '02') {
                 navigate('/constellation-location')
-              } else if (feature.number === '03') {
-                navigate('/constellation-info')
               }
             }}
           />
