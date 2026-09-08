@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from database.connection import engine, Base
 from routes.member import member_router
 from fortune.router import fortune_router
+from routes.constellation_recognition import constellation_recognition_router
 
 BASE_DIR = Path(__file__).resolve().parent
 load_dotenv(BASE_DIR / ".env")
@@ -32,6 +33,13 @@ app.include_router(member_router, prefix="/api/member", tags=["Auth & Member"])
 
 # 운세 라우터 등록
 app.include_router(fortune_router, prefix="/api/fortune", tags=["Fortune"])
+
+# YOLO 별자리/천체 인식 라우터 등록
+app.include_router(
+    constellation_recognition_router,
+    prefix="/api/constellation",
+    tags=["Constellation Recognition"],
+)
 
 @app.get("/")
 def root():
