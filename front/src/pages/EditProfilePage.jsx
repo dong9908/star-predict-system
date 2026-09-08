@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ChevronLeft, AlertCircle } from 'lucide-react'
+import { deleteMyAccountAPI, getMyInfoAPI, updateMyInfoAPI } from '../api/auth'
 import {
   PageContainer,
   FormWrapper,
@@ -21,6 +22,13 @@ import {
   PasswordRequirements,
   FormDivider,
   InfoText,
+  DeleteAccountButton,
+  ModalBackdrop,
+  ModalCard,
+  ModalTitle,
+  ModalDescription,
+  ModalActions,
+  ModalButton,
 } from './styles/EditProfilePage.styles'
 
 function EditProfilePage() {
@@ -28,6 +36,10 @@ function EditProfilePage() {
   const [isLoading, setIsLoading] = useState(false)
   const [generalError, setGeneralError] = useState('')
   const [successMessage, setSuccessMessage] = useState('')
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false)
+  const [deletePassword, setDeletePassword] = useState('')
+  const [deleteError, setDeleteError] = useState('')
+  const [isDeleting, setIsDeleting] = useState(false)
 
   const [formData, setFormData] = useState({
     name: '',
@@ -50,23 +62,39 @@ function EditProfilePage() {
 
   // 사용자 정보 로드
   useEffect(() => {
-    const userString = localStorage.getItem('user')
-    if (!userString) {
+    const accessToken = localStorage.getItem('accessToken')
+    if (!accessToken) {
       navigate('/login')
       return
     }
 
-    const user = JSON.parse(userString)
-    const [emailPrefix, emailDomain] = user.email ? user.email.split('@') : ['', '']
+    const loadUser = async () => {
+      setIsLoading(true)
+      try {
+        const user = await getMyInfoAPI(accessToken)
+        const [emailPrefix, emailDomain] = user.email ? user.email.split('@') : ['', '']
+        setFormData(prev => ({
+          ...prev,
+          name: user.name || '',
+          birthDate: user.birth_date || user.birthDate || '',
+          emailPrefix: emailPrefix || '',
+          emailDomain: emailDomain || '',
+          phone: user.phone || '',
+        }))
+      } catch (error) {
+        if (error.status === 401) {
+          localStorage.removeItem('accessToken')
+          localStorage.removeItem('user')
+          navigate('/login')
+          return
+        }
+        setGeneralError(error.message || '회원 정보를 불러오지 못했습니다.')
+      } finally {
+        setIsLoading(false)
+      }
+    }
 
-    setFormData(prev => ({
-      ...prev,
-      name: user.name || '',
-      birthDate: user.birthDate || '',
-      emailPrefix: emailPrefix || '',
-      emailDomain: emailDomain || '',
-      phone: user.phone || '',
-    }))
+    loadUser()
   }, [navigate])
 
   // 입력값 변경 처리
@@ -158,38 +186,80 @@ function EditProfilePage() {
     setIsLoading(true)
 
     try {
-      // 실제 API 호출은 여기에 구현
-      // const response = await fetch('/api/users/profile', {
-      //   method: 'PUT',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({
-      //     name: formData.name,
-      //     birthDate: formData.birthDate,
-      //     email: `${formData.emailPrefix}@${formData.emailDomain}`,
-      //     phone: formData.phone,
-      //     ...(formData.password && { password: formData.password }),
-      //   }),
-      // })
+      const accessToken = localStorage.getItem('accessToken')
+      if (!accessToken) {
+        navigate('/login')
+        return
+      }
 
-      // 임시로 localStorage 업데이트
-      const updatedUser = {
-        ...JSON.parse(localStorage.getItem('user')),
+      const result = await updateMyInfoAPI(accessToken, {
         name: formData.name,
         birthDate: formData.birthDate,
         email: `${formData.emailPrefix}@${formData.emailDomain}`,
         phone: formData.phone,
+        ...(formData.password && { password: formData.password }),
+      })
+
+      if (result.accessToken) {
+        localStorage.setItem('accessToken', result.accessToken)
       }
-      localStorage.setItem('user', JSON.stringify(updatedUser))
+      localStorage.setItem('user', JSON.stringify(result.user))
 
       setSuccessMessage('회원 정보가 저장되었습니다')
       setTimeout(() => {
         navigate('/mypage')
       }, 1500)
     } catch (error) {
-      setGeneralError('회원 정보 저장 중 오류가 발생했습니다. 다시 시도해주세요.')
+      if (error.status === 401) {
+        localStorage.removeItem('accessToken')
+        localStorage.removeItem('user')
+        navigate('/login')
+        return
+      }
+      setGeneralError(error.message || '회원 정보 저장 중 오류가 발생했습니다. 다시 시도해주세요.')
       console.error('Error updating profile:', error)
     } finally {
       setIsLoading(false)
+    }
+  }
+
+  const closeDeleteModal = () => {
+    if (isDeleting) return
+    setDeleteModalOpen(false)
+    setDeletePassword('')
+    setDeleteError('')
+  }
+
+  const handleDeleteAccount = async event => {
+    event.preventDefault()
+    if (!deletePassword || isDeleting) return
+
+    const accessToken = localStorage.getItem('accessToken')
+    if (!accessToken) {
+      navigate('/login')
+      return
+    }
+
+    setIsDeleting(true)
+    setDeleteError('')
+    try {
+      await deleteMyAccountAPI(accessToken, deletePassword)
+      localStorage.removeItem('accessToken')
+      localStorage.removeItem('user')
+      sessionStorage.removeItem('fortuneResult')
+      sessionStorage.removeItem('fortuneConversationId')
+      sessionStorage.removeItem('pendingPaymentOrderId')
+      navigate('/', { replace: true })
+    } catch (error) {
+      if (error.status === 401) {
+        localStorage.removeItem('accessToken')
+        localStorage.removeItem('user')
+        navigate('/login')
+        return
+      }
+      setDeleteError(error.message || '회원 탈퇴에 실패했습니다.')
+    } finally {
+      setIsDeleting(false)
     }
   }
 
@@ -201,6 +271,9 @@ function EditProfilePage() {
             <ChevronLeft size={20} />
             돌아가기
           </BackButton>
+          <DeleteAccountButton type="button" onClick={() => setDeleteModalOpen(true)}>
+            회원탈퇴
+          </DeleteAccountButton>
         </PageHeader>
 
         <PageTitle>회원 정보 수정</PageTitle>
@@ -234,11 +307,10 @@ function EditProfilePage() {
               <Label htmlFor="birthDate">생년월일</Label>
               <Input
                 id="birthDate"
-                type="text"
+                type="date"
                 name="birthDate"
                 value={formData.birthDate}
                 onChange={handleChange}
-                placeholder="2000.04.12"
                 disabled={isLoading}
               />
               {errors.birthDate && <ErrorMessage>{errors.birthDate}</ErrorMessage>}
@@ -353,6 +425,39 @@ function EditProfilePage() {
           <InfoText>비밀번호를 입력하지 않으면 기존 비밀번호가 유지됩니다.</InfoText>
         </FormCard>
       </FormWrapper>
+      {deleteModalOpen && (
+        <ModalBackdrop role="presentation" onMouseDown={event => {
+          if (event.target === event.currentTarget) closeDeleteModal()
+        }}>
+          <ModalCard role="dialog" aria-modal="true" aria-labelledby="delete-account-title">
+            <ModalTitle id="delete-account-title">회원탈퇴</ModalTitle>
+            <ModalDescription>
+              탈퇴하면 회원정보와 운세 대화 기록이 영구적으로 삭제됩니다. 계속하려면 현재 비밀번호를 입력해주세요.
+            </ModalDescription>
+            <form onSubmit={handleDeleteAccount}>
+              <Label htmlFor="deletePassword">현재 비밀번호</Label>
+              <Input
+                id="deletePassword"
+                type="password"
+                value={deletePassword}
+                onChange={event => setDeletePassword(event.target.value)}
+                autoComplete="current-password"
+                disabled={isDeleting}
+                autoFocus
+              />
+              {deleteError && <ErrorMessage role="alert">{deleteError}</ErrorMessage>}
+              <ModalActions>
+                <ModalButton type="button" onClick={closeDeleteModal} disabled={isDeleting}>
+                  취소
+                </ModalButton>
+                <ModalButton type="submit" $danger disabled={isDeleting || !deletePassword}>
+                  {isDeleting ? '탈퇴 처리 중...' : '영구 탈퇴'}
+                </ModalButton>
+              </ModalActions>
+            </form>
+          </ModalCard>
+        </ModalBackdrop>
+      )}
     </PageContainer>
   )
 }

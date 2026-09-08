@@ -9,6 +9,7 @@ from database.connection import engine, Base
 from routes.member import member_router
 from routes.constellation import constellation_router
 from routes.constellation_recognition import constellation_recognition_router
+from routes.title import title_router
 from fortune.router import fortune_router
 from payment.router import payment_router
 
@@ -58,6 +59,9 @@ app.include_router(
     prefix="/api/constellation",
     tags=["Constellation Recognition"],
 )
+
+# 칭호 조회 및 획득 조건 라우터
+app.include_router(title_router, prefix="/api/titles", tags=["Titles"])
 
 
 @app.get("/")

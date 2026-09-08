@@ -1,19 +1,28 @@
 from fastapi import APIRouter, Depends, HTTPException, Response, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import IntegrityError
 from datetime import datetime, timezone, timedelta
+from zoneinfo import ZoneInfo
 from jose import JWTError, jwt
 
 from database.connection import get_db
 from models.member import UserModel
-from schemas.member import UserSignupItem, UserLoginItem
+from schemas.member import (
+    UserDeleteItem,
+    UserLoginItem,
+    UserSignupItem,
+    UserUpdateItem,
+)
+from fortune.services.daily_fortune_service import delete_daily_fortune
 from core.security import (
     hash_password,
     verify_password,
     create_access_token,
     create_refresh_token,
     ACCESS_SECRET,
-    ALGORITHM
+    ALGORITHM,
+    get_current_user,
 )
 
 member_router = APIRouter()
@@ -129,6 +138,112 @@ async def get_my_info(
         "role": payload.get("role", "USER"),
         "hasFortuneAccess": user.has_fortune_access,
     }
+
+
+@member_router.put("/me")
+async def update_my_info(
+    item: UserUpdateItem,
+    response: Response,
+    user: UserModel = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    duplicate_email = (
+        db.query(UserModel)
+        .filter(
+            UserModel.email == item.email,
+            UserModel.user_id != user.user_id,
+        )
+        .first()
+    )
+    if duplicate_email:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="이미 사용 중인 이메일입니다.",
+        )
+
+    email_changed = user.email != item.email
+    birth_date_changed = user.birth_date != item.birthDate
+
+    user.email = item.email
+    user.name = item.name
+    user.phone = item.phone
+    user.birth_date = item.birthDate
+    if item.password:
+        user.password_hash = hash_password(item.password)
+
+    if birth_date_changed:
+        today = datetime.now(ZoneInfo("Asia/Seoul")).date()
+        delete_daily_fortune(db, user.user_id, today)
+
+    try:
+        db.commit()
+        db.refresh(user)
+    except IntegrityError as error:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="이미 사용 중인 회원 정보입니다.",
+        ) from error
+    except Exception:
+        db.rollback()
+        raise
+
+    access_token = None
+    if email_changed:
+        role = user.role if hasattr(user, "role") else "USER"
+        access_token = create_access_token(user.email, role)
+        refresh_token = create_refresh_token(user.email, role)
+        response.set_cookie(
+            key="refreshToken",
+            value=refresh_token,
+            httponly=True,
+            samesite="lax",
+            secure=False,
+            max_age=60 * 60 * 24 * 7,
+        )
+
+    return {
+        "message": "회원 정보가 수정되었습니다.",
+        "accessToken": access_token,
+        "user": {
+            "userId": user.user_id,
+            "loginId": user.login_id,
+            "email": user.email,
+            "name": user.name,
+            "birthDate": user.birth_date,
+            "phone": user.phone,
+        },
+    }
+
+
+@member_router.delete("/me", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_my_account(
+    item: UserDeleteItem,
+    response: Response,
+    user: UserModel = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    if not verify_password(item.pwd, user.password_hash):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="비밀번호가 올바르지 않습니다.",
+        )
+
+    try:
+        db.delete(user)
+        db.commit()
+    except Exception:
+        db.rollback()
+        raise
+
+    response.delete_cookie(
+        key="refreshToken",
+        httponly=True,
+        samesite="lax",
+        secure=False,
+    )
+    response.status_code = status.HTTP_204_NO_CONTENT
+    return response
 
 #4. 로그아웃
 @member_router.post("/logout")

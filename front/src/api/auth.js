@@ -66,7 +66,57 @@ export const getMyInfoAPI = async (accessToken) => {
   return response.json(); // { email, name, birth_date, phone, role }
 };
 
-// 6. 별자리 위치 조회
+// 6. 회원 정보 수정
+export const updateMyInfoAPI = async (accessToken, profile) => {
+  const response = await fetch('/api/member/me', {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${accessToken}`,
+    },
+    body: JSON.stringify(profile),
+  });
+
+  const contentType = response.headers.get('content-type') || '';
+  const data = contentType.includes('application/json')
+    ? await response.json()
+    : { detail: await response.text() };
+
+  if (!response.ok) {
+    const detail = Array.isArray(data.detail)
+      ? data.detail.map(item => item.msg).join('\n')
+      : data.detail;
+    const error = new Error(detail || '회원 정보 수정에 실패했습니다.');
+    error.status = response.status;
+    throw error;
+  }
+  return data;
+};
+
+// 7. 회원 탈퇴
+export const deleteMyAccountAPI = async (accessToken, password) => {
+  const response = await fetch('/api/member/me', {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${accessToken}`,
+    },
+    credentials: 'include',
+    body: JSON.stringify({ pwd: password }),
+  });
+
+  if (!response.ok) {
+    const contentType = response.headers.get('content-type') || '';
+    const data = contentType.includes('application/json')
+      ? await response.json()
+      : { detail: await response.text() };
+    const error = new Error(data.detail || '회원 탈퇴에 실패했습니다.');
+    error.status = response.status;
+    throw error;
+  }
+};
+
+// 8. 별자리 위치 조회
 export const getConstellationPositionAPI = async ({
   constellation,
   date,
@@ -100,7 +150,7 @@ export const getConstellationPositionAPI = async ({
   return response.json();
 };
 
-// 7. 별자리 전체 목록 조회
+// 9. 별자리 전체 목록 조회
 export const getConstellationsAPI = async () => {
   const response = await fetch('/api/constellation/', {
     method: 'GET',
