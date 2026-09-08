@@ -17,6 +17,11 @@ class StarModel(Base):
         nullable=True
     )
 
+    proper_ko: Mapped[str | None] = mapped_column(
+        String(100),
+        nullable=True
+    )
+
     ra: Mapped[float | None] = mapped_column(
         Double,
         nullable=True

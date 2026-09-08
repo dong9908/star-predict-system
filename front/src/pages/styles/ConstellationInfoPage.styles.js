@@ -6,8 +6,10 @@ export const PageWrapper = styled.div`
   padding: 2rem;
   background: linear-gradient(135deg, #0f0f2e 0%, #1a0f3d 100%);
   min-height: 100vh;
+  width: 100%;
   max-width: 1800px;
   margin: 0 auto;
+  box-sizing: border-box;
 
   @media (max-width: 1024px) {
     flex-direction: column;
@@ -21,7 +23,9 @@ export const PageWrapper = styled.div`
 `
 
 export const LeftSection = styled.div`
-  flex: 1;
+  flex: 1 1 0;
+  min-width: 0;
+  width: auto;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -33,6 +37,10 @@ export const LeftSection = styled.div`
 `
 
 export const VisualizationPanel = styled.div`
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+
   background: rgba(20, 10, 50, 0.6);
   border: 2px solid #a78bfa;
   border-radius: 12px;
@@ -49,6 +57,15 @@ export const VisualizationPanel = styled.div`
   }
 `
 
+export const ConstellationImage = styled.img`
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  min-width: 0;
+  object-fit: contain;
+`
+
 export const VisualizationCanvas = styled.svg`
   width: 100%;
   height: 100%;
@@ -57,7 +74,9 @@ export const VisualizationCanvas = styled.svg`
 export const ControlButtons = styled.div`
   position: absolute;
   bottom: 1rem;
-  right: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+
   display: flex;
   gap: 0.5rem;
   z-index: 10;
@@ -158,6 +177,8 @@ export const MainStarsContainer = styled.div`
 `
 
 export const StarChip = styled.span`
+  position: relative;
+
   background: rgba(167, 139, 250, 0.15);
   border: 1px solid #a78bfa;
   color: #e2e8f0;
@@ -171,6 +192,39 @@ export const StarChip = styled.span`
     background: rgba(167, 139, 250, 0.3);
     transform: translateY(-2px);
   }
+
+  &::after {
+    content: '밝기는 숫자가 작을수록 밝습니다.';
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 8px);
+    transform: translateX(-50%);
+
+    background: #1e293b;
+    color: #e2e8f0;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: normal;
+    white-space: nowrap;
+
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+
+    transition: opacity 0.2s ease;
+    z-index: 100;
+  }
+
+  &:hover::after {
+    opacity: 1;
+    visibility: visible;
+  }
+`
+
+export const StarEnglish = styled.span`
+  font-size: 0.75rem;
+  color: #a78bfa;
 `
 
 export const ObservationInfo = styled.div`
@@ -223,6 +277,8 @@ export const StorySection = styled.div`
 
 export const RightSection = styled.div`
   flex: 0 0 35%;
+  min-width: 0;
+  width: auto;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -287,6 +343,7 @@ export const ConstellationListContainer = styled.div`
 `
 
 export const ConstellationCard = styled.div`
+  position: relative;
   background: ${props => (props.$isSelected ? 'rgba(167, 139, 250, 0.2)' : 'rgba(167, 139, 250, 0.05)')};
   border: 2px solid ${props => (props.$isSelected ? '#a78bfa' : 'rgba(167, 139, 250, 0.2)')};
   border-radius: 8px;
@@ -310,16 +367,17 @@ export const ConstellationCard = styled.div`
 `
 
 export const ConstellationIcon = styled.div`
-  width: 50px;
-  height: 50px;
-  border-radius: 8px;
-  background: rgba(167, 139, 250, 0.2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5rem;
+  width: 70px;
+  height: 70px;
+  border-radius: 10px;
+  overflow: hidden;
   flex-shrink: 0;
-  color: #a78bfa;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 `
 
 export const ConstellationInfo = styled.div`
@@ -344,4 +402,33 @@ export const EmptyState = styled.div`
   padding: 2rem 1rem;
   color: #a78bfa;
   font-size: 0.95rem;
+`
+
+export const LoadingState = styled.div`
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #a78bfa;
+  font-size: 1rem;
+`
+
+export const ConstellationCardLoading = styled.div`
+  position: absolute;
+  inset: 0;
+
+  background: rgba(0, 0, 0, 0.55);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: white;
+  font-size: 0.95rem;
+  font-weight: 600;
+
+  border-radius: 8px;
+
+  z-index: 10;
 `
