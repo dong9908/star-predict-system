@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends
 
 from database.connection import get_db
 from models.constellation import ConstellationModel
-from models.user_constellation import UserConstellationModel
+from models.discovery import UserConstellationModel
 from models.member import UserModel
 from core.security import get_current_user
 from schemas.constellation import ConstellationRequest
