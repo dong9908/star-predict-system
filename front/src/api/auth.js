@@ -116,3 +116,24 @@ export const getConstellationsAPI = async () => {
 
   return response.json();
 };
+
+// 8. 개인 도감용 별자리 목록 조회
+export const getCatalogMyAPI = async (accessToken) => {
+  const response = await fetch('/api/constellation/catalog/my', {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${accessToken}`,
+    },
+  })
+
+  if (!response.ok) {
+    const errorData = await response.json()
+
+    throw new Error(
+      errorData.detail ||
+      '개인 도감 정보를 불러오는데 실패했습니다.'
+    )
+  }
+
+  return response.json()
+}
