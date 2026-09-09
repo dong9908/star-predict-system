@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { User, Star } from 'lucide-react'
 import TitlePage from './TitlePage'
-import { getTitleTier } from '../utils/titleTier'
 import {
   PageContainer,
   ProfileSection,
@@ -36,7 +35,8 @@ function MyPage() {
   const userString = localStorage.getItem('user')
   const user = userString ? JSON.parse(userString) : null
   const selectedTitle = titleSummary.titles.find(title => title.selected)
-  const selectedTitleTier = selectedTitle ? getTitleTier(selectedTitle.id).key : 'common'
+  const selectedTitleLevel = selectedTitle?.level || 1
+  const isUnavailableTitle = selectedTitle?.id === 121
 
   // 로그인하지 않은 경우 로그인 페이지로 리다이렉트
   if (!user) {
@@ -74,7 +74,11 @@ function MyPage() {
 
         <ProfileInfo>
           <UserName>{user.name}</UserName>
-          <SelectedTitle $selected={Boolean(selectedTitle)} $tier={selectedTitleTier}>
+          <SelectedTitle
+            $selected={Boolean(selectedTitle)}
+            $level={selectedTitleLevel}
+            $unavailable={isUnavailableTitle}
+          >
             {selectedTitle ? `✦ ${selectedTitle.name}` : '대표 칭호를 선택해주세요'}
           </SelectedTitle>
           <ConstellationInfo>

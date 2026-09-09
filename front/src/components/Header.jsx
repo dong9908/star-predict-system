@@ -3,7 +3,6 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { Sparkles, Menu, X } from 'lucide-react'
 import { logoutAPI } from '../api/auth'
 import { getMyTitlesAPI } from '../api/title'
-import { getTitleTier } from '../utils/titleTier'
 import {
   HeaderWrapper,
   HeaderContainer,
@@ -80,9 +79,8 @@ function Header() {
     }
   }, [userString])
 
-  const selectedTitleTier = selectedTitle
-    ? getTitleTier(selectedTitle.id).key
-    : 'common'
+  const selectedTitleLevel = selectedTitle?.level || 1
+  const isUnavailableTitle = selectedTitle?.id === 121
 
   // 2. 로그아웃 핸들러 (백엔드 쿠키 삭제 + 로컬 스토리지 삭제)
   const handleLogout = async () => {
@@ -154,7 +152,9 @@ function Header() {
               <UserIdentity>
                 <UserNameText>{user.name}님</UserNameText>
                 {selectedTitle && (
-                  <UserTitleText $tier={selectedTitleTier}>✦ {selectedTitle.name}</UserTitleText>
+                  <UserTitleText $level={selectedTitleLevel} $unavailable={isUnavailableTitle}>
+                    ✦ {selectedTitle.name}
+                  </UserTitleText>
                 )}
               </UserIdentity>
               <AuthButton $variant="outline" onClick={handleLogout}>
@@ -191,7 +191,9 @@ function Header() {
             <UserIdentity $mobile>
               <UserNameText>{user.name}님</UserNameText>
               {selectedTitle && (
-                <UserTitleText $tier={selectedTitleTier}>✦ {selectedTitle.name}</UserTitleText>
+                <UserTitleText $level={selectedTitleLevel} $unavailable={isUnavailableTitle}>
+                  ✦ {selectedTitle.name}
+                </UserTitleText>
               )}
             </UserIdentity>
           </MobileMenuUserInfo>

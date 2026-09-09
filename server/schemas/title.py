@@ -1,12 +1,13 @@
 from datetime import datetime
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class TitleStatusResponse(BaseModel):
     id: int
     name: str
     description: str | None
+    level: int = Field(ge=1, le=3)
     acquired: bool
     acquiredAt: datetime | None = None
     selected: bool

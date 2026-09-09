@@ -1,9 +1,17 @@
 import styled from 'styled-components'
 
 const titleTextColors = {
-  common: '#7dd3fc',
-  rare: '#d8b4fe',
-  legendary: '#fcd34d',
+  1: '#7dd3fc',
+  2: '#d8b4fe',
+  3: '#fcd34d',
+  unavailable: '#fb7185',
+}
+
+const titleTextGlows = {
+  1: 'rgba(56, 189, 248, 0.68)',
+  2: 'rgba(168, 85, 247, 0.7)',
+  3: 'rgba(245, 158, 11, 0.72)',
+  unavailable: 'rgba(244, 63, 94, 0.72)',
 }
 
 export const HeaderWrapper = styled.header`
@@ -108,10 +116,15 @@ export const UserNameText = styled.span`
 export const UserTitleText = styled.span`
   max-width: 150px;
   overflow: hidden;
-  color: ${props => titleTextColors[props.$tier] || titleTextColors.common};
+  color: ${props => props.$unavailable
+    ? titleTextColors.unavailable
+    : titleTextColors[props.$level] || titleTextColors[1]};
   font-size: 0.68rem;
   font-weight: 600;
   line-height: 1.2;
+  text-shadow: ${props => `0 0 2px ${props.$unavailable
+    ? titleTextGlows.unavailable
+    : titleTextGlows[props.$level] || titleTextGlows[1]}`};
   text-overflow: ellipsis;
   white-space: nowrap;
 `
