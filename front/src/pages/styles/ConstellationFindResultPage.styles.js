@@ -11,7 +11,7 @@ export const PageWrapper = styled.div`
   display: flex;
   gap: 2rem;
   padding: 2rem;
-  background: linear-gradient(135deg, #0f0f2e 0%, #1a0f3d 100%);
+  background: transparent;
   min-height: calc(100vh - 190px);
   max-width: 1800px;
   margin: 0 auto;
@@ -35,8 +35,8 @@ export const LeftSection = styled.div`
 `
 
 export const ImageVisualizationPanel = styled.div`
-  background: rgba(20, 10, 50, 0.6);
-  border: 2px solid #a78bfa;
+  background: rgba(15, 15, 46, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   padding: 1rem;
   height: 560px;
@@ -47,6 +47,10 @@ export const ImageVisualizationPanel = styled.div`
   justify-content: center;
   position: relative;
   overflow: hidden;
+
+  &:hover {
+    border-color: rgba(167, 139, 250, 0.4);
+  }
 
   @media (max-width: 1024px) {
     height: 520px;
@@ -66,10 +70,10 @@ export const EmptyResultCard = styled.section`
   gap: 1rem;
   color: #e2e8f0;
   text-align: center;
-  border: 1px solid rgba(167, 139, 250, 0.42);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 1.25rem;
-  background: linear-gradient(145deg, rgba(20, 10, 50, 0.9), rgba(15, 23, 42, 0.84));
-  box-shadow: 0 24px 70px rgba(15, 5, 40, 0.42);
+  background: rgba(15, 15, 46, 0.6);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.4);
 
   h2 { margin: 0; color: white; font-size: 1.7rem; }
   > p { margin: 0; color: #cbd5e1; line-height: 1.6; }
@@ -100,9 +104,9 @@ export const EmptyTipItem = styled.div`
   align-items: center;
   justify-content: center;
   gap: 0.45rem;
-  border: 1px solid rgba(167, 139, 250, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 0.85rem;
-  background: rgba(167, 139, 250, 0.07);
+  background: rgba(30, 41, 59, 0.4);
 
   span { font-size: 1.55rem; }
   strong { color: #f5f3ff; font-size: 0.9rem; }
@@ -205,7 +209,7 @@ export const ImagePlaceholder = styled.div`
   justify-content: center;
   width: 100%;
   height: 100%;
-  background: rgba(167, 139, 250, 0.1);
+  background: rgba(30, 41, 59, 0.4);
   color: #a78bfa;
   font-size: 3rem;
   border-radius: 8px;
@@ -222,8 +226,8 @@ export const ControlButton = styled.button`
   width: 40px;
   height: 40px;
   border-radius: 8px;
-  border: 1px solid #a78bfa;
-  background: rgba(167, 139, 250, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(30, 41, 59, 0.8);
   color: #a78bfa;
   cursor: pointer;
   font-size: 1.1rem;
@@ -233,7 +237,9 @@ export const ControlButton = styled.button`
   transition: all 0.3s ease;
 
   &:hover {
-    background: rgba(167, 139, 250, 0.4);
+    background: rgba(167, 139, 250, 0.2);
+    border-color: rgba(167, 139, 250, 0.4);
+    color: white;
     transform: scale(1.05);
   }
 
@@ -243,36 +249,39 @@ export const ControlButton = styled.button`
 `
 
 export const DetailSection = styled.div`
-  background: rgba(20, 10, 50, 0.6);
-  border: 2px solid #a78bfa;
+  background: rgba(15, 15, 46, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   padding: 2rem;
   max-height: 400px;
   overflow-y: auto;
+
+  &:hover {
+    border-color: rgba(167, 139, 250, 0.4);
+  }
 
   &::-webkit-scrollbar {
     width: 8px;
   }
 
   &::-webkit-scrollbar-track {
-    background: rgba(167, 139, 250, 0.1);
-    border-radius: 4px;
+    background: transparent;
   }
 
   &::-webkit-scrollbar-thumb {
-    background: rgba(167, 139, 250, 0.4);
+    background: rgba(255, 255, 255, 0.15);
     border-radius: 4px;
 
     &:hover {
-      background: rgba(167, 139, 250, 0.6);
+      background: rgba(255, 255, 255, 0.3);
     }
   }
 `
 
 export const RankBadge = styled.span`
   display: inline-block;
-  background: rgba(167, 139, 250, 0.3);
-  border: 1px solid #a78bfa;
+  background: rgba(167, 139, 250, 0.15);
+  border: 1px solid rgba(167, 139, 250, 0.4);
   color: #a78bfa;
   padding: 0.25rem 0.75rem;
   border-radius: 20px;
@@ -288,7 +297,7 @@ export const ConstellationTitle = styled.div`
 
   h2 {
     font-size: 1.8rem;
-    color: #e2e8f0;
+    color: white;
     margin: 0;
   }
 
@@ -312,7 +321,7 @@ export const SectionLabel = styled.h3`
   margin: 1.5rem 0 0.75rem 0;
   text-transform: uppercase;
   letter-spacing: 1px;
-  border-bottom: 1px solid rgba(167, 139, 250, 0.3);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   padding-bottom: 0.5rem;
 `
 
@@ -324,8 +333,8 @@ export const MainStarsContainer = styled.div`
 `
 
 export const StarChip = styled.span`
-  background: rgba(167, 139, 250, 0.15);
-  border: 1px solid #a78bfa;
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   color: #e2e8f0;
   padding: 0.5rem 1rem;
   border-radius: 20px;
@@ -334,14 +343,16 @@ export const StarChip = styled.span`
   transition: all 0.3s ease;
 
   &:hover {
-    background: rgba(167, 139, 250, 0.3);
+    border-color: rgba(167, 139, 250, 0.4);
+    background: rgba(167, 139, 250, 0.1);
     transform: ${props => (props.$available ? 'translateY(-2px)' : 'none')};
   }
 
   ${props => props.$active && `
     color: white;
-    background: rgba(167, 139, 250, 0.48);
-    box-shadow: 0 0 10px rgba(196, 181, 253, 0.75);
+    background: rgba(167, 139, 250, 0.3);
+    border-color: #a78bfa;
+    box-shadow: 0 0 10px rgba(196, 181, 253, 0.5);
   `}
 `
 
@@ -365,6 +376,9 @@ export const RightSection = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  background: transparent;
+  border: none;
+  padding: 0;
 
   @media (max-width: 1024px) {
     flex: none;
@@ -380,7 +394,7 @@ export const ResultHeader = styled.div`
 
   h2 {
     font-size: 1.5rem;
-    color: #e2e8f0;
+    color: white;
     margin: 0;
   }
 `
@@ -412,12 +426,13 @@ export const ActionButton = styled.button`
     }
   `
       : `
-    background: rgba(167, 139, 250, 0.2);
+    background: rgba(30, 41, 59, 0.8);
     color: #a78bfa;
-    border: 1px solid #a78bfa;
+    border: 1px solid rgba(167, 139, 250, 0.3);
 
     &:hover {
-      background: rgba(167, 139, 250, 0.4);
+      background: rgba(167, 139, 250, 0.2);
+      border-color: #a78bfa;
       transform: translateY(-2px);
     }
   `}
@@ -428,36 +443,39 @@ export const ActionButton = styled.button`
 `
 
 export const ResultListContainer = styled.div`
-  background: rgba(20, 10, 50, 0.6);
-  border: 2px solid #a78bfa;
+  background: rgba(15, 15, 46, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   padding: 1rem;
   max-height: 500px;
   overflow-y: auto;
   flex: 1;
 
+  &:hover {
+    border-color: rgba(167, 139, 250, 0.4);
+  }
+
   &::-webkit-scrollbar {
     width: 8px;
   }
 
   &::-webkit-scrollbar-track {
-    background: rgba(167, 139, 250, 0.1);
-    border-radius: 4px;
+    background: transparent;
   }
 
   &::-webkit-scrollbar-thumb {
-    background: rgba(167, 139, 250, 0.4);
+    background: rgba(255, 255, 255, 0.15);
     border-radius: 4px;
 
     &:hover {
-      background: rgba(167, 139, 250, 0.6);
+      background: rgba(255, 255, 255, 0.3);
     }
   }
 `
 
 export const ResultItem = styled.div`
-  background: ${props => (props.$isSelected ? 'rgba(167, 139, 250, 0.2)' : 'rgba(167, 139, 250, 0.05)')};
-  border: 2px solid ${props => (props.$isSelected ? '#a78bfa' : 'rgba(167, 139, 250, 0.2)')};
+  background: ${props => (props.$isSelected ? 'rgba(167, 139, 250, 0.15)' : 'rgba(30, 41, 59, 0.4)')};
+  border: 1px solid ${props => (props.$isSelected ? '#a78bfa' : 'rgba(255, 255, 255, 0.08)')};
   border-radius: 8px;
   padding: 1.5rem;
   margin-bottom: 1rem;
@@ -468,9 +486,8 @@ export const ResultItem = styled.div`
   gap: 1rem;
 
   &:hover {
-    background: rgba(167, 139, 250, 0.15);
-    border-color: #c084fc;
-    transform: translateX(4px);
+    background: rgba(167, 139, 250, 0.08);
+    border-color: rgba(167, 139, 250, 0.4);
   }
 
   &:last-child {
@@ -482,7 +499,8 @@ export const RankNumber = styled.div`
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background: ${props => (props.$isSelected ? '#a78bfa' : 'rgba(167, 139, 250, 0.2)')};
+  background: ${props => (props.$isSelected ? '#a78bfa' : 'rgba(30, 41, 59, 0.8)')};
+  border: 1px solid ${props => (props.$isSelected ? '#a78bfa' : 'rgba(255, 255, 255, 0.15)')};
   color: ${props => (props.$isSelected ? '#fff' : '#a78bfa')};
   display: flex;
   align-items: center;
@@ -499,7 +517,7 @@ export const ResultInfo = styled.div`
 
 export const ResultName = styled.div`
   font-size: 1.1rem;
-  color: #e2e8f0;
+  color: white;
   font-weight: 600;
   margin-bottom: 0.5rem;
 `
@@ -513,7 +531,7 @@ export const ResultPercentage = styled.div`
 export const PercentageBar = styled.div`
   width: 100%;
   height: 6px;
-  background: rgba(167, 139, 250, 0.2);
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 3px;
   margin-top: 0.5rem;
   overflow: hidden;
@@ -533,24 +551,26 @@ export const ShareModal = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.7);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  backdrop-filter: blur(4px);
 `
 
 export const ShareModalContent = styled.div`
-  background: rgba(20, 10, 50, 0.95);
-  border: 2px solid #a78bfa;
+  background: rgba(15, 15, 46, 0.95);
+  border: 1px solid rgba(167, 139, 250, 0.4);
   border-radius: 12px;
   padding: 2rem;
   max-width: 400px;
   width: 90%;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
 
   h3 {
     font-size: 1.3rem;
-    color: #e2e8f0;
+    color: white;
     margin: 0 0 1.5rem 0;
     text-align: center;
   }
@@ -564,8 +584,8 @@ export const ShareOptions = styled.div`
 
 export const ShareOption = styled.button`
   padding: 1rem;
-  background: rgba(167, 139, 250, 0.1);
-  border: 1px solid #a78bfa;
+  background: rgba(30, 41, 59, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 8px;
   color: #e2e8f0;
   cursor: pointer;
@@ -573,7 +593,9 @@ export const ShareOption = styled.button`
   font-size: 1rem;
 
   &:hover {
-    background: rgba(167, 139, 250, 0.2);
+    background: rgba(167, 139, 250, 0.15);
+    border-color: #a78bfa;
+    color: white;
     transform: translateX(4px);
   }
 `
@@ -582,17 +604,22 @@ export const CloseButton = styled.button`
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  border: 1px solid #a78bfa;
-  background: rgba(167, 139, 250, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(30, 41, 59, 0.8);
   color: #a78bfa;
   font-size: 1.5rem;
   cursor: pointer;
   position: absolute;
   top: 1rem;
   right: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: all 0.3s ease;
 
   &:hover {
-    background: rgba(167, 139, 250, 0.4);
+    background: rgba(167, 139, 250, 0.2);
+    border-color: #a78bfa;
+    color: white;
   }
 `
