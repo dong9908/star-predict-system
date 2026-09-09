@@ -167,7 +167,25 @@ export const getConstellationsAPI = async () => {
   return response.json();
 };
 
-// 10. 개인 도감용 별자리 목록 조회
+// 10. 별자리 간략 목록 조회
+export const getConstellationCatalogAPI = async () => {
+  const response = await fetch('/api/constellation/catalog', {
+    method: 'GET',
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+
+    throw new Error(
+      errorData.detail ||
+      '별자리 간략 목록을 불러오는데 실패했습니다.'
+    );
+  }
+
+  return response.json();
+};
+
+// 11. 개인 도감용 별자리 목록 조회
 export const getCatalogMyAPI = async (accessToken) => {
   const response = await fetch('/api/constellation/catalog/my', {
     method: 'GET',

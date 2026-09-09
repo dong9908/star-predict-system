@@ -183,6 +183,45 @@ export const FilterButton = styled.button`
   }
 `
 
+export const DifficultyFilterButton = styled(FilterButton)`
+  color: ${props => {
+    if (props.$active) return 'white'
+
+    if (props.$difficulty === '1') return '#3b82f6'
+    if (props.$difficulty === '2') return '#22c55e'
+    if (props.$difficulty === '3') return '#eab308'
+    if (props.$difficulty === '4') return '#ef4444'
+
+    return '#cbd5e1'
+  }};
+
+  background: ${props =>
+    props.$active
+      ? (
+          props.$difficulty === '1' ? '#3b82f6' :
+          props.$difficulty === '2' ? '#22c55e' :
+          props.$difficulty === '3' ? '#eab308' :
+          props.$difficulty === '4' ? '#ef4444' :
+          '#a78bfa'
+        )
+      : 'rgba(30, 41, 59, 0.8)'
+  };
+
+  border-color: ${props =>
+    props.$active
+      ? '#a78bfa'
+      : 'rgba(167, 139, 250, 0.3)'
+  };
+
+  &:hover {
+    border-color: #a78bfa;
+
+    background: ${props =>
+      !props.$active && 'rgba(167, 139, 250, 0.1)'
+    };
+  }
+`
+
 export const SearchBar = styled.div`
   position: relative;
 `

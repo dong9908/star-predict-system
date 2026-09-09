@@ -388,19 +388,18 @@ function ConstellationFindResultPage() {
       </LeftSection>
 
       <RightSection>
-        <ResultHeader>
-          <h2>분석 결과</h2>
-          <ActionButtons>
-            <ActionButton $variant="outline" onClick={() => setShowShareModal(true)}>
-              공유하기
-            </ActionButton>
-            <ActionButton $variant="primary" onClick={handleReanalyze}>
-              새로 분석하기
-            </ActionButton>
-          </ActionButtons>
-        </ResultHeader>
-
         <ResultListContainer>
+          <ResultHeader>
+            <h2>분석 결과</h2>
+            <ActionButtons>
+              <ActionButton $variant="outline" onClick={() => setShowShareModal(true)}>
+                공유하기
+              </ActionButton>
+              <ActionButton $variant="primary" onClick={handleReanalyze}>
+                새로 분석하기
+              </ActionButton>
+            </ActionButtons>
+          </ResultHeader>
           {liveResults.map((result) => (
             <ResultItem
               key={result.rank}

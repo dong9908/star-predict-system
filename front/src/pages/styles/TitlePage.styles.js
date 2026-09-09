@@ -3,27 +3,35 @@ import styled from 'styled-components'
 const tierColors = {
   common: {
     border: 'rgba(56, 189, 248, 0.58)',
-    background: 'linear-gradient(135deg, rgba(8, 47, 73, 0.72), rgba(15, 23, 42, 0.92))',
+    background: 'radial-gradient(ellipse at 78% 12%, rgba(56, 189, 248, 0.3) 0%, rgba(8, 145, 178, 0.13) 25%, transparent 49%), radial-gradient(ellipse at 28% 92%, rgba(34, 211, 238, 0.2) 0%, transparent 42%), linear-gradient(128deg, #020617 0%, #082f49 48%, #07111f 70%, #020617 100%)',
     color: '#7dd3fc',
     accent: 'linear-gradient(90deg, #38bdf8, #22d3ee)',
     badge: 'linear-gradient(135deg, rgba(14, 165, 233, 0.3), rgba(34, 211, 238, 0.16))',
-    glow: '0 8px 24px rgba(8, 145, 178, 0.1), inset 0 1px 0 rgba(125, 211, 252, 0.08)',
+    glow: '0 8px 22px rgba(2, 6, 23, 0.36), 0 0 7px rgba(56, 189, 248, 0.07), inset 0 1px 0 rgba(125, 211, 252, 0.09)',
   },
   rare: {
     border: 'rgba(168, 85, 247, 0.65)',
-    background: 'linear-gradient(135deg, rgba(76, 29, 149, 0.6), rgba(80, 7, 36, 0.42), rgba(15, 23, 42, 0.94))',
+    background: 'radial-gradient(ellipse at 78% 12%, rgba(236, 72, 153, 0.3) 0%, rgba(126, 34, 206, 0.15) 26%, transparent 50%), radial-gradient(ellipse at 28% 92%, rgba(139, 92, 246, 0.25) 0%, transparent 43%), linear-gradient(128deg, #090313 0%, #3b0764 46%, #500724 61%, #08020f 100%)',
     color: '#d8b4fe',
     accent: 'linear-gradient(90deg, #8b5cf6, #ec4899)',
     badge: 'linear-gradient(135deg, rgba(139, 92, 246, 0.38), rgba(236, 72, 153, 0.22))',
-    glow: '0 10px 30px rgba(147, 51, 234, 0.15), inset 0 1px 0 rgba(244, 114, 182, 0.1)',
+    glow: '0 8px 23px rgba(2, 6, 23, 0.38), 0 0 7px rgba(168, 85, 247, 0.08), inset 0 1px 0 rgba(244, 114, 182, 0.09)',
   },
   legendary: {
     border: 'rgba(245, 158, 11, 0.72)',
-    background: 'linear-gradient(135deg, rgba(120, 53, 15, 0.62), rgba(113, 63, 18, 0.38), rgba(15, 23, 42, 0.94))',
+    background: 'radial-gradient(ellipse at 78% 12%, rgba(253, 224, 71, 0.3) 0%, rgba(245, 158, 11, 0.15) 25%, transparent 49%), radial-gradient(ellipse at 28% 92%, rgba(249, 115, 22, 0.24) 0%, transparent 43%), linear-gradient(128deg, #0c0701 0%, #78350f 47%, #713f12 61%, #090501 100%)',
     color: '#fcd34d',
     accent: 'linear-gradient(90deg, #f59e0b, #fde047, #f97316)',
     badge: 'linear-gradient(135deg, rgba(245, 158, 11, 0.38), rgba(249, 115, 22, 0.22))',
-    glow: '0 12px 34px rgba(245, 158, 11, 0.18), inset 0 1px 0 rgba(254, 240, 138, 0.13)',
+    glow: '0 9px 24px rgba(2, 6, 23, 0.4), 0 0 8px rgba(245, 158, 11, 0.09), inset 0 1px 0 rgba(254, 240, 138, 0.1)',
+  },
+  unavailable: {
+    border: 'rgba(248, 38, 70, 0.9)',
+    background: 'radial-gradient(ellipse at 78% 12%, rgba(255, 82, 103, 0.34) 0%, rgba(127, 29, 29, 0.16) 24%, transparent 48%), radial-gradient(ellipse at 32% 88%, rgba(190, 18, 60, 0.3) 0%, transparent 44%), linear-gradient(128deg, #020203 0%, #100306 34%, #35070e 51%, #0d0204 68%, #000 100%)',
+    color: '#fecdd3',
+    accent: 'linear-gradient(90deg, #050000, #7f1d1d, #fff1f2, #e11d48, #050000)',
+    badge: 'linear-gradient(135deg, rgba(127, 29, 29, 0.9), rgba(15, 0, 3, 0.96))',
+    glow: '0 9px 24px rgba(0, 0, 0, 0.46), 0 0 8px rgba(225, 29, 72, 0.1), inset 0 1px 0 rgba(255, 228, 230, 0.09)',
   },
 }
 
