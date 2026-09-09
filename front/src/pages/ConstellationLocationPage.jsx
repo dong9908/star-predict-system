@@ -232,15 +232,35 @@ function ConstellationLocationPage() {
     }
   }
 
-  // 관측 값 포맷팅 (관측 불가 상태 처리)
-  const formatObservationValue = (value) => {
-    if (value === null || value === undefined || value === -999 || searchResult?.observable === '현재 관측 불가') {
+  // 고도 표시
+  const formatAltitude = (altitude) => {
+    if (altitude === null || altitude === undefined) {
       return '관측 불가'
     }
-    if (typeof value === 'number') {
-      return `${value.toFixed(2)}°`
+
+    if (altitude < 0) {
+      return '관측 불가'
     }
-    return value
+
+    if (altitude < 5) {
+      return '지평선근처'
+    }
+
+    return `${altitude.toFixed(2)}°`
+  }
+
+  // 방향 표시
+  const formatDirection = (direction, altitude) => {
+    if (
+      !direction ||
+      altitude === null ||
+      altitude === undefined ||
+      altitude < 0
+    ) {
+      return '관측 불가'
+    }
+
+    return direction
   }
 
   const selectedConstellations = constellations.filter(
@@ -449,14 +469,14 @@ function ConstellationLocationPage() {
                   <ResultRow>
                     <ResultLabel>고도 (Altitude)</ResultLabel>
                     <ResultValue>
-                      {formatObservationValue(searchResult.altitude)}
+                      {formatAltitude(searchResult.altitude)}
                     </ResultValue>
                   </ResultRow>
 
                   <ResultRow>
                     <ResultLabel>방향 (Direction)</ResultLabel>
                     <ResultValue>
-                      {formatObservationValue(searchResult.direction)}
+                      {formatDirection(searchResult.direction, searchResult.altitude)}
                     </ResultValue>
                   </ResultRow>
 
