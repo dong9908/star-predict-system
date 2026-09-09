@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { analysisResults } from '../data/analysisResults'
+import { registerConstellation } from '../api/constellation'
 import {
   PageWrapper,
   ResultPageShell,
@@ -26,6 +26,7 @@ import {
   SectionLabel,
   MainStarsContainer,
   StarChip,
+  StarEnglish,
   StorySection,
   RightSection,
   ResultHeader,
@@ -35,8 +36,10 @@ import {
   ResultItem,
   RankNumber,
   ResultInfo,
+  ResultNameRow,
   ResultName,
   ResultPercentage,
+  CatalogRegisterButton,
   PercentageBar,
   PercentageFill,
   ShareModal,
@@ -73,6 +76,8 @@ function ConstellationFindResultPage() {
   const [isDragging, setIsDragging] = useState(false)
   const [activeStar, setActiveStar] = useState(null)
   const [flashToken, setFlashToken] = useState(0)
+  const [registeredIds, setRegisteredIds] = useState(() => new Set())
+  const [registeringId, setRegisteringId] = useState(null)
   const dragStartRef = useRef({ pointerX: 0, pointerY: 0, panX: 0, panY: 0 })
   const flashTimerRef = useRef(null)
   const [imageUrl] = useState(() => {
@@ -93,23 +98,29 @@ function ConstellationFindResultPage() {
       ? verifiedStructures.map((overlay, index) => ({
           rank: index + 1,
           name: overlay.name,
-          englishName: overlay.candidate,
+          englishName: overlay.englishName || overlay.candidate,
           percentage: overlay.score,
           detectedObjects: [],
           resultSource: 'WCS 구조 검증',
+          description: overlay.description,
+          mainStars: overlay.mainStars,
+          story: overlay.story,
+          detailsSource: overlay.detailsSource,
+          constellationId: overlay.constellationId,
+          registrationEligible: overlay.registrationEligible,
         }))
       : (analysis?.results || [])
     return sourceResults.map((result) => {
-      const details = analysisResults.find((item) => item.englishName === result.englishName)
       const detectedObjects = result.detectedObjects || []
       return {
-        ...details,
         ...result,
-        description: details?.description || (result.resultSource
+        description: result.description || (result.resultSource
           ? `${result.resultSource}을 통해 확인된 별자리입니다.`
           : `${detectedObjects.join(', ')} 검출 결과`),
-        mainStars: details?.mainStars || detectedObjects.map((name) => ({ ko: name, en: name })),
-        story: details?.story || '업로드한 사진의 별 좌표와 공식 별자리 연결선을 비교한 결과입니다.',
+        mainStars: result.mainStars?.length
+          ? result.mainStars
+          : detectedObjects.map((name) => ({ ko: name, en: name })),
+        story: result.story || '업로드한 사진의 별 좌표와 공식 별자리 연결선을 비교한 결과입니다.',
       }
     })
   }, [analysis])
@@ -149,6 +160,27 @@ function ConstellationFindResultPage() {
 
   const handleReanalyze = () => {
     navigate('/constellation-find')
+  }
+
+  const handleCatalogRegistration = async (event, result) => {
+    event.stopPropagation()
+    const accessToken = localStorage.getItem('accessToken')
+    const user = localStorage.getItem('user')
+    if (!accessToken || !user) {
+      alert('로그인 해주세요.')
+      return
+    }
+    if (!result.registrationEligible || !result.constellationId || registeringId) return
+    try {
+      setRegisteringId(result.constellationId)
+      const response = await registerConstellation(result.constellationId, accessToken)
+      setRegisteredIds((previous) => new Set(previous).add(result.constellationId))
+      alert(response.message)
+    } catch (error) {
+      alert(error.message || '도감 등록에 실패했습니다.')
+    } finally {
+      setRegisteringId(null)
+    }
   }
 
   const handleZoomOut = () => {
@@ -270,8 +302,8 @@ function ConstellationFindResultPage() {
                     {overlays.map((overlay, overlayIndex) => {
                       const color = overlayColors[overlayIndex % overlayColors.length]
                       const points = Object.fromEntries(overlay.points.map((point) => [point.id, point]))
-                      const details = analysisResults.find((item) => item.englishName === overlay.candidate)
-                      const majorIds = new Set((details?.mainStars || []).map((star) => star.hip).filter(Boolean))
+                      const majorStars = overlay.mainStars || []
+                      const majorIds = new Set(majorStars.map((star) => star.hip).filter(Boolean))
                       return (
                         <g key={`${overlay.iau}-${overlayIndex}`}>
                           {overlay.edges.map((edge, edgeIndex) => {
@@ -333,9 +365,14 @@ function ConstellationFindResultPage() {
               const available = Boolean(star.hip && availableStarIds.has(star.hip))
               const active = activeStar?.hip === star.hip && activeStar?.iau === selectedOverlay?.iau
               return (
-              <StarChip key={idx} $available={available} $active={active} onClick={() => handleStarClick(star)}
-                title={available ? `${star.ko}을 사진에서 강조` : '현재 사진 영역에서 확인되지 않은 별입니다.'}>
-                {star.ko} <span style={{ fontSize: '0.75rem', opacity: 0.7 }}>({star.en})</span>
+              <StarChip key={idx} $available={available} $active={active} onClick={() => handleStarClick(star)}>
+                {star.ko}{' '}
+                <StarEnglish>({star.en})</StarEnglish>
+                {star.magnitude != null && (
+                  <span style={{ fontSize: '0.75rem', opacity: 0.7 }}>
+                    {' '}(밝기 {star.magnitude})
+                  </span>
+                )}
               </StarChip>
               )
             })}
@@ -372,12 +409,25 @@ function ConstellationFindResultPage() {
             >
               <RankNumber $isSelected={selectedRank === result.rank}>{result.rank}</RankNumber>
               <ResultInfo>
-                <ResultName>{result.name}</ResultName>
+                <ResultNameRow>
+                  <ResultName>{result.name}</ResultName>
+                  <ResultPercentage>{result.percentage}%</ResultPercentage>
+                </ResultNameRow>
                 <PercentageBar>
                   <PercentageFill $percentage={result.percentage} />
                 </PercentageBar>
               </ResultInfo>
-              <ResultPercentage>{result.percentage}%</ResultPercentage>
+              <CatalogRegisterButton
+                type="button"
+                $registered={registeredIds.has(result.constellationId)}
+                disabled={!result.registrationEligible || registeringId === result.constellationId || registeredIds.has(result.constellationId)}
+                onClick={(event) => handleCatalogRegistration(event, result)}
+                title={result.registrationEligible ? '발견한 별자리를 도감에 등록합니다.' : '이 결과는 도감 등록 조건을 충족하지 않습니다.'}
+              >
+                {registeredIds.has(result.constellationId)
+                  ? '등록 완료'
+                  : registeringId === result.constellationId ? '등록 중...' : '도감 등록'}
+              </CatalogRegisterButton>
             </ResultItem>
           ))}
         </ResultListContainer>

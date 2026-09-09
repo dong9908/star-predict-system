@@ -20,3 +20,17 @@ export async function recognizeConstellation(image) {
 
   return response.json()
 }
+
+export async function registerConstellation(constellationId, accessToken) {
+  const response = await fetch(`/api/constellation/catalog/${constellationId}`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  })
+  const data = await response.json().catch(() => ({}))
+  if (!response.ok) {
+    throw new Error(data.detail || '도감 등록에 실패했습니다.')
+  }
+  return data
+}
