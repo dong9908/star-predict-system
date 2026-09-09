@@ -32,7 +32,12 @@ function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [selectedTitle, setSelectedTitle] = useState(null)
 
-  const isActive = (path) => location.pathname === path
+  const isActive = (path) => {
+    if (path === '/') return location.pathname === '/'
+    return location.pathname === path
+      || location.pathname.startsWith(`${path}/`)
+      || location.pathname.startsWith(`${path}-`)
+  }
 
   const handleLogoClick = () => {
     navigate('/')
@@ -133,13 +138,13 @@ function Header() {
         </Logo>
 
         <Nav>
-          <NavButton onClick={() => navigate('/')}>메인</NavButton>
-          <NavButton onClick={() => navigate('/constellation-find')}>별자리 찾기</NavButton>
-          <NavButton onClick={() => navigate('/constellation-location')}>별자리 위치</NavButton>
-          <NavButton onClick={() => navigate('/constellation-info')}>별자리 정보</NavButton>
-          <NavButton onClick={() => navigate('/constellation-catalog')}>도감</NavButton>
-          <NavButton onClick={() => navigate('/fortune-reading')}>운세</NavButton>
-          <NavButton onClick={() => navigate('/mypage')}>마이 페이지</NavButton>
+          <NavButton $active={isActive('/')} onClick={() => navigate('/')}>메인</NavButton>
+          <NavButton $active={isActive('/constellation-find')} onClick={() => navigate('/constellation-find')}>별자리 찾기</NavButton>
+          <NavButton $active={isActive('/constellation-location')} onClick={() => navigate('/constellation-location')}>별자리 위치</NavButton>
+          <NavButton $active={isActive('/constellation-info')} onClick={() => navigate('/constellation-info')}>별자리 정보</NavButton>
+          <NavButton $active={isActive('/constellation-catalog')} onClick={() => navigate('/constellation-catalog')}>도감</NavButton>
+          <NavButton $active={isActive('/fortune-reading')} onClick={() => navigate('/fortune-reading')}>운세</NavButton>
+          <NavButton $active={isActive('/mypage')} onClick={() => navigate('/mypage')}>마이 페이지</NavButton>
         </Nav>
 
         <AuthButtonsGroup>
