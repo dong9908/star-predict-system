@@ -1,12 +1,15 @@
 import styled from 'styled-components'
 
 const selectedTitleColors = {
-  common: { border: '#38bdf8', background: 'linear-gradient(135deg, rgba(14, 116, 144, 0.32), rgba(34, 211, 238, 0.12))', text: '#7dd3fc' },
-  rare: { border: '#a855f7', background: 'linear-gradient(135deg, rgba(107, 33, 168, 0.36), rgba(236, 72, 153, 0.16))', text: '#e9d5ff' },
-  legendary: { border: '#f59e0b', background: 'linear-gradient(135deg, rgba(146, 64, 14, 0.42), rgba(249, 115, 22, 0.18))', text: '#fde68a' },
+  1: { border: '#38bdf8', background: 'radial-gradient(ellipse at 75% 20%, rgba(56, 189, 248, 0.34), transparent 42%), linear-gradient(135deg, #020617, #082f49 52%, #07111f)', text: '#7dd3fc', glow: 'rgba(56, 189, 248, 0.48)' },
+  2: { border: '#a855f7', background: 'radial-gradient(ellipse at 75% 20%, rgba(236, 72, 153, 0.3), transparent 42%), linear-gradient(135deg, #090313, #3b0764 52%, #500724)', text: '#e9d5ff', glow: 'rgba(168, 85, 247, 0.5)' },
+  3: { border: '#f59e0b', background: 'radial-gradient(ellipse at 75% 20%, rgba(253, 224, 71, 0.32), transparent 42%), linear-gradient(135deg, #0c0701, #78350f 52%, #713f12)', text: '#fde68a', glow: 'rgba(245, 158, 11, 0.52)' },
+  unavailable: { border: '#f82646', background: 'radial-gradient(ellipse at 75% 20%, rgba(244, 63, 94, 0.36), transparent 42%), linear-gradient(135deg, #020203, #35070e 52%, #080102)', text: '#fecdd3' },
 }
 
-const getSelectedTitleColor = tier => selectedTitleColors[tier] || selectedTitleColors.common
+const getSelectedTitleColor = (level, unavailable) => (
+  unavailable ? selectedTitleColors.unavailable : selectedTitleColors[level] || selectedTitleColors[1]
+)
 
 export const PageContainer = styled.div`
   width: 100%;
@@ -65,19 +68,21 @@ export const SelectedTitle = styled.div`
   width: fit-content;
   padding: 0.35rem 0.75rem;
   border: 1px solid ${props => props.$selected
-    ? getSelectedTitleColor(props.$tier).border
+    ? getSelectedTitleColor(props.$level, props.$unavailable).border
     : 'rgba(148, 163, 184, 0.3)'};
   border-radius: 9999px;
   background: ${props => props.$selected
-    ? getSelectedTitleColor(props.$tier).background
+    ? getSelectedTitleColor(props.$level, props.$unavailable).background
     : 'rgba(30, 41, 59, 0.45)'};
   color: ${props => props.$selected
-    ? getSelectedTitleColor(props.$tier).text
+    ? getSelectedTitleColor(props.$level, props.$unavailable).text
     : '#94a3b8'};
   font-size: 0.82rem;
   font-weight: 600;
   box-shadow: ${props => props.$selected
-    ? `0 0 18px ${getSelectedTitleColor(props.$tier).border}22`
+    ? props.$unavailable
+      ? '0 0 4px rgba(248, 38, 70, 0.16), inset 0 1px 0 rgba(255, 228, 230, 0.09)'
+      : `0 0 3px ${getSelectedTitleColor(props.$level, false).glow}, inset 0 1px 0 rgba(255, 255, 255, 0.07)`
     : 'none'};
 `
 

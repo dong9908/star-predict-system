@@ -3,7 +3,6 @@ import { CheckCircle, Lock, Trophy } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
 import { evaluateMyTitlesAPI, getMyTitlesAPI, selectMyTitleAPI } from '../api/title'
-import { getTitleTier } from '../utils/titleTier'
 import {
   AcquiredDate,
   EmptyMessage,
@@ -25,6 +24,12 @@ import {
   TitleTierBadge,
   SelectButton,
 } from './styles/TitlePage.styles'
+
+const TITLE_LEVELS = {
+  1: { key: 'common', label: '일반' },
+  2: { key: 'rare', label: '희귀' },
+  3: { key: 'legendary', label: '전설' },
+}
 
 function TitlePage({ onDataLoaded }) {
   const navigate = useNavigate()
@@ -126,7 +131,9 @@ function TitlePage({ onDataLoaded }) {
 
       <TitleGrid>
         {titles.map(title => {
-          const tier = getTitleTier(title.id)
+          const tier = title.id === 121
+            ? { key: 'unavailable', label: '특수 전설' }
+            : TITLE_LEVELS[title.level] || TITLE_LEVELS[1]
           return (
           <TitleCard key={title.id} $acquired={title.acquired} $tier={tier.key}>
             <StatusIcon $acquired={title.acquired} $tier={tier.key}>
