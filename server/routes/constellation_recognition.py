@@ -1,4 +1,5 @@
 from fastapi import APIRouter, File, HTTPException, UploadFile, status
+from starlette.concurrency import run_in_threadpool
 
 from services.constellation_recognition import recognize
 
@@ -23,7 +24,9 @@ async def recognize_constellation(image: UploadFile = File(...)):
         )
     try:
         suffix = ".png" if image.content_type == "image/png" else ".jpg"
-        return recognize(content, suffix=suffix, filename=image.filename or "")
+        return await run_in_threadpool(
+            recognize, content, suffix=suffix, filename=image.filename or ""
+        )
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     except FileNotFoundError as exc:
