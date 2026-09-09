@@ -46,23 +46,7 @@ OBJECT_TO_GROUP = {
     "Jupiter": ("Jupiter", "목성", "planet"),
 }
 
-IAU_TO_ENGLISH = {
-    "Aur": "Auriga",
-    "Gem": "Gemini",
-    "Ori": "Orion",
-    "Tau": "Taurus",
-    "Eri": "Eridanus",
-    "Sco": "Scorpius",
-}
-
-IAU_TO_KOREAN = {
-    "Tau": "황소자리",
-    "Gem": "쌍둥이자리",
-    "Ori": "오리온자리",
-    "Aur": "마차부자리",
-    "Eri": "에리다누스자리",
-    "Sco": "전갈자리",
-}
+HYG_CATALOG = PROJECT_ROOT / "Constellation" / "HYG-Database-main" / "hyg" / "CURRENT" / "hygdata_v41.csv"
 
 
 def find_known_wcs(content: bytes, filename: str) -> Path | None:
@@ -219,12 +203,12 @@ def overlay_from_selected(selected: list[dict], verified: bool) -> list[dict]:
             for hip, value in matches.items()
         ]
         iau = str(candidate.get("iau") or "")
-        native = str(candidate.get("native_name") or IAU_TO_ENGLISH.get(iau, iau))
+        native = str(candidate.get("native_name") or iau)
         overlays.append({
             "rank": rank,
             "status": "verified" if verified else "candidate",
             "candidate": native,
-            "name": IAU_TO_KOREAN.get(iau, native),
+            "name": native,
             "iau": iau,
             "score": round(float(candidate.get("score") or 0), 1),
             "confidence": candidate.get("confidence", "high" if verified else "medium"),
@@ -265,6 +249,140 @@ def run_wcs_overlay(content: bytes, suffix: str, wcs_path: Path) -> list[dict]:
             return []
         payload = json.loads(result_path.read_text(encoding="utf-8"))
         return overlay_from_selected(payload.get("selected") or [], verified=True)
+
+
+@lru_cache(maxsize=1)
+def proper_name_to_hip() -> dict[str, int]:
+    """Map DB/HYG proper names to HIP ids used by the browser overlay."""
+    if not HYG_CATALOG.is_file():
+        return {}
+    mapping: dict[str, int] = {}
+    with HYG_CATALOG.open("r", encoding="utf-8-sig", newline="") as file:
+        for row in csv.DictReader(file):
+            proper = str(row.get("proper") or "").strip().casefold()
+            hip = str(row.get("hip") or "").strip()
+            if proper and hip:
+                try:
+                    mapping[proper] = int(float(hip))
+                except ValueError:
+                    continue
+    return mapping
+
+
+def load_constellation_details(iau_codes: set[str], english_names: set[str]) -> dict[str, dict]:
+    """Read localized constellation details and bright named stars from MySQL."""
+    if not iau_codes and not english_names:
+        return {}
+
+    from database.connection import SessionLocal
+    from models.constellation import ConstellationModel
+    from models.star import StarModel
+    from sqlalchemy import or_
+
+    lookup_codes = set(iau_codes)
+    if "Ser" in lookup_codes:
+        lookup_codes.update({"SerH", "SerT"})
+    db = SessionLocal()
+    try:
+        constellations = (
+            db.query(ConstellationModel)
+            .filter(or_(
+                ConstellationModel.abbreviation.in_(lookup_codes),
+                ConstellationModel.name_en.in_(english_names),
+            ))
+            .all()
+        )
+        star_codes = {
+            "Ser" if row.abbreviation in {"SerH", "SerT"} else row.abbreviation
+            for row in constellations
+        }
+        stars = (
+            db.query(StarModel)
+            .filter(StarModel.con.in_(star_codes))
+            .filter(StarModel.proper.isnot(None), StarModel.proper != "")
+            .filter(StarModel.mag.isnot(None))
+            .order_by(StarModel.con.asc(), StarModel.mag.asc())
+            .all()
+        )
+    finally:
+        db.close()
+
+    hip_by_name = proper_name_to_hip()
+    stars_by_code: dict[str, list[dict]] = {}
+    for star in stars:
+        bucket = stars_by_code.setdefault(str(star.con), [])
+        if len(bucket) >= 3:
+            continue
+        english = str(star.proper or "").strip()
+        bucket.append({
+            "ko": str(star.proper_ko or english),
+            "en": english,
+            "hip": hip_by_name.get(english.casefold()),
+            "magnitude": round(float(star.mag), 2),
+        })
+
+    details: dict[str, dict] = {}
+    for row in sorted(constellations, key=lambda item: item.abbreviation):
+        is_serpens = row.abbreviation in {"SerH", "SerT"}
+        iau = "Ser" if is_serpens else row.abbreviation
+        star_code = "Ser" if is_serpens else row.abbreviation
+        payload = {
+            "constellationId": row.constellation_id,
+            "name": "뱀자리" if is_serpens else row.name_ko,
+            "englishName": "Serpens" if is_serpens else row.name_en,
+            "abbreviation": iau,
+            "description": row.description,
+            "story": row.mythology or "등록된 별자리 이야기가 없습니다.",
+            "difficulty": row.difficulty,
+            "imageUrl": row.image_url,
+            "mainStars": stars_by_code.get(star_code, []),
+            "detailsSource": "database",
+        }
+        details.setdefault(iau, payload)
+        details.setdefault(str(row.name_en).casefold(), payload)
+        if is_serpens:
+            details.setdefault("serpens", payload)
+    return details
+
+
+def enrich_recognition_results(rankings: list[dict], overlays: list[dict]) -> None:
+    iau_codes = {str(item.get("iau") or "") for item in overlays} - {""}
+    english_names = {
+        str(item.get("englishName") or item.get("candidate") or "")
+        for item in [*rankings, *overlays]
+    } - {""}
+    try:
+        details = load_constellation_details(iau_codes, english_names)
+    except Exception:
+        # Recognition remains usable while the DB is temporarily unavailable.
+        return
+    for item in [*rankings, *overlays]:
+        key = str(item.get("iau") or "")
+        detail = details.get(key) or details.get(
+            str(item.get("englishName") or item.get("candidate") or "").casefold()
+        )
+        if detail:
+            item.update(detail)
+            if "candidate" in item:
+                item["candidate"] = detail["englishName"]
+
+
+def mark_registration_eligibility(results: list[dict]) -> None:
+    """Apply the catalog-registration rule to one recognition result set."""
+    if not results:
+        return
+    if len(results) == 1:
+        results[0]["registrationEligible"] = bool(results[0].get("constellationId"))
+        return
+    has_eighty_or_more = any(float(item.get("score", item.get("percentage", 0))) >= 80 for item in results)
+    highest_index = max(
+        range(len(results)),
+        key=lambda index: float(results[index].get("score", results[index].get("percentage", 0))),
+    )
+    for index, item in enumerate(results):
+        percentage = float(item.get("score", item.get("percentage", 0)))
+        meets_score_rule = percentage >= 80 if has_eighty_or_more else index == highest_index
+        item["registrationEligible"] = meets_score_rule and bool(item.get("constellationId"))
 
 
 def model_path() -> Path:
@@ -361,7 +479,7 @@ def run_graph_matching(content: bytes, suffix: str, yolo_results: list[dict]) ->
             }
             for hip, row in mappings.items()
         ]
-        candidate_english = IAU_TO_ENGLISH.get(str(best.get("iau")), str(best.get("native_name") or ""))
+        candidate_english = str(best.get("native_name") or best.get("iau") or "")
         yolo_names = {str(row.get("englishName")) for row in yolo_results}
         confidence = str(matching.get("decision", {}).get("confidence") or "low")
         agrees = candidate_english in yolo_names
@@ -388,6 +506,15 @@ def recognize(
     image = decode_image(content)
     portable_result = find_portable_result(content)
     if portable_result is not None:
+        enrich_recognition_results(
+            portable_result.get("results") or [],
+            portable_result.get("graphOverlays") or [],
+        )
+        registration_results = (
+            [item for item in (portable_result.get("graphOverlays") or []) if item.get("verified")]
+            or (portable_result.get("results") or [])
+        )
+        mark_registration_eligibility(registration_results)
         return portable_result
     model = load_model()
     prediction = model.predict(source=image, imgsz=640, conf=confidence, verbose=False)[0]
@@ -444,6 +571,9 @@ def recognize(
     verified_overlays = run_wcs_overlay(content, suffix, resolved_wcs) if resolved_wcs else []
     graph_overlay = run_graph_matching(content, suffix, rankings) if not verified_overlays else {}
     graph_overlays = verified_overlays or ([graph_overlay] if graph_overlay.get("points") else [])
+    enrich_recognition_results(rankings, graph_overlays)
+    registration_results = [item for item in graph_overlays if item.get("verified")] or rankings
+    mark_registration_eligibility(registration_results)
     return {
         "model": str(model_path()),
         "image": {"width": width, "height": height},

@@ -1,7 +1,8 @@
 import numpy as np
 
 from sqlalchemy.orm import Session
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.exc import IntegrityError
 
 from database.connection import get_db
 from models.constellation import ConstellationModel
@@ -193,6 +194,65 @@ def get_catalog_my(
         })
 
     return result
+
+
+@constellation_router.post("/catalog/{constellation_id}")
+def register_catalog_constellation(
+    constellation_id: int,
+    current_user: UserModel = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    constellation = (
+        db.query(ConstellationModel)
+        .filter(ConstellationModel.constellation_id == constellation_id)
+        .first()
+    )
+    if constellation is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="등록할 별자리 정보를 찾을 수 없습니다.",
+        )
+
+    existing = (
+        db.query(UserConstellationModel)
+        .filter(
+            UserConstellationModel.user_id == current_user.user_id,
+            UserConstellationModel.constellation_id == constellation_id,
+        )
+        .first()
+    )
+    if existing is not None:
+        return {
+            "registered": False,
+            "already_registered": True,
+            "constellation_id": constellation_id,
+            "message": "이미 도감에 등록된 별자리입니다.",
+        }
+
+    discovery = UserConstellationModel(
+        user_id=current_user.user_id,
+        constellation_id=constellation_id,
+    )
+    db.add(discovery)
+    try:
+        db.commit()
+        db.refresh(discovery)
+    except IntegrityError:
+        db.rollback()
+        return {
+            "registered": False,
+            "already_registered": True,
+            "constellation_id": constellation_id,
+            "message": "이미 도감에 등록된 별자리입니다.",
+        }
+
+    return {
+        "registered": True,
+        "already_registered": False,
+        "constellation_id": constellation_id,
+        "discovered_at": discovery.discovered_at,
+        "message": f"{constellation.name_ko}을(를) 도감에 등록했습니다.",
+    }
 
 # 별자리 전체 목록 조회
 @constellation_router.get("/")

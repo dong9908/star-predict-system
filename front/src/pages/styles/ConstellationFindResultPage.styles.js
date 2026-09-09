@@ -348,12 +348,42 @@ export const StarChip = styled.span`
     transform: ${props => (props.$available ? 'translateY(-2px)' : 'none')};
   }
 
+  &::after {
+    content: '밝기는 숫자가 작을수록 밝습니다.';
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 8px);
+    transform: translateX(-50%);
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    background: #1e293b;
+    color: #e2e8f0;
+    font-size: 0.75rem;
+    font-weight: normal;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    z-index: 100;
+  }
+
+  &:hover::after {
+    opacity: 1;
+    visibility: visible;
+  }
+
   ${props => props.$active && `
     color: white;
     background: rgba(167, 139, 250, 0.3);
     border-color: #a78bfa;
     box-shadow: 0 0 10px rgba(196, 181, 253, 0.5);
   `}
+`
+
+export const StarEnglish = styled.span`
+  font-size: 0.75rem;
+  color: #a78bfa;
 `
 
 export const StorySection = styled.div`
@@ -511,17 +541,49 @@ export const ResultInfo = styled.div`
   min-width: 0;
 `
 
+export const ResultNameRow = styled.div`
+  display: flex;
+  align-items: baseline;
+  gap: 0.65rem;
+  min-width: 0;
+`
+
 export const ResultName = styled.div`
   font-size: 1.1rem;
   color: white;
   font-weight: 600;
-  margin-bottom: 0.5rem;
 `
 
 export const ResultPercentage = styled.div`
-  font-size: 1.5rem;
+  font-size: 1rem;
   color: #a78bfa;
   font-weight: 700;
+  white-space: nowrap;
+`
+
+export const CatalogRegisterButton = styled.button`
+  min-width: 86px;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid ${props => (props.$registered ? '#34d399' : '#a78bfa')};
+  border-radius: 8px;
+  background: ${props => (props.$registered ? 'rgba(52, 211, 153, 0.15)' : 'rgba(167, 139, 250, 0.18)')};
+  color: ${props => (props.$registered ? '#6ee7b7' : '#c4b5fd')};
+  font-size: 0.82rem;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 150ms ease, border-color 150ms ease, color 150ms ease;
+
+  &:hover:not(:disabled) {
+    background: rgba(167, 139, 250, 0.35);
+    border-color: #c4b5fd;
+    color: white;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: ${props => (props.$registered ? 1 : 0.4)};
+  }
 `
 
 export const PercentageBar = styled.div`

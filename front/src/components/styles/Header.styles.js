@@ -76,11 +76,12 @@ export const Nav = styled.nav`
 export const NavButton = styled.button`
   background: none;
   border: none;
-  color: #cbd5e1;
+  color: ${props => (props.$active ? '#a78bfa' : '#cbd5e1')};
   font-size: 0.875rem;
-  font-weight: 500;
+  font-weight: ${props => (props.$active ? 700 : 500)};
   cursor: pointer;
-  transition: color 150ms ease-in-out;
+  transition: color 150ms ease-in-out, text-shadow 150ms ease-in-out;
+  text-shadow: ${props => (props.$active ? '0 0 12px rgba(167, 139, 250, 0.55)' : 'none')};
 
   &:hover {
     color: white;
