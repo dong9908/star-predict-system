@@ -9,6 +9,7 @@ import sys
 import tempfile
 import hashlib
 import csv
+import threading
 from functools import lru_cache
 from io import BytesIO
 from pathlib import Path
@@ -28,6 +29,11 @@ DEFAULT_MODEL = (
     / "best.pt"
 )
 PORTABLE_RESULT_ROOT = Path(__file__).resolve().parents[1] / "assets" / "constellation_results"
+REALTIME_PLATE_SOLVER = PROJECT_ROOT / "Constellation" / "scripts" / "48_realtime_plate_solve.py"
+REALTIME_PLATE_ROOT = (
+    PROJECT_ROOT / "Constellation" / "data" / "results" / "realtime_plate_solving"
+)
+_PLATE_SOLVE_LOCK = threading.Lock()
 
 OBJECT_TO_GROUP = {
     "Pleiades": ("Taurus", "황소자리", "constellation"),
@@ -89,7 +95,108 @@ def find_portable_result(content: bytes) -> dict | None:
     payload = json.loads(result_path.read_text(encoding="utf-8"))
     payload["model"] = "portable-sha256-cache"
     payload["matchedBy"] = "sha256"
+    payload.setdefault("plateSolving", {
+        "status": "success" if payload.get("wcsVerified") else "unavailable",
+        "cached": True,
+        "aiUsed": False,
+        "source": "portable-sha256-cache",
+    })
     return payload
+
+
+def _read_realtime_plate_result(result_path: Path, was_cached: bool) -> tuple[dict, Path | None]:
+    try:
+        result = json.loads(result_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {
+            "status": "unavailable",
+            "cached": was_cached,
+            "message": "Plate Solving 결과를 읽지 못했습니다.",
+        }, None
+
+    artifact = str(result.get("artifacts", {}).get("wcs") or "")
+    wcs_path = Path(artifact) if artifact else None
+    if wcs_path is not None and not wcs_path.is_absolute():
+        wcs_path = REALTIME_PLATE_ROOT / wcs_path
+    if result.get("status") != "success" or wcs_path is None or not wcs_path.is_file():
+        failure = result.get("failure") or {}
+        return {
+            "status": "failed",
+            "cached": was_cached,
+            "imageSha256": result.get("image_sha256"),
+            "elapsedSeconds": result.get("elapsed_seconds"),
+            "backend": result.get("backend"),
+            "aiUsed": False,
+            "errorType": failure.get("error_type"),
+            "message": failure.get("message") or "Plate Solving으로 좌표를 확정하지 못했습니다.",
+        }, None
+    return {
+        "status": "success",
+        "cached": was_cached,
+        "imageSha256": result.get("image_sha256"),
+        "elapsedSeconds": result.get("elapsed_seconds"),
+        "backend": result.get("backend"),
+        "aiUsed": False,
+        "solution": result.get("solution") or {},
+        "message": "WCS 천구 좌표를 확인했습니다.",
+    }, wcs_path
+
+
+def run_realtime_plate_solving(content: bytes, suffix: str) -> tuple[dict, Path | None]:
+    """Resolve an upload with stage 48, reusing its filename-independent SHA cache."""
+    image_hash = hashlib.sha256(content).hexdigest().lower()
+    result_path = REALTIME_PLATE_ROOT / image_hash / "result.json"
+    with _PLATE_SOLVE_LOCK:
+        if result_path.is_file():
+            return _read_realtime_plate_result(result_path, was_cached=True)
+        if not REALTIME_PLATE_SOLVER.is_file():
+            return {
+                "status": "unavailable",
+                "cached": False,
+                "imageSha256": image_hash,
+                "aiUsed": False,
+                "message": "48번 Plate Solving 스크립트가 없습니다.",
+            }, None
+
+        timeout_seconds = max(30, int(os.getenv("PLATE_SOLVE_TIMEOUT_SECONDS", "90")))
+        scale_lower = float(os.getenv("PLATE_SOLVE_SCALE_LOWER", "20"))
+        scale_upper = float(os.getenv("PLATE_SOLVE_SCALE_UPPER", "120"))
+        distribution = os.getenv("PLATE_SOLVE_WSL_DISTRIBUTION", "Ubuntu")
+        with tempfile.TemporaryDirectory(prefix="astra_plate_upload_") as temporary:
+            image_path = Path(temporary) / f"{image_hash}{suffix}"
+            image_path.write_bytes(content)
+            command = [
+                sys.executable, str(REALTIME_PLATE_SOLVER), str(image_path),
+                "--output-dir", str(REALTIME_PLATE_ROOT),
+                "--timeout-seconds", str(timeout_seconds),
+                "--scale-lower", str(scale_lower), "--scale-upper", str(scale_upper),
+                "--wsl-distribution", distribution,
+            ]
+            try:
+                completed = subprocess.run(
+                    command, cwd=PROJECT_ROOT / "Constellation", capture_output=True,
+                    text=True, encoding="utf-8", errors="replace",
+                    timeout=timeout_seconds + 45, check=False,
+                )
+            except subprocess.TimeoutExpired:
+                return {
+                    "status": "failed",
+                    "cached": False,
+                    "imageSha256": image_hash,
+                    "aiUsed": False,
+                    "errorType": "TimeoutError",
+                    "message": f"Plate Solving이 {timeout_seconds + 45}초를 초과했습니다.",
+                }, None
+        if result_path.is_file():
+            return _read_realtime_plate_result(result_path, was_cached=False)
+        return {
+            "status": "unavailable",
+            "cached": False,
+            "imageSha256": image_hash,
+            "aiUsed": False,
+            "errorType": "PlateSolverProcessError",
+            "message": (completed.stderr.strip() or completed.stdout.strip())[-1000:],
+        }, None
 
 
 def overlay_from_selected(selected: list[dict], verified: bool) -> list[dict]:
@@ -326,7 +433,15 @@ def recognize(
         item["percentage"] = round(item.pop("confidence") * 100, 1)
 
     cached_wcs = find_known_wcs(content, filename)
-    verified_overlays = run_wcs_overlay(content, suffix, cached_wcs) if cached_wcs else []
+    if cached_wcs:
+        plate_solving = {
+            "status": "success", "cached": True, "aiUsed": False,
+            "source": "legacy-wcs-cache", "message": "기존 WCS 천구 좌표를 확인했습니다.",
+        }
+        resolved_wcs = cached_wcs
+    else:
+        plate_solving, resolved_wcs = run_realtime_plate_solving(content, suffix)
+    verified_overlays = run_wcs_overlay(content, suffix, resolved_wcs) if resolved_wcs else []
     graph_overlay = run_graph_matching(content, suffix, rankings) if not verified_overlays else {}
     graph_overlays = verified_overlays or ([graph_overlay] if graph_overlay.get("points") else [])
     return {
@@ -338,5 +453,12 @@ def recognize(
         "graphOverlay": graph_overlays[0] if graph_overlays else graph_overlay,
         "graphOverlays": graph_overlays,
         "wcsVerified": bool(verified_overlays),
-        "message": "천체 후보를 찾았습니다." if rankings else "학습된 8개 천체 후보를 찾지 못했습니다.",
+        "plateSolving": plate_solving,
+        "message": (
+            "WCS 좌표로 별자리 구조를 확인했습니다."
+            if verified_overlays else
+            "천체 후보를 찾았습니다."
+            if rankings else
+            "학습된 8개 천체 후보를 찾지 못했습니다."
+        ),
     }
