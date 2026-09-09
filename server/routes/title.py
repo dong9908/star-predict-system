@@ -26,6 +26,7 @@ def _to_response(status) -> TitleStatusResponse:
         id=status.id,
         name=status.name,
         description=status.description,
+        level=status.level,
         acquired=status.acquired,
         acquiredAt=status.acquired_at,
         selected=status.selected,

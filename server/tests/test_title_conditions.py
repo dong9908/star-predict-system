@@ -43,6 +43,7 @@ _BOUNDARY_CASES = [
         (15, {"mythology_count": 19}, {"mythology_count": 20}),
         (16, {"longest_consecutive_days": 6}, {"longest_consecutive_days": 7}),
         (17, {"discoveries_by_date": {date(2026, 9, 1): 2}}, {"discoveries_by_date": {date(2026, 9, 1): 3}}),
+        (121, {"discovered_by_difficulty": {}}, {"discovered_by_difficulty": {"관측불가": 1}}),
 ]
 
 

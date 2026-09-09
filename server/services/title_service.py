@@ -37,6 +37,7 @@ class UserTitleStatus:
     id: int
     name: str
     description: str | None
+    level: int
     acquired: bool
     acquired_at: datetime | None
     selected: bool
@@ -173,6 +174,7 @@ def get_qualified_title_ids(
         15: stats.mythology_count >= 20,
         16: stats.longest_consecutive_days >= 7,
         17: same_day_maximum >= 3,
+        121: stats.discovered_by_difficulty.get("관측불가", 0) >= 1,
     }
 
     return frozenset(
@@ -258,6 +260,7 @@ def list_user_title_statuses(
             id=title.id,
             name=title.name,
             description=title.description,
+            level=title.level,
             acquired=user_title is not None,
             acquired_at=(
                 user_title.acquired_at
