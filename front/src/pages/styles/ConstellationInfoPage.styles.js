@@ -5,15 +5,19 @@ export const PageWrapper = styled.div`
   gap: 2rem;
   padding: 2rem;
   background: linear-gradient(135deg, #0f0f2e 0%, #1a0f3d 100%);
-  min-height: 100vh;
+  height: 100vh;
   width: 100%;
   max-width: 1800px;
   margin: 0 auto;
   box-sizing: border-box;
+  align-items: stretch;
 
   @media (max-width: 1024px) {
     flex-direction: column;
     gap: 1.5rem;
+    height: auto;
+    min-height: 100vh;
+    align-items: flex-start;
   }
 
   @media (max-width: 768px) {
@@ -29,10 +33,13 @@ export const LeftSection = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  height: 100%;
 
   @media (max-width: 1024px) {
     flex: none;
     width: 100%;
+    height: auto;
+    order: 2;
   }
 `
 
@@ -46,6 +53,7 @@ export const VisualizationPanel = styled.div`
   border-radius: 12px;
   padding: 2rem;
   height: 400px;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -54,6 +62,7 @@ export const VisualizationPanel = styled.div`
 
   @media (max-width: 1024px) {
     height: 300px;
+    flex-shrink: 1;
   }
 `
 
@@ -111,8 +120,9 @@ export const DetailSection = styled.div`
   border: 2px solid #a78bfa;
   border-radius: 12px;
   padding: 2rem;
-  max-height: 400px;
   overflow-y: auto;
+  flex: 1;
+  min-height: 0;
 
   &::-webkit-scrollbar {
     width: 8px;
@@ -282,10 +292,13 @@ export const RightSection = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  height: 100%;
 
   @media (max-width: 1024px) {
     flex: none;
     width: 100%;
+    height: auto;
+    order: 1;
   }
 `
 
@@ -319,9 +332,9 @@ export const ConstellationListContainer = styled.div`
   border: 2px solid #a78bfa;
   border-radius: 12px;
   padding: 1rem;
-  max-height: 600px;
   overflow-y: auto;
   flex: 1;
+  min-height: 0;
 
   &::-webkit-scrollbar {
     width: 8px;
