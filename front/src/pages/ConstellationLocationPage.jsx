@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Check } from 'lucide-react'
 import {
   PageContainer,
@@ -25,7 +26,14 @@ import {
   ConstellationNoResult,
   ConstellationImageBox,
   ConstellationImage,
-  HighlightText,
+  ResultContainer,
+  ResultRow,
+  ResultLabel,
+  ResultValue,
+  ResultActionWrapper,
+  InfoLinkButton,
+  BottomButtonWrapper,
+  FortuneButton,
 } from './styles/ConstellationLocationPage.styles'
 
 import {
@@ -34,6 +42,8 @@ import {
 } from '../api/auth'
 
 function ConstellationLocationPage() {
+  const navigate = useNavigate()
+
   const [formData, setFormData] = useState({
     constellation: '',
     date: '',
@@ -46,6 +56,7 @@ function ConstellationLocationPage() {
   const [useCurrentTime, setUseCurrentTime] = useState(false)
   const [searchCompleted, setSearchCompleted] = useState(false)
   const [searchResult, setSearchResult] = useState(null)
+  const [showSuggestions, setShowSuggestions] = useState(false)
 
   const [constellations, setConstellations] = useState([])
   const [showConstellationList, setShowConstellationList] = useState(false)
@@ -72,9 +83,13 @@ function ConstellationLocationPage() {
       ...prev,
       [name]: value,
     }))
+
+    if (name === 'constellation') {
+      setShowSuggestions(true)
+    }
   }
 
-  // 별자리 검색
+  // 별자리 검색 필터
   const filteredConstellations = constellations.filter(
     (constellation) =>
       constellation.name_ko.includes(
@@ -123,15 +138,12 @@ function ConstellationLocationPage() {
           case error.PERMISSION_DENIED:
             alert('위치 정보 사용 권한이 거부되었습니다.')
             break
-
           case error.POSITION_UNAVAILABLE:
             alert('현재 위치 정보를 가져올 수 없습니다.')
             break
-
           case error.TIMEOUT:
             alert('위치 정보 요청 시간이 초과되었습니다.')
             break
-
           default:
             alert('위치 정보를 가져오는 중 오류가 발생했습니다.')
         }
@@ -161,7 +173,6 @@ function ConstellationLocationPage() {
 
   // 별자리 위치 검색
   const handleConstellationSearch = async () => {
-    // 검색 목록 닫기
     setShowConstellationList(false)
 
     if (!formData.constellation.trim()) {
@@ -205,10 +216,36 @@ function ConstellationLocationPage() {
     }
   }
 
-  const selectedConstellation = constellations.find(
+  // 운세 페이지로 이동
+  const handleFortuneClick = () => {
+    navigate('/fortune-reading')
+  }
+
+  // 별자리 정보 페이지로 이동
+  const handleGoToConstellationInfo = () => {
+    if (selectedConstellation?.constellation_id) {
+      navigate(`/constellation-info?constellation_id=${selectedConstellation.constellation_id}`)
+    } else {
+      alert('조회할 별자리를 먼저 선택해주세요.')
+    }
+  }
+
+  // 관측 값 포맷팅 (관측 불가 상태 처리)
+  const formatObservationValue = (value) => {
+    if (value === null || value === undefined || value === -999 || searchResult?.observable === '현재 관측 불가') {
+      return '관측 불가'
+    }
+    if (typeof value === 'number') {
+      return `${value.toFixed(2)}°`
+    }
+    return value
+  }
+
+  const selectedConstellations = constellations.filter(
     (constellation) =>
       constellation.name_ko === formData.constellation
   )
+  const selectedConstellation = selectedConstellations.length > 0 ? selectedConstellations[0] : null
 
   return (
     <PageContainer>
@@ -217,7 +254,6 @@ function ConstellationLocationPage() {
         {/* 페이지 제목 */}
         <PageHeader>
           <PageTitle>별자리 위치</PageTitle>
-
           <PageDescription>
             지금 내 위치에서 원하는 별자리를 찾아보세요
           </PageDescription>
@@ -233,15 +269,11 @@ function ConstellationLocationPage() {
             {/* 01. 별자리 입력 */}
             <FormGroup>
               <FormGroupNumber>01</FormGroupNumber>
-
               <FormGroupTitle>
                 찾을 별자리를 입력해주세요
               </FormGroupTitle>
-
               <FormGroupContent>
-
                 <ConstellationSearchWrapper>
-
                   <Input
                     type="text"
                     name="constellation"
@@ -258,7 +290,6 @@ function ConstellationLocationPage() {
                     placeholder="오리온자리"
                   />
 
-                  {/* 검색 결과 */}
                   {showConstellationList &&
                     formData.constellation &&
                     filteredConstellations.length > 0 && (
@@ -277,7 +308,6 @@ function ConstellationLocationPage() {
                       </ConstellationDropdown>
                     )}
 
-                  {/* 검색 결과 없음 */}
                   {showConstellationList &&
                     formData.constellation &&
                     filteredConstellations.length === 0 && (
@@ -285,46 +315,36 @@ function ConstellationLocationPage() {
                         검색 결과가 없습니다.
                       </ConstellationNoResult>
                     )}
-
                 </ConstellationSearchWrapper>
-
               </FormGroupContent>
             </FormGroup>
-
 
             {/* 02. 날짜 및 시간 */}
             <FormGroup>
               <FormGroupNumber>02</FormGroupNumber>
-
               <FormGroupTitle>
                 관측할 날짜와 시간을 입력해주세요
               </FormGroupTitle>
-
               <FormGroupContent>
-
                 <Input
                   type="date"
                   name="date"
                   value={formData.date}
                   onChange={handleInputChange}
                 />
-
                 <Input
                   type="time"
                   name="time"
                   value={formData.time}
                   onChange={handleInputChange}
                 />
-
                 <LocationCheckBox>
                   <input
                     type="checkbox"
                     checked={useCurrentTime}
                     onChange={(e) => {
                       const checked = e.target.checked
-
                       setUseCurrentTime(checked)
-
                       if (checked) {
                         handleUseCurrentTime()
                       } else {
@@ -336,24 +356,18 @@ function ConstellationLocationPage() {
                       }
                     }}
                   />
-
                   <span>현재 시간으로 설정</span>
                 </LocationCheckBox>
-
               </FormGroupContent>
             </FormGroup>
-
 
             {/* 03. 위치 설정 */}
             <FormGroup>
               <FormGroupNumber>03</FormGroupNumber>
-
               <FormGroupTitle>
                 위치 설정 버튼을 눌러 현재위치를 지정해주세요
               </FormGroupTitle>
-
               <FormGroupContent>
-
                 <Input
                   type="text"
                   name="latitude"
@@ -361,7 +375,6 @@ function ConstellationLocationPage() {
                   onChange={handleInputChange}
                   placeholder="위도 (예: 37.5)"
                 />
-
                 <Input
                   type="text"
                   name="longitude"
@@ -369,22 +382,18 @@ function ConstellationLocationPage() {
                   onChange={handleInputChange}
                   placeholder="경도 (예: 127.0)"
                 />
-
                 <LocationButton onClick={handleLocationConfirm}>
                   위치 설정
                 </LocationButton>
-
                 <LocationNotice>
                   위치 정보는 별자리 위치 계산 목적으로만 사용됩니다.
                 </LocationNotice>
-
                 {locationConfirmed && (
                   <CheckStatus>
                     <Check size={16} />
                     현재 위치 설정 완료!
                   </CheckStatus>
                 )}
-
               </FormGroupContent>
             </FormGroup>
 
@@ -398,11 +407,9 @@ function ConstellationLocationPage() {
 
             <VisualizationHeader>
               <FormGroupNumber>04</FormGroupNumber>
-
               <FormGroupTitle>
                 별자리 위치 검색 버튼을 눌러 별자리를 찾아보세요
               </FormGroupTitle>
-
               <FormGroupContent>
                 <LocationButton onClick={handleConstellationSearch}>
                   별자리 위치 검색
@@ -410,11 +417,9 @@ function ConstellationLocationPage() {
               </FormGroupContent>
             </VisualizationHeader>
 
-
-            {/* 검색 결과 */}
+            {/* 검색 완료 시 결과 렌더링 */}
             {searchCompleted && searchResult && (
               <>
-                {/* 별자리 이미지 */}
                 <ConstellationImageBox>
                   {selectedConstellation?.image_url ? (
                     <ConstellationImage
@@ -422,73 +427,53 @@ function ConstellationLocationPage() {
                       alt={selectedConstellation.name_ko}
                     />
                   ) : (
-                    <div>별자리 이미지를 불러올 수 없습니다.</div>
+                    <div style={{ color: '#cbd5e1' }}>별자리 이미지를 불러올 수 없습니다.</div>
                   )}
                 </ConstellationImageBox>
 
+                <ResultContainer>
+                  <ResultRow>
+                    <ResultLabel>별자리명</ResultLabel>
+                    <ResultValue>{searchResult.constellation}</ResultValue>
+                  </ResultRow>
 
-                {/* 결과 설명 */}
-                <div>
-                  {searchResult.constellation}는{' '}
-                  {formData.date} {formData.time} 기준
+                  <ResultRow>
+                    <ResultLabel>관측 날짜/시간</ResultLabel>
+                    <ResultValue>
+                      {formData.date} {formData.time}
+                    </ResultValue>
+                  </ResultRow>
 
-                  <br />
+                  <ResultRow>
+                    <ResultLabel>고도 (Altitude)</ResultLabel>
+                    <ResultValue>
+                      {formatObservationValue(searchResult.altitude)}
+                    </ResultValue>
+                  </ResultRow>
 
-                  {/* 현재 관측 불가 */}
-                  {searchResult.observable === '현재 관측 불가' && (
-                    <>
-                      지평선 밑에 있어{' '}
-                      <HighlightText>
-                        관측이 불가능
-                      </HighlightText>
-                      {' '}합니다.
-                    </>
-                  )}
+                  <ResultRow>
+                    <ResultLabel>방향 (Direction)</ResultLabel>
+                    <ResultValue>
+                      {formatObservationValue(searchResult.direction)}
+                    </ResultValue>
+                  </ResultRow>
 
-                  {/* 전체 관측 가능 */}
-                  {searchResult.observable === '전체 관측 가능' && (
-                    <>
-                      <HighlightText>
-                        {searchResult.direction}쪽하늘
-                      </HighlightText>
-                      {' '}고도 약{' '}
-                      <HighlightText>
-                        {searchResult.altitude}°
-                      </HighlightText>
-                      에서 관측할 수 있습니다.
-                    </>
-                  )}
-
-                  {/* 일부 관측 가능 - 고도 5도 이상 */}
-                  {searchResult.observable === '일부 관측 가능' &&
-                    searchResult.altitude > 5 && (
-                      <>
-                        <HighlightText>
-                          {searchResult.direction}쪽하늘
-                        </HighlightText>
-                        {' '}고도 약{' '}
-                        <HighlightText>
-                          {searchResult.altitude}°
-                        </HighlightText>
-                        에서 별자리 일부를 관측할 수 있습니다.
-                      </>
-                  )}
-
-                  {/* 일부 관측 가능 - 고도 5도 미만 */}
-                  {searchResult.observable === '일부 관측 가능' &&
-                    searchResult.altitude <= 5 && (
-                      <>
-                        <HighlightText>
-                          {searchResult.direction}쪽하늘
-                        </HighlightText>
-                        {' '}지평선 근처에서
-                        별자리 일부를 관측할 수 있습니다.
-                      </>
-                  )}
-
-                </div>
+                  {/* 관측 정보 박스 하단에 '별자리 정보 보러가기' 배치 */}
+                  <ResultActionWrapper>
+                    <InfoLinkButton onClick={handleGoToConstellationInfo}>
+                      별자리 정보 보러가기
+                    </InfoLinkButton>
+                  </ResultActionWrapper>
+                </ResultContainer>
               </>
             )}
+
+            {/* 운세 버튼 (결과 유무와 관계없이 항상 하단 단독 한 줄 노출, 검색 버튼 색상 통일) */}
+            <BottomButtonWrapper>
+              <FortuneButton onClick={handleFortuneClick}>
+                오늘의 나의 운세 보기 (pro)
+              </FortuneButton>
+            </BottomButtonWrapper>
 
           </VisualizationSection>
 
