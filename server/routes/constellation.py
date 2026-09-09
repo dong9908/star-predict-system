@@ -90,24 +90,12 @@ def get_constellation_position(
         request.longitude,
     )
 
-    # 3. 현재 지평선 위에 있는 별
-    visible_stars = result[result["altitude"] > 0]
-
-    # 4. 관측 상태
-    if len(visible_stars) == len(result):
-        observable = "전체 관측 가능"
-    elif len(visible_stars) > 0:
-        observable = "일부 관측 가능"
-    else:
-        observable = "현재 관측 불가"
-
     # 5. 대표 고도 / 방위각
     altitude = result["altitude"].median()
     azimuth = circular_median(result["azimuth"].values)
 
     return {
         "constellation": request.constellation,
-        "observable": observable,
         "altitude": round(float(altitude), 2),
         "azimuth": round(float(azimuth), 2),
         "direction": get_direction(float(azimuth)),
