@@ -38,7 +38,7 @@ import {
 
 import {
   getConstellationPositionAPI,
-  getConstellationsAPI,
+  getConstellationCatalogAPI,
 } from '../api/auth'
 
 function ConstellationLocationPage() {
@@ -57,6 +57,7 @@ function ConstellationLocationPage() {
   const [searchCompleted, setSearchCompleted] = useState(false)
   const [searchResult, setSearchResult] = useState(null)
   const [showSuggestions, setShowSuggestions] = useState(false)
+  const [searchDateTime, setSearchDateTime] = useState(null)
 
   const [constellations, setConstellations] = useState([])
   const [showConstellationList, setShowConstellationList] = useState(false)
@@ -65,7 +66,7 @@ function ConstellationLocationPage() {
   useEffect(() => {
     const loadConstellations = async () => {
       try {
-        const data = await getConstellationsAPI()
+        const data = await getConstellationCatalogAPI()
         setConstellations(data)
       } catch (error) {
         console.error('별자리 목록 조회 실패:', error)
@@ -204,10 +205,11 @@ function ConstellationLocationPage() {
         longitude: formData.longitude,
       })
 
-      console.log('========== 별자리 위치 검색 결과 ==========')
-      console.log(result)
-
       setSearchResult(result)
+      setSearchDateTime({
+        date: formData.date,
+        time: formData.time,
+      })
       setSearchCompleted(true)
 
     } catch (error) {
@@ -440,7 +442,7 @@ function ConstellationLocationPage() {
                   <ResultRow>
                     <ResultLabel>관측 날짜/시간</ResultLabel>
                     <ResultValue>
-                      {formData.date} {formData.time}
+                      {searchDateTime?.date} {searchDateTime?.time}
                     </ResultValue>
                   </ResultRow>
 
