@@ -22,6 +22,7 @@ import {
   ContentSection,
   FilterBar,
   FilterButton,
+  DifficultyFilterButton,
   FilterInfo,
   FilterGroup,
   SearchBar,
@@ -42,6 +43,7 @@ import {
 function ConstellationCatalogPage() {
   const navigate = useNavigate()
   const [filterType, setFilterType] = useState('all')
+  const [difficultyFilter, setDifficultyFilter] = useState('all')
   const [searchQuery, setSearchQuery] = useState('')
   const [constellations, setConstellations] = useState([])
 
@@ -125,13 +127,24 @@ function ConstellationCatalogPage() {
   // Filter and search
   const filteredConstellations = useMemo(() => {
     return constellations.filter(c => {
-      const matchesFilter = filterType === 'all' ||
-                          (filterType === 'discovered' && c.discovered) ||
-                          (filterType === 'undiscovered' && !c.discovered)
-      const matchesSearch = c.name.toLowerCase().includes(searchQuery.toLowerCase())
-      return matchesFilter && matchesSearch
+      // 발견 여부 필터
+      const matchesFilter =
+        filterType === 'all' ||
+        (filterType === 'discovered' && c.discovered) ||
+        (filterType === 'undiscovered' && !c.discovered)
+
+      // 난이도 필터
+      const matchesDifficulty =
+        difficultyFilter === 'all' ||
+        c.difficulty === difficultyFilter
+
+      // 이름 검색
+      const matchesSearch =
+        c.name.toLowerCase().includes(searchQuery.toLowerCase())
+
+      return matchesFilter && matchesDifficulty && matchesSearch
     })
-  }, [constellations, filterType, searchQuery])
+  }, [constellations, filterType, difficultyFilter, searchQuery])
 
   const recentConstellation = useMemo(() => {
     const discovered = constellations
@@ -207,6 +220,57 @@ function ConstellationCatalogPage() {
               </FilterButton>
             </FilterGroup>
 
+
+            </FilterBar>
+
+            <FilterBar>
+              <FilterGroup>
+                <FilterButton
+                  $active={difficultyFilter === 'all'}
+                  onClick={() => setDifficultyFilter('all')}
+                >
+                  전체
+                </FilterButton>
+
+                <DifficultyFilterButton
+                  $active={difficultyFilter === '1'}
+                  $difficulty="1"
+                  onClick={() => setDifficultyFilter('1')}
+                >
+                  ✦
+                </DifficultyFilterButton>
+
+                <DifficultyFilterButton
+                  $active={difficultyFilter === '2'}
+                  $difficulty="2"
+                  onClick={() => setDifficultyFilter('2')}
+                >
+                  ✦✦
+                </DifficultyFilterButton>
+
+                <DifficultyFilterButton
+                  $active={difficultyFilter === '3'}
+                  $difficulty="3"
+                  onClick={() => setDifficultyFilter('3')}
+                >
+                  ✦✦✦
+                </DifficultyFilterButton>
+
+                <DifficultyFilterButton
+                  $active={difficultyFilter === '4'}
+                  $difficulty="4"
+                  onClick={() => setDifficultyFilter('4')}
+                >
+                  ✦✦✦✦
+                </DifficultyFilterButton>
+
+                <FilterButton
+                  $active={difficultyFilter === '관측불가'}
+                  onClick={() => setDifficultyFilter('관측불가')}
+                >
+                  관측불가
+                </FilterButton>
+              </FilterGroup>
               <FilterInfo>
                 관측불가 : 일반적으로 한국에서 관측이 불가합니다.
               </FilterInfo>
