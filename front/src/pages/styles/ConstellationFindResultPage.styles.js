@@ -35,7 +35,7 @@ export const LeftSection = styled.div`
 `
 
 export const ImageVisualizationPanel = styled.div`
-  background: rgba(15, 15, 46, 0.5);
+  background: rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   padding: 1rem;
@@ -249,7 +249,7 @@ export const ControlButton = styled.button`
 `
 
 export const DetailSection = styled.div`
-  background: rgba(15, 15, 46, 0.5);
+  background: rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   padding: 2rem;
@@ -443,11 +443,10 @@ export const ActionButton = styled.button`
 `
 
 export const ResultListContainer = styled.div`
-  background: rgba(15, 15, 46, 0.5);
+  background: rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   padding: 1rem;
-  max-height: 500px;
   overflow-y: auto;
   flex: 1;
 
@@ -455,9 +454,6 @@ export const ResultListContainer = styled.div`
     border-color: rgba(167, 139, 250, 0.4);
   }
 
-  &::-webkit-scrollbar {
-    width: 8px;
-  }
 
   &::-webkit-scrollbar-track {
     background: transparent;
