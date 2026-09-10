@@ -10,6 +10,7 @@ export const PageWrapper = styled.div`
   max-width: 1800px;
   margin: 0 auto;
   box-sizing: border-box;
+  align-items: stretch;
 
   @media (max-width: 1024px) {
     flex-direction: column;
@@ -37,6 +38,43 @@ export const LeftSection = styled.div`
     width: 100%;
     height: auto;
     order: 2;
+  }
+`
+
+export const ConstellationListContainer = styled.div`
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(167, 139, 250, 0.3);
+  border-radius: 1rem;
+  padding: 1rem;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+
+  /* 모바일 화면에서 카드가 4개 정도만 보이도록 높이 제한 */
+  @media (max-width: 1024px) {
+    max-height: 420px; /* 카드 크기에 맞춰 대략 4개 정도가 들어오는 높이 */
+    flex: none;
+  }
+
+  &:hover {
+    border-color: #a78bfa;
+  }
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(167, 139, 250, 0.3);
+    border-radius: 4px;
+
+    &:hover {
+      background: rgba(167, 139, 250, 0.5);
+    }
   }
 `
 
@@ -193,6 +231,8 @@ export const DetailSection = styled.div`
   overflow-y: auto;
   max-height: 400px;
   box-sizing: border-box;
+  flex: 1;
+  min-height: 0;
 
   &:hover {
     border-color: #a78bfa;
@@ -382,6 +422,7 @@ export const RightSection = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  height: 100%;
   background: transparent;
   border: none;
   padding: 0;
@@ -423,36 +464,7 @@ export const SearchInput = styled.input`
   }
 `
 
-export const ConstellationListContainer = styled.div`
-  background: rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(167, 139, 250, 0.3);
-  border-radius: 1rem;
-  padding: 1rem;
-  overflow-y: auto;
-  flex: 1;
-  min-height: 0;
 
-  &:hover {
-    border-color: #a78bfa;
-  }
-
-  &::-webkit-scrollbar {
-    width: 8px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: rgba(167, 139, 250, 0.3);
-    border-radius: 4px;
-
-    &:hover {
-      background: rgba(167, 139, 250, 0.5);
-    }
-  }
-`
 
 export const ConstellationCard = styled.div`
   position: relative;
