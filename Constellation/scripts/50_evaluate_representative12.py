@@ -42,15 +42,21 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--dataset-dir", type=Path, default=DEFAULT_DATASET)
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT)
+    parser.add_argument("--plate-output-dir", type=Path, default=REALTIME_ROOT, help="설정별 Plate Solving 캐시 폴더")
     parser.add_argument("--category", choices=sorted(EXPECTED_IAU), help="한 폴더만 평가")
     parser.add_argument("--split", choices=("train", "validation", "test"), help="해당 분할만 처리")
     parser.add_argument("--limit", type=int, help="품질 통과 이미지 중 최대 처리 수")
     parser.add_argument("--audit-only", action="store_true", help="품질·중복·분할만 생성")
+    parser.add_argument(
+        "--report-only", action="store_true",
+        help="기존 evaluation_results.csv를 이용해 보고서만 다시 생성",
+    )
     parser.add_argument("--skip-overlay", action="store_true", help="Plate Solving 성공률만 평가")
     parser.add_argument("--retry-failed", action="store_true")
     parser.add_argument("--timeout-seconds", type=int, default=90)
     parser.add_argument("--scale-lower", type=float, default=20.0)
     parser.add_argument("--scale-upper", type=float, default=120.0)
+    parser.add_argument("--downsample", type=int, choices=(1, 2, 4, 8), help="48번에 전달할 고정 축소 배율")
     parser.add_argument("--wsl-distribution", default="Ubuntu")
     parser.add_argument("--minimum-side", type=int, default=600)
     parser.add_argument("--train-percent", type=int, default=70)
@@ -114,6 +120,22 @@ def write_json(path: Path, value: Any) -> None:
     path.write_text(json.dumps(value, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
+def read_evaluation_results(path: Path) -> list[dict[str, Any]]:
+    if not path.is_file():
+        raise FileNotFoundError(f"기존 평가 결과가 없습니다: {path}")
+    with path.open("r", encoding="utf-8-sig", newline="") as file:
+        rows = list(csv.DictReader(file))
+    boolean_fields = ("is_negative", "valid", "duplicate", "cached", "overlay_evaluated", "expected_hit")
+    numeric_fields = ("index", "bytes", "width", "height", "elapsed_seconds", "solver_elapsed_seconds")
+    for row in rows:
+        for field in boolean_fields:
+            row[field] = str(row.get(field, "")).strip().lower() == "true"
+        for field in numeric_fields:
+            value = str(row.get(field, "")).strip()
+            row[field] = float(value) if value else None
+    return rows
+
+
 def build_manifest(args: argparse.Namespace) -> list[dict[str, Any]]:
     categories = [args.category] if args.category else list(EXPECTED_IAU)
     files: list[tuple[str, Path]] = []
@@ -159,15 +181,18 @@ def run_command(command: list[str], cwd: Path, timeout: int) -> subprocess.Compl
 
 def plate_solve(path: Path, args: argparse.Namespace) -> tuple[dict[str, Any], bool]:
     digest = sha256_file(path)
-    result_path = REALTIME_ROOT / digest / "result.json"
+    plate_output = args.plate_output_dir.resolve()
+    result_path = plate_output / digest / "result.json"
     was_cached = result_path.is_file() and not args.retry_failed
     command = [
         sys.executable, str(PLATE_SCRIPT), str(path),
-        "--output-dir", str(REALTIME_ROOT),
+        "--output-dir", str(plate_output),
         "--timeout-seconds", str(args.timeout_seconds),
         "--scale-lower", str(args.scale_lower), "--scale-upper", str(args.scale_upper),
         "--wsl-distribution", args.wsl_distribution,
     ]
+    if args.downsample:
+        command.extend(["--downsample", str(args.downsample)])
     if args.retry_failed:
         command.append("--retry-failed")
     try:
@@ -219,6 +244,9 @@ def summarize(manifest: list[dict[str, Any]], results: list[dict[str, Any]]) -> 
     negatives = [row for row in evaluated if row["is_negative"]]
     overlay_positives = [row for row in positives if row["overlay_evaluated"]]
     overlay_negatives = [row for row in negatives if row["overlay_evaluated"]]
+    positive_solved = [row for row in positives if row["plate_status"] == "success"]
+    positive_hits = [row for row in positives if row["expected_hit"]]
+    negative_false_positives = [row for row in negatives if row["predicted_iau"]]
 
     per_category: dict[str, dict[str, Any]] = {}
     for category in EXPECTED_IAU:
@@ -247,11 +275,17 @@ def summarize(manifest: list[dict[str, Any]], results: list[dict[str, Any]]) -> 
             "plate_solved": sum(row["plate_status"] == "success" for row in evaluated),
             "plate_solve_rate": round(sum(row["plate_status"] == "success" for row in evaluated) / len(evaluated) * 100, 2) if evaluated else None,
             "positive_overlay_checked": len(overlay_positives),
+            "positive_images": len(positives),
+            "positive_plate_solved": len(positive_solved),
+            "positive_plate_solve_rate": round(len(positive_solved) / len(positives) * 100, 2) if positives else None,
             "positive_expected_hits": sum(bool(row["expected_hit"]) for row in overlay_positives),
             "positive_top12_hit_rate": round(sum(bool(row["expected_hit"]) for row in overlay_positives) / len(overlay_positives) * 100, 2) if overlay_positives else None,
+            "positive_end_to_end_hit_rate": round(len(positive_hits) / len(positives) * 100, 2) if positives else None,
+            "negative_images": len(negatives),
             "negative_overlay_checked": len(overlay_negatives),
-            "negative_false_positives": sum(bool(row["predicted_iau"]) for row in overlay_negatives),
-            "negative_false_positive_rate": round(sum(bool(row["predicted_iau"]) for row in overlay_negatives) / len(overlay_negatives) * 100, 2) if overlay_negatives else None,
+            "negative_false_positives": len(negative_false_positives),
+            "negative_false_positive_rate": round(len(negative_false_positives) / len(negatives) * 100, 2) if negatives else None,
+            "negative_conditional_false_positive_rate": round(len(negative_false_positives) / len(overlay_negatives) * 100, 2) if overlay_negatives else None,
             "average_seconds": round(sum(float(row["elapsed_seconds"] or 0) for row in evaluated) / len(evaluated), 3) if evaluated else None,
             "failure_types": dict(Counter(row["failure_type"] for row in evaluated if row["failure_type"])),
         },
@@ -265,6 +299,10 @@ def main() -> None:
     args = parse_args()
     validate(args)
     output = args.output_dir.resolve()
+    previous_report: dict[str, Any] = {}
+    previous_report_path = output / "evaluation_report.json"
+    if args.report_only and previous_report_path.is_file():
+        previous_report = json.loads(previous_report_path.read_text(encoding="utf-8"))
     manifest = build_manifest(args)
     write_csv(output / "dataset_manifest.csv", manifest)
     write_json(output / "dataset_manifest.json", manifest)
@@ -280,7 +318,9 @@ def main() -> None:
     if args.limit is not None:
         candidates = candidates[:max(0, args.limit)]
     results: list[dict[str, Any]] = []
-    if not args.audit_only:
+    if args.report_only:
+        results = read_evaluation_results(output / "evaluation_results.csv")
+    elif not args.audit_only:
         for number, item in enumerate(candidates, 1):
             source = args.dataset_dir / item["relative_path"]
             print(f"[{number}/{len(candidates)}] {item['category']} / {source.name}")
@@ -292,7 +332,7 @@ def main() -> None:
             overlay_evaluated = False
             if plate_status == "success" and not args.skip_overlay:
                 relative_wcs = str((plate.get("artifacts") or {}).get("wcs") or "")
-                wcs_path = REALTIME_ROOT / relative_wcs
+                wcs_path = args.plate_output_dir.resolve() / relative_wcs
                 if wcs_path.is_file():
                     predicted, overlay_error = evaluate_overlay(source, item["sha256"], wcs_path, output)
                     overlay_evaluated = not overlay_error
@@ -313,13 +353,32 @@ def main() -> None:
             write_csv(output / "evaluation_results.csv", results)
 
     report = summarize(manifest, results)
-    report["parameters"] = {
+    current_parameters = {
         "audit_only": args.audit_only, "skip_overlay": args.skip_overlay,
+        "report_only": args.report_only,
         "category": args.category, "split": args.split,
         "limit": args.limit, "timeout_seconds": args.timeout_seconds,
         "scale_lower": args.scale_lower, "scale_upper": args.scale_upper,
+        "downsample": args.downsample,
+        "plate_output_dir": str(args.plate_output_dir.resolve()),
         "minimum_side": args.minimum_side,
     }
+    if args.report_only and previous_report.get("parameters"):
+        current_parameters = {**previous_report["parameters"], "report_only": True}
+        explicit_options = {
+            "--category": ("category", args.category),
+            "--split": ("split", args.split),
+            "--limit": ("limit", args.limit),
+            "--timeout-seconds": ("timeout_seconds", args.timeout_seconds),
+            "--scale-lower": ("scale_lower", args.scale_lower),
+            "--scale-upper": ("scale_upper", args.scale_upper),
+            "--downsample": ("downsample", args.downsample),
+            "--minimum-side": ("minimum_side", args.minimum_side),
+        }
+        for option, (key, value) in explicit_options.items():
+            if option in sys.argv:
+                current_parameters[key] = value
+    report["parameters"] = current_parameters
     write_json(output / "evaluation_report.json", report)
     summary = [
         "대표 별자리 12종 평가 결과",
@@ -329,8 +388,10 @@ def main() -> None:
         f"품질 제외: {report['dataset']['invalid_or_low_resolution']}",
         f"처리 완료: {report['evaluation']['processed']}",
         f"Plate Solving 성공률: {report['evaluation']['plate_solve_rate']}",
-        f"대표 12종 Top-12 포함률: {report['evaluation']['positive_top12_hit_rate']}",
-        f"Negative 오검출률: {report['evaluation']['negative_false_positive_rate']}",
+        f"별자리 사진 Plate Solving 성공률: {report['evaluation']['positive_plate_solve_rate']}",
+        f"Solve 성공 후 대표 12종 Top-12 포함률: {report['evaluation']['positive_top12_hit_rate']}",
+        f"별자리 사진 전체 기준 최종 성공률: {report['evaluation']['positive_end_to_end_hit_rate']}",
+        f"Negative 전체 기준 오검출률: {report['evaluation']['negative_false_positive_rate']}",
     ]
     (output / "evaluation_summary.txt").write_text("\n".join(summary) + "\n", encoding="utf-8")
     print("\n".join(summary))

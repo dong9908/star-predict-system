@@ -1,0 +1,671 @@
+{
+  "Vel": {
+    "stars": {
+      "42913": {
+        "x_percent": 98.71,
+        "y_percent": 37.62
+      },
+      "44816": {
+        "x_percent": 34.87,
+        "y_percent": 28.72
+      },
+      "45941": {
+        "x_percent": 98.3,
+        "y_percent": 37.4
+      }
+    },
+    "line_points": [
+      { "x_percent": 83.4, "y_percent": 2.8 },
+      { "x_percent": 98.3, "y_percent": 37.4, "hip": 45941 },
+      { "x_percent": 74.0, "y_percent": 74.3 },
+      { "x_percent": 36.7, "y_percent": 98.3, "hip": 44816 },
+      { "x_percent": 3.7, "y_percent": 71.8 },
+      { "x_percent": 10.2, "y_percent": 38.7 },
+      { "x_percent": 98.71, "y_percent": 37.62, "hip": 42913 }
+    ]
+  },
+  "Mus": {
+    "stars": {},
+    "line_points": [
+      { "x_percent": 7.8, "y_percent": 5.1 },
+      { "x_percent": 28.9, "y_percent": 50.3 },
+      { "x_percent": 49.07, "y_percent": 72.32 },
+      { "x_percent": 84.1, "y_percent": 53.2 },
+      { "x_percent": 86.75, "y_percent": 90.51 },
+      { "x_percent": 39.8, "y_percent": 89.5 }
+    ]
+  },
+  "Gru": {
+    "stars": {
+      "109268": { "x_percent": 42.66, "y_percent": 26.83 },
+      "112122": { "x_percent": 60.15, "y_percent": 44.95 },
+      "108085": { "x_percent": 89.03, "y_percent": 96.22 }
+    },
+    "line_points": [
+      { "x_percent": 6.35, "y_percent": 2.78 },
+      { "x_percent": 14.1, "y_percent": 16.0 },
+      { "x_percent": 42.66, "y_percent": 26.83, "hip": 109268 },
+      { "x_percent": 60.15, "y_percent": 44.95, "hip": 112122 },
+      { "x_percent": 36.8, "y_percent": 47.6 },
+      { "x_percent": 32.5, "y_percent": 63.0 },
+      { "x_percent": 70.8, "y_percent": 64.5 },
+      { "x_percent": 89.03, "y_percent": 96.22, "hip": 108085 }
+    ]
+  },
+  "CMi": {
+    "stars": {
+      "37279": { "x_percent": 62.72, "y_percent": 38.95 },
+      "36188": { "x_percent": 26.26, "y_percent": 67.72 }
+    },
+    "line_points": [
+      { "x_percent": 62.72, "y_percent": 38.95, "hip": 37279 },
+      { "x_percent": 26.26, "y_percent": 67.72, "hip": 36188 }
+    ]
+  },
+  "Cnc": {
+    "stars": {
+      "40526": { "x_percent": 19.4, "y_percent": 5.69 },
+      "42911": { "x_percent": 58.75, "y_percent": 49.07 }
+    },
+    "line_points": [
+      { "x_percent": 19.2, "y_percent": 5.5 },
+      { "x_percent": 87.4, "y_percent": 23.4 },
+      { "x_percent": 58.75, "y_percent": 49.07 },
+      { "x_percent": 58.75, "y_percent": 49.07, "hip": 42911 },
+      { "x_percent": 19.4, "y_percent": 5.69, "hip": 40526 }
+    ]
+  },
+  "Leo": {
+    "stars": {
+      "49669": { "x_percent": 30.06, "y_percent": 70.95 },
+      "50583": { "x_percent": 41.67, "y_percent": 24.88 },
+      "57632": { "x_percent": 39.96, "y_percent": 1.06 }
+    },
+    "line_points": [
+      { "x_percent": 39.96, "y_percent": 1.06, "hip": 57632 },
+      { "x_percent": 24.2, "y_percent": 17.7 },
+      { "x_percent": 9.6, "y_percent": 19.2 },
+      { "x_percent": 41.67, "y_percent": 24.88, "hip": 50583 },
+      { "x_percent": 59.77, "y_percent": 25.37 },
+      { "x_percent": 44.3, "y_percent": 44.6 },
+      { "x_percent": 58.06, "y_percent": 61.91 },
+      { "x_percent": 70.9, "y_percent": 63.4 },
+      { "x_percent": 47.61, "y_percent": 70.74 },
+      { "x_percent": 30.06, "y_percent": 70.95, "hip": 49669 },
+      { "x_percent": 81.7, "y_percent": 78.9 },
+      { "x_percent": 74.1, "y_percent": 83.5 },
+      { "x_percent": 83.2, "y_percent": 85.3 },
+      { "x_percent": 72.7, "y_percent": 93.4 },
+      { "x_percent": 85.7, "y_percent": 96.7 }
+    ]
+  },
+  "LMi": {
+    "stars": {
+      "53229": { "x_percent": 79.75, "y_percent": 92.06 }
+    },
+    "line_points": [
+      { "x_percent": 50.0, "y_percent": 4.7 },
+      { "x_percent": 47.8, "y_percent": 35.8 },
+      { "x_percent": 71.2, "y_percent": 32.8 },
+      { "x_percent": 61.92, "y_percent": 55.25 },
+      { "x_percent": 79.75, "y_percent": 92.06, "hip": 53229 }
+    ]
+  },
+  "UMi": {
+    "stars": {
+      "11767": { "x_percent": 89.54, "y_percent": 95.45 },
+      "72607": { "x_percent": 9.69, "y_percent": 31.03 },
+      "75097": { "x_percent": 5.57, "y_percent": 6.51 }
+    },
+    "line_points": [
+      { "x_percent": 89.54, "y_percent": 95.45, "hip": 11767 },
+      { "x_percent": 79.1, "y_percent": 66.8 },
+      { "x_percent": 62.1, "y_percent": 38.9 },
+      { "x_percent": 36.03, "y_percent": 27.3 },
+      { "x_percent": 35.9, "y_percent": 5.27 },
+      { "x_percent": 5.57, "y_percent": 6.51, "hip": 75097 },
+      { "x_percent": 9.69, "y_percent": 31.03, "hip": 72607 }
+    ]
+  },
+  "Lyr": {
+    "stars": {
+      "91262": { "x_percent": 69.89, "y_percent": 9.28 },
+      "92420": { "x_percent": 18.71, "y_percent": 44.77 },
+      "93194": { "x_percent": 27.85, "y_percent": 96.29 }
+    },
+    "line_points": [
+      { "x_percent": 69.89, "y_percent": 9.28, "hip": 91262 },
+      { "x_percent": 50.15, "y_percent": 29.0 },
+      { "x_percent": 18.71, "y_percent": 44.77, "hip": 92420 },
+      { "x_percent": 27.85, "y_percent": 96.29, "hip": 93194 },
+      { "x_percent": 58.9, "y_percent": 81.4 },
+      { "x_percent": 36.5, "y_percent": 5.4 }
+    ]
+  },
+  "Dor": {
+    "stars": {},
+    "line_points": [
+      { "x_percent": 8.7, "y_percent": 3.6 },
+      { "x_percent": 42.6, "y_percent": 3.8 },
+      { "x_percent": 37.2, "y_percent": 15.8 },
+      { "x_percent": 68.3, "y_percent": 44.2 },
+      { "x_percent": 62.2, "y_percent": 69.9 },
+      { "x_percent": 74.2, "y_percent": 94.5 }
+    ]
+  },
+  "Cep": {
+    "stars": {
+      "105199": { "x_percent": 79.47, "y_percent": 78.68 },
+      "116727": { "x_percent": 3.36, "y_percent": 1.51 },
+      "106032": { "x_percent": 96.27, "y_percent": 39.08 }
+    },
+    "line_points": [
+      { "x_percent": 79.47, "y_percent": 78.68, "hip": 105199 },
+      { "x_percent": 3.36, "y_percent": 1.51, "hip": 116727 },
+      { "x_percent": 96.27, "y_percent": 39.08, "hip": 106032 }
+    ]
+  },
+  "Vir": {
+    "stars": {
+      "65474": { "x_percent": 51.44, "y_percent": 98.72 },
+      "61941": { "x_percent": 70.18, "y_percent": 51.25 },
+      "63608": { "x_percent": 56.59, "y_percent": 2.33 }
+    },
+    "line_points": [
+      { "x_percent": 51.44, "y_percent": 98.72, "hip": 65474 },
+      { "x_percent": 70.18, "y_percent": 51.25, "hip": 61941 },
+      { "x_percent": 56.59, "y_percent": 2.33, "hip": 63608 }
+    ]
+  },
+  "UMa": {
+    "stars": {
+      "62956": { "x_percent": 38.32, "y_percent": 32.58 },
+      "54061": { "x_percent": 58.92, "y_percent": 22.12 },
+      "67301": { "x_percent": 33.83, "y_percent": 49.06 }
+    },
+    "line_points": [
+      { "x_percent": 38.32, "y_percent": 32.58, "hip": 62956 },
+      { "x_percent": 58.92, "y_percent": 22.12, "hip": 54061 },
+      { "x_percent": 33.83, "y_percent": 49.06, "hip": 67301 }
+    ]
+  },
+  "Per": {
+    "stars": {
+      "15863": { "x_percent": 43.74, "y_percent": 28.78 },
+      "14576": { "x_percent": 56.93, "y_percent": 61.53 }
+    },
+    "line_points": [
+      { "x_percent": 43.74, "y_percent": 28.78, "hip": 15863 },
+      { "x_percent": 56.93, "y_percent": 61.53, "hip": 14576 }
+    ]
+  },
+  "CMa": {
+    "stars": {
+      "32349": { "x_percent": 79.42, "y_percent": 47.83 },
+      "33579": { "x_percent": 18.51, "y_percent": 88.65 },
+      "34444": { "x_percent": 23.13, "y_percent": 57.41 }
+    },
+    "line_points": [
+      { "x_percent": 79.42, "y_percent": 47.83, "hip": 32349 },
+      { "x_percent": 18.51, "y_percent": 88.65, "hip": 33579 },
+      { "x_percent": 23.13, "y_percent": 57.41, "hip": 34444 }
+    ]
+  },
+  "Lep": {
+    "stars": {
+      "25985": { "x_percent": 57.11, "y_percent": 53.29 },
+      "25606": { "x_percent": 37.72, "y_percent": 53.85 }
+    },
+    "line_points": [
+      { "x_percent": 57.11, "y_percent": 53.29, "hip": 25985 },
+      { "x_percent": 37.72, "y_percent": 53.85, "hip": 25606 }
+    ]
+  },
+  "Col": {
+    "stars": {
+      "26634": { "x_percent": 53.64, "y_percent": 91.12 },
+      "27628": { "x_percent": 52.57, "y_percent": 60.07 }
+    },
+    "line_points": [
+      { "x_percent": 53.64, "y_percent": 91.12, "hip": 26634 },
+      { "x_percent": 52.57, "y_percent": 60.07, "hip": 27628 }
+    ]
+  },
+  "Aqr": {
+    "stars": {
+      "106278": { "x_percent": 75.06, "y_percent": 43.47 },
+      "109074": { "x_percent": 48.37, "y_percent": 28.37 },
+      "113136": { "x_percent": 32.91, "y_percent": 80.48 }
+    },
+    "line_points": [
+      { "x_percent": 75.06, "y_percent": 43.47, "hip": 106278 },
+      { "x_percent": 48.37, "y_percent": 28.37, "hip": 109074 },
+      { "x_percent": 32.91, "y_percent": 80.48, "hip": 113136 }
+    ]
+  },
+  "Cap": {
+    "stars": {
+      "107556": { "x_percent": 94.35, "y_percent": 93.2 },
+      "100345": { "x_percent": 6.3, "y_percent": 94.0 },
+      "100064": { "x_percent": 49.7, "y_percent": 11.7 }
+    },
+    "line_points": [
+      { "x_percent": 94.35, "y_percent": 93.2, "hip": 107556 },
+      { "x_percent": 6.3, "y_percent": 94.0, "hip": 100345 },
+      { "x_percent": 49.7, "y_percent": 11.7, "hip": 100064 }
+    ]
+  },
+  "Gem": {
+    "stars": {
+      "37826": { "x_percent": 91.5, "y_percent": 28.54 },
+      "36850": { "x_percent": 94.06, "y_percent": 53.71 },
+      "31681": { "x_percent": 11.47, "y_percent": 38.82 }
+    },
+    "line_points": [
+      { "x_percent": 91.5, "y_percent": 28.54, "hip": 37826 },
+      { "x_percent": 94.06, "y_percent": 53.71, "hip": 36850 },
+      { "x_percent": 11.47, "y_percent": 38.82, "hip": 31681 }
+    ]
+  },
+  "Pic": { "stars": {}, "line_points": [] },
+  "Pup": {
+    "stars": {
+      "39429": { "x_percent": 56.57, "y_percent": 12.8 },
+      "39757": { "x_percent": 94.16, "y_percent": 77.63 }
+    },
+    "line_points": [
+      { "x_percent": 56.57, "y_percent": 12.8, "hip": 39429 },
+      { "x_percent": 94.16, "y_percent": 77.63, "hip": 39757 }
+    ]
+  },
+  "Men": { "stars": {}, "line_points": [] },
+  "Ret": { "stars": {}, "line_points": [] },
+  "Vol": { "stars": {}, "line_points": [] },
+  "Boo": {
+    "stars": {
+      "69673": { "x_percent": 61.8, "y_percent": 66.52 },
+      "72105": { "x_percent": 35.54, "y_percent": 49.34 },
+      "67927": { "x_percent": 94.07, "y_percent": 72.12 }
+    },
+    "line_points": [
+      { "x_percent": 61.8, "y_percent": 66.52, "hip": 69673 },
+      { "x_percent": 35.54, "y_percent": 49.34, "hip": 72105 },
+      { "x_percent": 94.07, "y_percent": 72.12, "hip": 67927 }
+    ]
+  },
+  "Lac": { "stars": {}, "line_points": [] },
+  "For": {
+    "stars": { "14879": { "x_percent": 7.25, "y_percent": 37.15 } },
+    "line_points": [
+      { "x_percent": 96.84, "y_percent": 78.72, "hip": 14879 }
+    ]
+  },
+  "Hyi": { "stars": {}, "line_points": [] },
+  "Pav": {
+    "stars": { "100751": { "x_percent": 31.18, "y_percent": 15.57 } },
+    "line_points": [{ "x_percent": 31.18, "y_percent": 15.57, "hip": 100751 }]
+  },
+  "Lup": { "stars": {}, "line_points": [] },
+  "Ori": {
+    "stars": {
+      "24436": { "x_percent": 2.23, "y_percent": 37.66 },
+      "27989": { "x_percent": 59.81, "y_percent": 34.9 },
+      "25336": { "x_percent": 45.42, "y_percent": 58.83 }
+    },
+    "line_points": [
+      { "x_percent": 2.23, "y_percent": 37.66, "hip": 24436 },
+      { "x_percent": 59.81, "y_percent": 34.9, "hip": 27989 },
+      { "x_percent": 45.42, "y_percent": 58.83, "hip": 25336 }
+    ]
+  },
+  "Cet": {
+    "stars": {
+      "3419": { "x_percent": 40.41, "y_percent": 99.28 },
+      "14135": { "x_percent": 20.9, "y_percent": 8.53 },
+      "12706": { "x_percent": 31.41, "y_percent": 18.36 }
+    },
+    "line_points": [
+      { "x_percent": 40.41, "y_percent": 99.28, "hip": 3419 },
+      { "x_percent": 20.9, "y_percent": 8.53, "hip": 14135 },
+      { "x_percent": 31.41, "y_percent": 18.36, "hip": 12706 }
+    ]
+  },
+  "Sex": { "stars": {}, "line_points": [] },
+  "Aql": {
+    "stars": {
+      "97649": { "x_percent": 32.85, "y_percent": 29.77 },
+      "97278": { "x_percent": 37.37, "y_percent": 22.07 },
+      "93747": { "x_percent": 78.01, "y_percent": 7.99 }
+    },
+    "line_points": [
+      { "x_percent": 32.85, "y_percent": 29.77, "hip": 97649 },
+      { "x_percent": 37.37, "y_percent": 22.07, "hip": 97278 },
+      { "x_percent": 78.01, "y_percent": 7.99, "hip": 93747 }
+    ]
+  },
+  "Mic": { "stars": {}, "line_points": [] },
+  "Ind": { "stars": {}, "line_points": [] },
+  "Ara": { "stars": {}, "line_points": [] },
+  "CrA": {
+    "stars": { "94114": { "x_percent": 9.08, "y_percent": 16.96 } },
+    "line_points": [{ "x_percent": 9.08, "y_percent": 16.96, "hip": 94114 }]
+  },
+  "Lib": {
+    "stars": {
+      "74785": { "x_percent": 68.42, "y_percent": 16.45 },
+      "72622": { "x_percent": 88.27, "y_percent": 61.56 },
+      "73714": { "x_percent": 38.59, "y_percent": 92.19 }
+    },
+    "line_points": [
+      { "x_percent": 68.42, "y_percent": 16.45, "hip": 74785 },
+      { "x_percent": 88.27, "y_percent": 61.56, "hip": 72622 },
+      { "x_percent": 38.59, "y_percent": 92.19, "hip": 73714 }
+    ]
+  },
+  "Sgr": {
+    "stars": {
+      "90185": { "x_percent": 62.64, "y_percent": 48.01 },
+      "92855": { "x_percent": 52.87, "y_percent": 39.34 },
+      "93506": { "x_percent": 44.18, "y_percent": 70.89 }
+    },
+    "line_points": [
+      { "x_percent": 62.64, "y_percent": 48.01, "hip": 90185 },
+      { "x_percent": 52.87, "y_percent": 39.34, "hip": 92855 },
+      { "x_percent": 44.18, "y_percent": 70.89, "hip": 93506 }
+    ]
+  },
+  "Ari": {
+    "stars": {
+      "9884": { "x_percent": 64.57, "y_percent": 30.18 },
+      "8903": { "x_percent": 86.22, "y_percent": 45.68 },
+      "13209": { "x_percent": 5.54, "y_percent": 39.48 }
+    },
+    "line_points": [
+      { "x_percent": 64.57, "y_percent": 30.18, "hip": 9884 },
+      { "x_percent": 86.22, "y_percent": 45.68, "hip": 8903 },
+      { "x_percent": 5.54, "y_percent": 39.48, "hip": 13209 }
+    ]
+  },
+  "CrB": {
+    "stars": {
+      "76267": { "x_percent": 63.88, "y_percent": 96.1 },
+      "75695": { "x_percent": 75.26, "y_percent": 57.49 }
+    },
+    "line_points": [
+      { "x_percent": 63.88, "y_percent": 96.1, "hip": 76267 },
+      { "x_percent": 75.26, "y_percent": 57.49, "hip": 75695 }
+    ]
+  },
+  "Scl": { "stars": {}, "line_points": [] },
+  "Phe": {
+    "stars": {
+      "2081": { "x_percent": 32.06, "y_percent": 89.43 },
+      "5348": { "x_percent": 73.49, "y_percent": 5.52 }
+    },
+    "line_points": [
+      { "x_percent": 32.06, "y_percent": 89.43, "hip": 2081 },
+      { "x_percent": 73.49, "y_percent": 5.52, "hip": 5348 }
+    ]
+  },
+  "Hor": { "stars": {}, "line_points": [] },
+  "Cae": { "stars": {}, "line_points": [] },
+  "Tuc": { "stars": {}, "line_points": [] },
+  "Cha": { "stars": {}, "line_points": [] },
+  "Cru": {
+    "stars": {
+      "60718": { "x_percent": 97.88, "y_percent": 62.57 },
+      "62434": { "x_percent": 43.14, "y_percent": 95.77 },
+      "61084": { "x_percent": 15.67, "y_percent": 39.03 }
+    },
+    "line_points": [
+      { "x_percent": 97.88, "y_percent": 62.57, "hip": 60718 },
+      { "x_percent": 43.14, "y_percent": 95.77, "hip": 62434 },
+      { "x_percent": 15.67, "y_percent": 39.03, "hip": 61084 }
+    ]
+  },
+  "Mon": { "stars": {}, "line_points": [] },
+  "Tau": {
+    "stars": {
+      "21421": { "x_percent": 57.09, "y_percent": 47.37 },
+      "25428": { "x_percent": 99.65, "y_percent": 69.98 }
+    },
+    "line_points": [
+      { "x_percent": 57.09, "y_percent": 47.37, "hip": 21421 },
+      { "x_percent": 99.65, "y_percent": 69.98, "hip": 25428 }
+    ]
+  },
+  "Crt": {
+    "stars": { "53740": { "x_percent": 93.0, "y_percent": 39.91 } },
+    "line_points": [{ "x_percent": 93.0, "y_percent": 39.91, "hip": 53740 }]
+  },
+  "Crv": {
+    "stars": {
+      "59803": { "x_percent": 22.83, "y_percent": 10.12 },
+      "61359": { "x_percent": 70.09, "y_percent": 96.41 },
+      "60965": { "x_percent": 7.91, "y_percent": 61.53 }
+    },
+    "line_points": [
+      { "x_percent": 22.83, "y_percent": 10.12, "hip": 59803 },
+      { "x_percent": 70.09, "y_percent": 96.41, "hip": 61359 },
+      { "x_percent": 7.91, "y_percent": 61.53, "hip": 60965 }
+    ]
+  },
+  "Cir": { "stars": {}, "line_points": [] },
+  "Tri": {
+    "stars": { "8796": { "x_percent": 97.13, "y_percent": 92.21 } },
+    "line_points": [{ "x_percent": 97.13, "y_percent": 92.21, "hip": 8796 }]
+  },
+  "Cas": {
+    "stars": {
+      "3179": { "x_percent": 86.53, "y_percent": 80.32 },
+      "746": { "x_percent": 95.03, "y_percent": 11.94 }
+    },
+    "line_points": [
+      { "x_percent": 86.53, "y_percent": 80.32, "hip": 3179 },
+      { "x_percent": 95.03, "y_percent": 11.94, "hip": 746 }
+    ]
+  },
+  "Cyg": {
+    "stars": {
+      "102098": { "x_percent": 46.36, "y_percent": 95.5 },
+      "100453": { "x_percent": 56.08, "y_percent": 71.05 },
+      "102488": { "x_percent": 79.82, "y_percent": 79.8 }
+    },
+    "line_points": [
+      { "x_percent": 46.36, "y_percent": 95.5, "hip": 102098 },
+      { "x_percent": 56.08, "y_percent": 71.05, "hip": 100453 },
+      { "x_percent": 79.82, "y_percent": 79.8, "hip": 102488 }
+    ]
+  },
+  "Cam": { "stars": {}, "line_points": [] },
+  "Com": {
+    "stars": { "64241": { "x_percent": 9.88, "y_percent": 67.93 } },
+    "line_points": [{ "x_percent": 9.88, "y_percent": 67.93, "hip": 64241 }]
+  },
+  "PsA": {
+    "stars": { "113368": { "x_percent": 94.99, "y_percent": 49.44 } },
+    "line_points": [{ "x_percent": 94.99, "y_percent": 49.44, "hip": 113368 }]
+  },
+  "Her": {
+    "stars": {
+      "80816": { "x_percent": 29.05, "y_percent": 77.79 },
+      "84345": { "x_percent": 11.94, "y_percent": 40.3 }
+    },
+    "line_points": [
+      { "x_percent": 29.05, "y_percent": 77.79, "hip": 80816 },
+      { "x_percent": 11.94, "y_percent": 40.3, "hip": 84345 }
+    ]
+  },
+  "Nor": { "stars": {}, "line_points": [] },
+  "Equ": {
+    "stars": { "104987": { "x_percent": 94.59, "y_percent": 13.14 } },
+    "line_points": [{ "x_percent": 94.59, "y_percent": 13.14, "hip": 104987 }]
+  },
+  "Del": {
+    "stars": {
+      "101769": { "x_percent": 41.07, "y_percent": 18.1 },
+      "101958": { "x_percent": 17.61, "y_percent": 25.5 },
+      "101421": { "x_percent": 98.96, "y_percent": 7.35 }
+    },
+    "line_points": [
+      { "x_percent": 41.07, "y_percent": 18.1, "hip": 101769 },
+      { "x_percent": 17.61, "y_percent": 25.5, "hip": 101958 },
+      { "x_percent": 98.96, "y_percent": 7.35, "hip": 101421 }
+    ]
+  },
+  "Sge": {
+    "stars": { "96757": { "x_percent": 95.45, "y_percent": 9.94 } },
+    "line_points": [{ "x_percent": 95.45, "y_percent": 9.94, "hip": 96757 }]
+  },
+  "Vul": {
+    "stars": { "95771": { "x_percent": 71.28, "y_percent": 12.29 } },
+    "line_points": [{ "x_percent": 71.28, "y_percent": 12.29, "hip": 95771 }]
+  },
+  "SerH": {
+    "stars": {
+      "77070": { "x_percent": 53.42, "y_percent": 32.12 },
+      "77450": { "x_percent": 3.32, "y_percent": 36.2 }
+    },
+    "line_points": [
+      { "x_percent": 53.42, "y_percent": 32.12, "hip": 77070 },
+      { "x_percent": 3.32, "y_percent": 36.2, "hip": 77450 }
+    ]
+  },
+  "Lyn": {
+    "stars": { "41075": { "x_percent": 62.78, "y_percent": 20.76 } },
+    "line_points": [{ "x_percent": 62.78, "y_percent": 20.76, "hip": 41075 }]
+  },
+  "Ant": { "stars": {}, "line_points": [] },
+  "Pyx": { "stars": {}, "line_points": [] },
+  "Aur": {
+    "stars": {
+      "24608": { "x_percent": 28.4, "y_percent": 20.7 },
+      "28360": { "x_percent": 12.17, "y_percent": 42.1 },
+      "28380": { "x_percent": 21.07, "y_percent": 74.93 }
+    },
+    "line_points": [
+      { "x_percent": 28.4, "y_percent": 20.7, "hip": 24608 },
+      { "x_percent": 12.17, "y_percent": 42.1, "hip": 28360 },
+      { "x_percent": 21.07, "y_percent": 74.93, "hip": 28380 }
+    ]
+  },
+  "Psc": {
+    "stars": {
+      "7097": { "x_percent": 9.7, "y_percent": 51.56 },
+      "9487": { "x_percent": 1.26, "y_percent": 99.25 },
+      "8198": { "x_percent": 6.47, "y_percent": 74.26 }
+    },
+    "line_points": [
+      { "x_percent": 9.7, "y_percent": 51.56, "hip": 7097 },
+      { "x_percent": 1.26, "y_percent": 99.25, "hip": 9487 },
+      { "x_percent": 6.47, "y_percent": 74.26, "hip": 8198 }
+    ]
+  },
+  "Dra": {
+    "stars": {
+      "87833": { "x_percent": 99.26, "y_percent": 3.67 },
+      "80331": { "x_percent": 58.84, "y_percent": 27.39 },
+      "85670": { "x_percent": 88.09, "y_percent": 0.29 }
+    },
+    "line_points": [
+      { "x_percent": 99.26, "y_percent": 3.67, "hip": 87833 },
+      { "x_percent": 58.84, "y_percent": 27.39, "hip": 80331 },
+      { "x_percent": 88.09, "y_percent": 0.29, "hip": 85670 }
+    ]
+  },
+  "Sct": { "stars": {}, "line_points": [] },
+  "And": {
+    "stars": {
+      "677": { "x_percent": 8.81, "y_percent": 37.34 },
+      "5447": { "x_percent": 55.92, "y_percent": 32.41 },
+      "9640": { "x_percent": 97.46, "y_percent": 38.24 }
+    },
+    "line_points": [
+      { "x_percent": 8.81, "y_percent": 37.34, "hip": 677 },
+      { "x_percent": 55.92, "y_percent": 32.41, "hip": 5447 },
+      { "x_percent": 97.46, "y_percent": 38.24, "hip": 9640 }
+    ]
+  },
+  "Peg": {
+    "stars": {
+      "107315": { "x_percent": 97.05, "y_percent": 74.25 },
+      "113881": { "x_percent": 52.82, "y_percent": 32.81 },
+      "113963": { "x_percent": 58.24, "y_percent": 76.29 }
+    },
+    "line_points": [
+      { "x_percent": 97.05, "y_percent": 74.25, "hip": 107315 },
+      { "x_percent": 52.82, "y_percent": 32.81, "hip": 113881 },
+      { "x_percent": 58.24, "y_percent": 76.29, "hip": 113963 }
+    ]
+  },
+  "Car": {
+    "stars": {
+      "30438": { "x_percent": 0.5, "y_percent": 98.0 },
+      "45238": { "x_percent": 68.2, "y_percent": 18.7 },
+      "41037": { "x_percent": 54.08, "y_percent": 83.72 }
+    },
+    "line_points": [
+      { "x_percent": 0.5, "y_percent": 98.0, "hip": 30438 },
+      { "x_percent": 68.2, "y_percent": 18.7, "hip": 45238 },
+      { "x_percent": 54.08, "y_percent": 83.72, "hip": 41037 }
+    ]
+  },
+  "CVn": {
+    "stars": {
+      "63125": { "x_percent": 94.12, "y_percent": 62.95 },
+      "61317": { "x_percent": 10.75, "y_percent": 28.24 }
+    },
+    "line_points": [
+      { "x_percent": 94.12, "y_percent": 62.95, "hip": 63125 },
+      { "x_percent": 10.75, "y_percent": 28.24, "hip": 61317 }
+    ]
+  },
+  "SerT": {
+    "stars": {
+      "77070": { "clickable": false },
+      "77450": { "clickable": false }
+    },
+    "line_points": []
+  },
+  "Aps": { "stars": {}, "line_points": [] },
+  "Tel": { "stars": {}, "line_points": [] },
+  "TrA": { "stars": {}, "line_points": [] },
+  "Cen": {
+    "stars": {
+      "71683": { "x_percent": 67.54, "y_percent": 99.18 },
+      "68702": { "x_percent": 69.51, "y_percent": 81.88 }
+    },
+    "line_points": [
+      { "x_percent": 67.54, "y_percent": 99.18, "hip": 71683 },
+      { "x_percent": 69.51, "y_percent": 81.88, "hip": 68702 }
+    ]
+  },
+  "Hya": {
+    "stars": {
+      "46390": { "x_percent": 26.64, "y_percent": 81.97 },
+      "43109": { "x_percent": 72.4, "y_percent": 15.28 }
+    },
+    "line_points": [
+      { "x_percent": 26.64, "y_percent": 81.97, "hip": 46390 },
+      { "x_percent": 72.4, "y_percent": 15.28, "hip": 43109 }
+    ]
+  },
+  "Oph": {
+    "stars": {
+      "86032": { "x_percent": 24.76, "y_percent": 6.47 },
+      "84012": { "x_percent": 49.24, "y_percent": 80.77 }
+    },
+    "line_points": [
+      { "x_percent": 24.76, "y_percent": 6.47, "hip": 86032 },
+      { "x_percent": 49.24, "y_percent": 80.77, "hip": 84012 }
+    ]
+  },
+  "Eri": {
+    "stars": {
+      "7588": { "clickable": false },
+      "23875": { "x_percent": 5.15, "y_percent": 18.15 },
+      "13847": { "clickable": false }
+    },
+    "line_points": [{ "x_percent": 5.15, "y_percent": 18.15, "hip": 23875 }]
+  }
+}

@@ -195,12 +195,17 @@ export const getCatalogMyAPI = async (accessToken) => {
   })
 
   if (!response.ok) {
-    const errorData = await response.json()
+    const contentType = response.headers.get('content-type') || ''
+    const errorData = contentType.includes('application/json')
+      ? await response.json()
+      : { detail: await response.text() }
 
-    throw new Error(
+    const error = new Error(
       errorData.detail ||
       '개인 도감 정보를 불러오는데 실패했습니다.'
     )
+    error.status = response.status
+    throw error
   }
 
   return response.json()
