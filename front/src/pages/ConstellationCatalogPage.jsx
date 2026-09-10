@@ -46,7 +46,10 @@ function ConstellationCatalogPage() {
   const [difficultyFilter, setDifficultyFilter] = useState('all')
   const [searchQuery, setSearchQuery] = useState('')
   const [constellations, setConstellations] = useState([])
-
+  
+  // 뱀자리 머리/꼬리 선택 모달을 위한 상태
+  const [showSerpensModal, setShowSerpensModal] = useState(false)
+  const [serpensData, setSerpensData] = useState({ head: null, tail: null })
 
   // 로컬 스토리지에서 로그인된 유저 정보 가져오기
   const userString = localStorage.getItem('user')
@@ -98,7 +101,7 @@ function ConstellationCatalogPage() {
         const token = localStorage.getItem('accessToken')
         const myCatalog = await getCatalogMyAPI(token)
 
-        const data = myCatalog.map(item => ({
+        const rawData = myCatalog.map(item => ({
           id: item.constellation_id,
           name: item.name_ko,
           difficulty: item.difficulty,
@@ -110,8 +113,39 @@ function ConstellationCatalogPage() {
           imageUrl: item.image_url,
         }))
 
+        // 뱀자리(머리)와 뱀자리(꼬리) 분리 처리 및 통합
+        const headItem = rawData.find(c => c.name === '뱀자리(머리)')
+        const tailItem = rawData.find(c => c.name === '뱀자리(꼬리)')
 
-        setConstellations(data)
+        const filteredRawData = rawData.filter(
+          c => c.name !== '뱀자리(머리)' && c.name !== '뱀자리(꼬리)'
+        )
+
+        if (headItem || tailItem) {
+          const isBothDiscovered = headItem?.discovered && tailItem?.discovered
+          const isAnyDiscovered = headItem?.discovered || tailItem?.discovered
+          
+          // 가장 최근 발견일 선택
+          const dates = [headItem?.date, tailItem?.date].filter(Boolean).sort()
+          const latestDate = dates[dates.length - 1] || ''
+
+          const mergedSerpens = {
+            id: 'serpens-merged', // 가상의 통합 ID
+            name: '뱀자리',
+            difficulty: headItem?.difficulty || tailItem?.difficulty || '3',
+            date: latestDate,
+            discovered: isAnyDiscovered,
+            isNew: false,
+            imageUrl: headItem?.imageUrl || tailItem?.imageUrl,
+            isSerpensGroup: true,
+            head: headItem,
+            tail: tailItem,
+          }
+
+          filteredRawData.push(mergedSerpens)
+        }
+
+        setConstellations(filteredRawData)
 
       } catch (error) {
         console.error('별자리 도감 조회 실패:', error)
@@ -156,6 +190,15 @@ function ConstellationCatalogPage() {
     return discovered[0]?.name || '없음'
 
   }, [constellations])
+
+  const handleCardClick = (constellation) => {
+    if (constellation.isSerpensGroup) {
+      setSerpensData({ head: constellation.head, tail: constellation.tail })
+      setShowSerpensModal(true)
+    } else {
+      navigate(`/constellation-info?constellation_id=${constellation.id}`)
+    }
+  }
 
   return (
     <PageContainer>
@@ -219,8 +262,6 @@ function ConstellationCatalogPage() {
                 미발견 {constellations.length - discoveredCount}
               </FilterButton>
             </FilterGroup>
-
-
             </FilterBar>
 
             <FilterBar>
@@ -296,9 +337,7 @@ function ConstellationCatalogPage() {
                   <ConstellationCard 
                     key={constellation.id}
                     $discovered={constellation.discovered}
-                    onClick={() =>
-                      navigate(`/constellation-info?constellation_id=${constellation.id}`)
-                    }
+                    onClick={() => handleCardClick(constellation)}
                   >
                     <CardImage $discovered={constellation.discovered}>
                     {
@@ -343,6 +382,57 @@ function ConstellationCatalogPage() {
           </ContentSection>
         </MainContainer>
       </ContentWrapper>
+
+      {/* 뱀자리 머리/꼬리 선택 모달 */}
+      {showSerpensModal && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.7)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000
+        }}>
+          <div style={{
+            backgroundColor: '#16132d', border: '1px solid #a78bfa', borderRadius: '1rem',
+            padding: '2rem', width: '320px', textAlign: 'center', color: 'white'
+          }}>
+            <h3 style={{ marginBottom: '1.5rem', fontSize: '1.25rem' }}>뱀자리 선택</h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <button
+                onClick={() => {
+                  setShowSerpensModal(false)
+                  navigate(`/constellation-info?constellation_id=${serpensData.head.id}`)
+                }}
+                style={{
+                  padding: '0.75rem', borderRadius: '0.5rem', backgroundColor: '#7c3aed',
+                  color: 'white', border: 'none', cursor: 'pointer', fontWeight: '600'
+                }}
+              >
+                뱀자리(머리) 보기 {serpensData.head?.discovered ? '(발견됨)' : '(미발견)'}
+              </button>
+              <button
+                onClick={() => {
+                  setShowSerpensModal(false)
+                  navigate(`/constellation-info?constellation_id=${serpensData.tail.id}`)
+                }}
+                style={{
+                  padding: '0.75rem', borderRadius: '0.5rem', backgroundColor: '#7c3aed',
+                  color: 'white', border: 'none', cursor: 'pointer', fontWeight: '600'
+                }}
+              >
+                뱀자리(꼬리) 보기 {serpensData.tail?.discovered ? '(발견됨)' : '(미발견)'}
+              </button>
+            </div>
+            <button
+              onClick={() => setShowSerpensModal(false)}
+              style={{
+                marginTop: '1.5rem', padding: '0.5rem 1rem', background: 'transparent',
+                color: '#94a3b8', border: 'none', cursor: 'pointer'
+              }}
+            >
+              닫기
+            </button>
+          </div>
+        </div>
+      )}
     </PageContainer>
   )
 }
