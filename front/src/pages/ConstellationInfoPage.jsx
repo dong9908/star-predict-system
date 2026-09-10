@@ -209,7 +209,13 @@ function ConstellationInfoPage() {
   const [loadingId, setLoadingId] = useState(null)
   const [error, setError] = useState('')
 
-  // 별자리 전체 목록 조회
+  // 도감에서 넘어온 경우인지 확인 (constellation_id 파라미터 유무)
+  const hasCatalogParam = searchParams.has('constellation_id')
+  
+  // 이미지(시각화 패널)가 있는 영역을 최상단으로 잡기 위한 ref
+  const visualizationRef = useRef(null)
+
+  // 별자리 전체 목록 조회 및 URL ID 변경 감지
   useEffect(() => {
     const fetchCatalog = async () => {
       try {
@@ -235,6 +241,11 @@ function ConstellationInfoPage() {
         setSelectedConstellation(detailData)
         setSelectedId(urlConstellationId)
 
+        // 도감에서 넘어온 경우 모바일에서도 이미지/시각화 패널부터 맨 위에 보이도록 즉시 스크롤 포커스
+        window.scrollTo(0, 0)
+        if (hasCatalogParam && visualizationRef.current) {
+          visualizationRef.current.scrollIntoView({ behavior: 'auto', block: 'center' })
+        }
 
       } catch(error) {
         console.error(error)
@@ -247,7 +258,7 @@ function ConstellationInfoPage() {
 
     fetchCatalog()
 
-  }, [urlConstellationId])
+  }, [urlConstellationId, hasCatalogParam])
 
   // 검색 결과
   const filteredConstellations = useMemo(() => {
@@ -299,14 +310,16 @@ function ConstellationInfoPage() {
     <PageWrapper>
 
       {/* =========================
-          왼쪽 영역
+          왼쪽 영역 ($isFromCatalog 전달)
       ========================= */}
-      <LeftSection>
+      <LeftSection $isFromCatalog={hasCatalogParam}>
 
-        {/* 별자리 이미지 */}
-        <ConstellationVisualization
-          constellation={selectedConstellation}
-        />
+        {/* 별자리 이미지 및 시각화 패널 (ref 부착으로 도감 진입 시 맨 먼저 노출) */}
+        <div ref={visualizationRef}>
+          <ConstellationVisualization
+            constellation={selectedConstellation}
+          />
+        </div>
 
 
         <DetailSection>
@@ -394,7 +407,7 @@ function ConstellationInfoPage() {
       {/* =========================
           오른쪽 영역
       ========================= */}
-      <RightSection>
+      <RightSection $isFromCatalog={hasCatalogParam}>
 
         {/* 검색 */}
         <SearchContainer>
@@ -481,6 +494,5 @@ function ConstellationInfoPage() {
     </PageWrapper>
   )
 }
-
 
 export default ConstellationInfoPage
