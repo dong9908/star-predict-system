@@ -25,16 +25,22 @@ import {
   ControlButton,
   LoadingState,
   ConstellationImage,
+  ConstellationImageFrame,
   StarEnglish,
   ConstellationCardLoading,
+  ActiveStarMarker,
+  ClickableLineStar,
 } from './styles/ConstellationInfoPage.styles'
 
 const DEFAULT_CONSTELLATION_ID = 1
 
-function ConstellationVisualization({ constellation }) {
+function ConstellationVisualization({ constellation, activeStar, flashToken, onLineStarClick }) {
   const [zoom, setZoom] = useState(1)
   const [pan, setPan] = useState({ x: 0, y: 0 })
   const [isDragging, setIsDragging] = useState(false)
+  const [renderedImageBounds, setRenderedImageBounds] = useState(null)
+  const imageFrameRef = useRef(null)
+  const imageRef = useRef(null)
 
   const dragStartRef = useRef({
     pointerX: 0,
@@ -42,6 +48,52 @@ function ConstellationVisualization({ constellation }) {
     panX: 0,
     panY: 0,
   })
+
+  const updateRenderedImageBounds = () => {
+    const frame = imageFrameRef.current
+    const image = imageRef.current
+    if (
+      !frame ||
+      !image ||
+      !image.clientWidth ||
+      !image.clientHeight ||
+      !image.naturalWidth ||
+      !image.naturalHeight
+    ) return
+
+    // object-fit: contain은 img 요소의 박스 안에 실제 사진을 레터박스로
+    // 배치할 수 있으므로, clientWidth/Height가 곧 사진 영역은 아닙니다.
+    const scale = Math.min(
+      image.clientWidth / image.naturalWidth,
+      image.clientHeight / image.naturalHeight,
+    )
+    const contentWidth = image.naturalWidth * scale
+    const contentHeight = image.naturalHeight * scale
+
+    setRenderedImageBounds({
+      left: image.offsetLeft + (image.clientWidth - contentWidth) / 2,
+      top: image.offsetTop + (image.clientHeight - contentHeight) / 2,
+      width: contentWidth,
+      height: contentHeight,
+    })
+  }
+
+  useEffect(() => {
+    const frame = imageFrameRef.current
+    const image = imageRef.current
+    if (!frame || !image) return undefined
+
+    updateRenderedImageBounds()
+    const observer = new ResizeObserver(updateRenderedImageBounds)
+    observer.observe(frame)
+    observer.observe(image)
+    window.addEventListener('resize', updateRenderedImageBounds)
+
+    return () => {
+      observer.disconnect()
+      window.removeEventListener('resize', updateRenderedImageBounds)
+    }
+  }, [constellation.image_url])
 
   // 축소
   const handleZoomOut = () => {
@@ -112,8 +164,10 @@ function ConstellationVisualization({ constellation }) {
         style={{
           position: 'relative',
           width: '100%',
-          height: '100%',
+          flex: 1,
+          minHeight: 0,
           overflow: 'hidden',
+          borderRadius: '8px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -147,10 +201,38 @@ function ConstellationVisualization({ constellation }) {
                 : 'transform 0.2s ease',
             }}
           >
-            <ConstellationImage
-              src={constellation.image_url}
-              alt={`${constellation.name_ko} 별자리`}
-            />
+            <ConstellationImageFrame ref={imageFrameRef}>
+              <ConstellationImage
+                ref={imageRef}
+                src={constellation.image_url}
+                alt={`${constellation.name_ko} 별자리`}
+                onLoad={updateRenderedImageBounds}
+              />
+              {renderedImageBounds && constellation.image_line_points?.map((point) => (
+                <ClickableLineStar
+                  key={point.point_id}
+                  type="button"
+                  style={{
+                    left: `${renderedImageBounds.left + (renderedImageBounds.width * point.x_percent / 100)}px`,
+                    top: `${renderedImageBounds.top + (renderedImageBounds.height * point.y_percent / 100)}px`,
+                  }}
+                  onPointerDown={(event) => event.stopPropagation()}
+                  onClick={() => onLineStarClick(point)}
+                  title={point.hip ? '주요 별 선택' : '별자리 연결선의 별'}
+                  aria-label="별자리 연결선의 별 선택"
+                />
+              ))}
+              {activeStar && renderedImageBounds && (
+                <ActiveStarMarker
+                  key={`${activeStar.star_id}-${flashToken}`}
+                  style={{
+                    left: `${renderedImageBounds.left + (renderedImageBounds.width * activeStar.x_percent / 100)}px`,
+                    top: `${renderedImageBounds.top + (renderedImageBounds.height * activeStar.y_percent / 100)}px`,
+                  }}
+                  aria-label={`${activeStar.name} 위치 강조`}
+                />
+              )}
+            </ConstellationImageFrame>
           </div>
         ) : (
           <div
@@ -208,6 +290,38 @@ function ConstellationInfoPage() {
   const [loading, setLoading] = useState(true)
   const [loadingId, setLoadingId] = useState(null)
   const [error, setError] = useState('')
+  const [activeStar, setActiveStar] = useState(null)
+  const [flashToken, setFlashToken] = useState(0)
+  const flashTimerRef = useRef(null)
+
+  useEffect(() => () => {
+    if (flashTimerRef.current) window.clearTimeout(flashTimerRef.current)
+  }, [])
+
+  const handleStarClick = (star) => {
+    if (!star.clickable) return
+    if (flashTimerRef.current) window.clearTimeout(flashTimerRef.current)
+    setActiveStar(star)
+    setFlashToken((value) => value + 1)
+    flashTimerRef.current = window.setTimeout(() => setActiveStar(null), 1800)
+  }
+
+  const handleLineStarClick = (point) => {
+    if (flashTimerRef.current) window.clearTimeout(flashTimerRef.current)
+    const matchedStar = selectedConstellation.main_stars?.find(
+      (star) => Number(star.hip) === Number(point.hip)
+    )
+    setActiveStar(matchedStar
+      ? { ...matchedStar, x_percent: point.x_percent, y_percent: point.y_percent }
+      : {
+          star_id: `line-${point.point_id}`,
+          name: '별자리 연결선의 별',
+          x_percent: point.x_percent,
+          y_percent: point.y_percent,
+        })
+    setFlashToken((value) => value + 1)
+    flashTimerRef.current = window.setTimeout(() => setActiveStar(null), 1800)
+  }
 
   // 별자리 전체 목록 조회
   useEffect(() => {
@@ -306,6 +420,9 @@ function ConstellationInfoPage() {
         {/* 별자리 이미지 */}
         <ConstellationVisualization
           constellation={selectedConstellation}
+          activeStar={activeStar}
+          flashToken={flashToken}
+          onLineStarClick={handleLineStarClick}
         />
 
 
@@ -339,7 +456,14 @@ function ConstellationInfoPage() {
             selectedConstellation.main_stars.length > 0 ? (
               selectedConstellation.main_stars.map(
                 (star, idx) => (
-                  <StarChip key={idx}>
+                  <StarChip
+                    key={`${star.star_id || idx}-${activeStar?.star_id === star.star_id ? flashToken : 0}`}
+                    $available={star.clickable}
+                    $active={activeStar?.star_id === star.star_id}
+                    onClick={() => handleStarClick(star)}
+                    aria-disabled={!star.clickable}
+                    title={star.clickable ? '사진에서 주요 별 위치를 확인합니다.' : '현재 사진의 연결선에 표시되지 않은 별입니다.'}
+                  >
                     {star.name}{' '}
 
                     <StarEnglish>
@@ -435,6 +559,7 @@ function ConstellationInfoPage() {
                       const data = await response.json()
 
                       setSelectedConstellation(data)
+                      setActiveStar(null)
 
                     } catch(error) {
                       console.error(error)

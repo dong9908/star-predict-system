@@ -4,13 +4,12 @@ export const PageWrapper = styled.div`
   display: flex;
   gap: 2rem;
   padding: 2rem;
-  background: #090916; /* 다른 페이지들과 일치하는 깔끔한 어두운 단색 배경으로 변경 */
-  height: 100vh;
+  background: transparent;
+  min-height: calc(100vh - 190px);
   width: 100%;
   max-width: 1800px;
   margin: 0 auto;
   box-sizing: border-box;
-  align-items: stretch;
 
   @media (max-width: 1024px) {
     flex-direction: column;
@@ -27,13 +26,11 @@ export const PageWrapper = styled.div`
 `
 
 export const LeftSection = styled.div`
-  flex: 1 1 0;
+  flex: 1;
   min-width: 0;
-  width: auto;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  height: 100%;
 
   @media (max-width: 1024px) {
     flex: none;
@@ -51,10 +48,12 @@ export const VisualizationPanel = styled.div`
   background: rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(167, 139, 250, 0.3);
   border-radius: 1rem;
-  padding: 2rem;
-  height: 400px;
+  padding: 1rem;
+  height: 560px;
   flex-shrink: 0;
   display: flex;
+  flex-direction: column;
+  gap: 1rem;
   align-items: center;
   justify-content: center;
   position: relative;
@@ -65,17 +64,24 @@ export const VisualizationPanel = styled.div`
   }
 
   @media (max-width: 1024px) {
-    height: 300px;
-    flex-shrink: 1;
+    height: 520px;
   }
+`
+
+export const ConstellationImageFrame = styled.div`
+  position: relative;
+  display: inline-flex;
+  max-width: 100%;
+  max-height: 100%;
+  line-height: 0;
 `
 
 export const ConstellationImage = styled.img`
   display: block;
-  width: 100%;
-  height: 100%;
+  width: auto;
+  height: auto;
   max-width: 100%;
-  min-width: 0;
+  max-height: 100%;
   object-fit: contain;
 `
 
@@ -85,14 +91,74 @@ export const VisualizationCanvas = styled.svg`
 `
 
 export const ControlButtons = styled.div`
-  position: absolute;
-  bottom: 1rem;
-  left: 50%;
-  transform: translateX(-50%);
-
   display: flex;
+  justify-content: center;
   gap: 0.5rem;
-  z-index: 10;
+  flex-shrink: 0;
+`
+
+export const ActiveStarMarker = styled.span`
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid #c4b5fd;
+  box-shadow: 0 0 4px #c4b5fd, 0 0 9px #c4b5fd;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 5;
+  animation: constellationStarFlash 0.6s ease-in-out 3;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: rgba(196, 181, 253, 0.16);
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 16px;
+    height: 16px;
+    transform: translate(-50%, -50%);
+    background:
+      linear-gradient(#c4b5fd, #c4b5fd) center / 1px 16px no-repeat,
+      linear-gradient(#c4b5fd, #c4b5fd) center / 16px 1px no-repeat;
+  }
+
+  @keyframes constellationStarFlash {
+    0%, 100% { opacity: 0.72; transform: translate(-50%, -50%) scale(0.9); }
+    50% { opacity: 1; transform: translate(-50%, -50%) scale(1.3); }
+  }
+`
+
+export const ClickableLineStar = styled.button`
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  z-index: 4;
+
+  &:hover,
+  &:focus-visible {
+    outline: none;
+    background: rgba(196, 181, 253, 0.2);
+    box-shadow: 0 0 8px rgba(196, 181, 253, 0.75);
+  }
 `
 
 export const ControlButton = styled.button`
@@ -125,8 +191,8 @@ export const DetailSection = styled.div`
   border-radius: 1rem;
   padding: 2rem;
   overflow-y: auto;
-  flex: 1;
-  min-height: 0;
+  max-height: 400px;
+  box-sizing: border-box;
 
   &:hover {
     border-color: #a78bfa;
@@ -202,13 +268,14 @@ export const StarChip = styled.span`
   padding: 0.5rem 1rem;
   border-radius: 20px;
   font-size: 0.85rem;
-  cursor: pointer;
+  cursor: ${props => (props.$available ? 'pointer' : 'not-allowed')};
+  opacity: ${props => (props.$available ? 1 : 0.58)};
   transition: all 0.3s ease;
 
   &:hover {
     border-color: #a78bfa;
     background: rgba(167, 139, 250, 0.1);
-    transform: translateY(-2px);
+    transform: ${props => (props.$available ? 'translateY(-2px)' : 'none')};
   }
 
   &::after {
@@ -238,6 +305,19 @@ export const StarChip = styled.span`
   &:hover::after {
     opacity: 1;
     visibility: visible;
+  }
+
+  ${props => props.$active && `
+    color: white;
+    background: rgba(167, 139, 250, 0.3);
+    border-color: #a78bfa;
+    box-shadow: 0 0 10px rgba(196, 181, 253, 0.5);
+    animation: selectedStarChipFlash 0.6s ease-in-out 3;
+  `}
+
+  @keyframes selectedStarChipFlash {
+    0%, 100% { box-shadow: 0 0 5px rgba(196, 181, 253, 0.35); }
+    50% { box-shadow: 0 0 16px rgba(196, 181, 253, 0.95); }
   }
 `
 
@@ -296,13 +376,12 @@ export const StorySection = styled.div`
 
 /* 오른쪽 영역 바깥쪽 배경을 투명하게 만들어 전체 배경 그라데이션과 완전히 일치시킴 */
 export const RightSection = styled.div`
-  flex: 0 0 35%;
+  flex: 0 0 40%;
   min-width: 0;
   width: auto;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  height: 100%;
   background: transparent;
   border: none;
   padding: 0;

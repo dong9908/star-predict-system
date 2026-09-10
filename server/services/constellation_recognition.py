@@ -34,6 +34,10 @@ REALTIME_PLATE_ROOT = (
     PROJECT_ROOT / "Constellation" / "data" / "results" / "realtime_plate_solving"
 )
 _PLATE_SOLVE_LOCK = threading.Lock()
+DEFAULT_PLATE_SOLVE_TIMEOUT_SECONDS = 90
+DEFAULT_PLATE_SOLVE_SCALE_LOWER = 5.0
+DEFAULT_PLATE_SOLVE_SCALE_UPPER = 160.0
+DEFAULT_PLATE_SOLVE_DOWNSAMPLE = 4
 
 OBJECT_TO_GROUP = {
     "Pleiades": ("Taurus", "황소자리", "constellation"),
@@ -126,12 +130,62 @@ def _read_realtime_plate_result(result_path: Path, was_cached: bool) -> tuple[di
     }, wcs_path
 
 
+def _plate_solver_settings() -> dict:
+    timeout_seconds = max(
+        30,
+        int(os.getenv("PLATE_SOLVE_TIMEOUT_SECONDS", str(DEFAULT_PLATE_SOLVE_TIMEOUT_SECONDS))),
+    )
+    scale_lower = float(os.getenv("PLATE_SOLVE_SCALE_LOWER", str(DEFAULT_PLATE_SOLVE_SCALE_LOWER)))
+    scale_upper = float(os.getenv("PLATE_SOLVE_SCALE_UPPER", str(DEFAULT_PLATE_SOLVE_SCALE_UPPER)))
+    downsample = int(os.getenv("PLATE_SOLVE_DOWNSAMPLE", str(DEFAULT_PLATE_SOLVE_DOWNSAMPLE)))
+    if not 0 < scale_lower < scale_upper:
+        raise ValueError("PLATE_SOLVE_SCALE_LOWER는 SCALE_UPPER보다 작아야 합니다.")
+    if downsample not in {1, 2, 4, 8}:
+        raise ValueError("PLATE_SOLVE_DOWNSAMPLE은 1, 2, 4, 8 중 하나여야 합니다.")
+    return {
+        "timeout_seconds": timeout_seconds,
+        "scale_lower": scale_lower,
+        "scale_upper": scale_upper,
+        "downsample": downsample,
+        "distribution": os.getenv("PLATE_SOLVE_WSL_DISTRIBUTION", "Ubuntu"),
+    }
+
+
+def _plate_cache_matches(result_path: Path, settings: dict) -> bool:
+    try:
+        result = json.loads(result_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return False
+    parameters = result.get("parameters") or {}
+    try:
+        return (
+            int(parameters.get("timeout_seconds")) == settings["timeout_seconds"]
+            and float(parameters.get("scale_lower")) == settings["scale_lower"]
+            and float(parameters.get("scale_upper")) == settings["scale_upper"]
+            and int(parameters.get("downsample")) == settings["downsample"]
+        )
+    except (TypeError, ValueError):
+        return False
+
+
 def run_realtime_plate_solving(content: bytes, suffix: str) -> tuple[dict, Path | None]:
     """Resolve an upload with stage 48, reusing its filename-independent SHA cache."""
     image_hash = hashlib.sha256(content).hexdigest().lower()
     result_path = REALTIME_PLATE_ROOT / image_hash / "result.json"
     with _PLATE_SOLVE_LOCK:
-        if result_path.is_file():
+        try:
+            settings = _plate_solver_settings()
+        except (TypeError, ValueError) as error:
+            return {
+                "status": "unavailable",
+                "cached": False,
+                "imageSha256": image_hash,
+                "aiUsed": False,
+                "errorType": "PlateSolverConfigurationError",
+                "message": str(error),
+            }, None
+        cache_matches = result_path.is_file() and _plate_cache_matches(result_path, settings)
+        if cache_matches:
             return _read_realtime_plate_result(result_path, was_cached=True)
         if not REALTIME_PLATE_SOLVER.is_file():
             return {
@@ -142,10 +196,11 @@ def run_realtime_plate_solving(content: bytes, suffix: str) -> tuple[dict, Path 
                 "message": "48번 Plate Solving 스크립트가 없습니다.",
             }, None
 
-        timeout_seconds = max(30, int(os.getenv("PLATE_SOLVE_TIMEOUT_SECONDS", "90")))
-        scale_lower = float(os.getenv("PLATE_SOLVE_SCALE_LOWER", "20"))
-        scale_upper = float(os.getenv("PLATE_SOLVE_SCALE_UPPER", "120"))
-        distribution = os.getenv("PLATE_SOLVE_WSL_DISTRIBUTION", "Ubuntu")
+        timeout_seconds = settings["timeout_seconds"]
+        scale_lower = settings["scale_lower"]
+        scale_upper = settings["scale_upper"]
+        downsample = settings["downsample"]
+        distribution = settings["distribution"]
         with tempfile.TemporaryDirectory(prefix="astra_plate_upload_") as temporary:
             image_path = Path(temporary) / f"{image_hash}{suffix}"
             image_path.write_bytes(content)
@@ -154,8 +209,11 @@ def run_realtime_plate_solving(content: bytes, suffix: str) -> tuple[dict, Path 
                 "--output-dir", str(REALTIME_PLATE_ROOT),
                 "--timeout-seconds", str(timeout_seconds),
                 "--scale-lower", str(scale_lower), "--scale-upper", str(scale_upper),
+                "--downsample", str(downsample),
                 "--wsl-distribution", distribution,
             ]
+            if result_path.is_file() and not cache_matches:
+                command.append("--force")
             try:
                 completed = subprocess.run(
                     command, cwd=PROJECT_ROOT / "Constellation", capture_output=True,
