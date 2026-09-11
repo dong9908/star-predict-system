@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 
 export const PageContainer = styled.div`
+  position: relative;
   width: 100%;
   padding: 3rem 2rem;
   min-height: calc(100vh - 80px);
@@ -411,4 +412,65 @@ export const EmptyState = styled.div`
   text-align: center;
   padding: 3rem 2rem;
   color: #cbd5e1;
+`
+
+export const SelectButtonGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1rem;
+
+  button {
+    width: 100%;
+    padding: 0.875rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 0.75rem;
+    background: linear-gradient(135deg, #7c3aed, #4f46e5);
+    color: white;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+`
+
+export const ModalOverlay = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  box-sizing: border-box;
+  padding: 1rem;
+`
+
+export const ConstellationDetailModal = styled.div`
+  position: sticky;
+  top: 50vh;
+  transform: translateY(-50%);
+  width: 90%;
+  max-width: 360px;
+  background: #0f172a;
+  border: 1px solid rgba(167, 139, 250, 0.4);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-sizing: border-box;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+
+  @media (max-width: 768px) {
+    width: 90%;
+    max-width: 320px;
+    padding: 1.25rem;
+  }
 `

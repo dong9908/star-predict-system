@@ -35,6 +35,9 @@ import {
   CardName,
   CardDate,
   EmptyState,
+  ConstellationDetailModal,
+  SelectButtonGroup,
+  ModalOverlay
 } from './styles/ConstellationCatalogPage.styles'
 import {
   getCatalogMyAPI,
@@ -47,9 +50,10 @@ function ConstellationCatalogPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [constellations, setConstellations] = useState([])
 
-  // 뱀자리 머리/꼬리 선택 모달을 위한 상태
+  // 뱀자리 머리/꼬리 선택 모달을 위한 상태 및 스크롤 위치 상태
   const [showSerpensModal, setShowSerpensModal] = useState(false)
   const [serpensData, setSerpensData] = useState({ head: null, tail: null })
+  const [scrollPosition, setScrollPosition] = useState(0)
 
   // 로컬 스토리지에서 로그인된 유저 정보 가져오기
   const userString = localStorage.getItem('user')
@@ -194,6 +198,7 @@ function ConstellationCatalogPage() {
 
   const handleCardClick = (constellation) => {
     if (constellation.isSerpensGroup) {
+      setScrollPosition(window.scrollY) // 모달 열릴 때의 현재 스크롤 위치 저장
       setSerpensData({ head: constellation.head, tail: constellation.tail })
       setShowSerpensModal(true)
     } else {
@@ -386,17 +391,12 @@ function ConstellationCatalogPage() {
 
       {/* 뱀자리 머리/꼬리 선택 모달 */}
       {showSerpensModal && (
-        <div style={{
-          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-          backgroundColor: 'rgba(0, 0, 0, 0.7)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000
-        }}>
-          <div style={{
-            backgroundColor: '#16132d', border: '1px solid #a78bfa', borderRadius: '1rem',
-            padding: '2rem', width: '320px', textAlign: 'center', color: 'white'
-          }}>
-            <h3 style={{ marginBottom: '1.5rem', fontSize: '1.25rem' }}>뱀자리 선택</h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <ModalOverlay onClick={() => setShowSerpensModal(false)}>
+          <ConstellationDetailModal onClick={(e) => e.stopPropagation()}>
+            <h3 style={{ marginBottom: '1.5rem', fontSize: '1.25rem', textAlign: 'center', color: 'white' }}>
+              뱀자리 선택
+            </h3>
+            <SelectButtonGroup>
               <button
                 disabled={!serpensData.head}
                 onClick={() => {
@@ -405,9 +405,8 @@ function ConstellationCatalogPage() {
                   navigate(`/constellation-info?constellation_id=${serpensData.head.id}`)
                 }}
                 style={{
-                  padding: '0.75rem', borderRadius: '0.5rem', backgroundColor: '#7c3aed',
-                  color: 'white', border: 'none', cursor: serpensData.head ? 'pointer' : 'not-allowed',
-                  fontWeight: '600', opacity: serpensData.head ? 1 : 0.45
+                  cursor: serpensData.head ? 'pointer' : 'not-allowed',
+                  opacity: serpensData.head ? 1 : 0.45
                 }}
               >
                 뱀자리(머리) 보기 {serpensData.head?.discovered ? '(발견됨)' : '(미발견)'}
@@ -420,25 +419,26 @@ function ConstellationCatalogPage() {
                   navigate(`/constellation-info?constellation_id=${serpensData.tail.id}`)
                 }}
                 style={{
-                  padding: '0.75rem', borderRadius: '0.5rem', backgroundColor: '#7c3aed',
-                  color: 'white', border: 'none', cursor: serpensData.tail ? 'pointer' : 'not-allowed',
-                  fontWeight: '600', opacity: serpensData.tail ? 1 : 0.45
+                  cursor: serpensData.tail ? 'pointer' : 'not-allowed',
+                  opacity: serpensData.tail ? 1 : 0.45
                 }}
               >
                 뱀자리(꼬리) 보기 {serpensData.tail?.discovered ? '(발견됨)' : '(미발견)'}
               </button>
+            </SelectButtonGroup>
+            <div style={{ textAlign: 'center', marginTop: '1.5rem' }}>
+              <button
+                onClick={() => setShowSerpensModal(false)}
+                style={{
+                  padding: '0.5rem 1rem', background: 'transparent',
+                  color: '#94a3b8', border: 'none', cursor: 'pointer', fontSize: '0.875rem'
+                }}
+              >
+                닫기
+              </button>
             </div>
-            <button
-              onClick={() => setShowSerpensModal(false)}
-              style={{
-                marginTop: '1.5rem', padding: '0.5rem 1rem', background: 'transparent',
-                color: '#94a3b8', border: 'none', cursor: 'pointer'
-              }}
-            >
-              닫기
-            </button>
-          </div>
-        </div>
+          </ConstellationDetailModal>
+        </ModalOverlay>
       )}
     </PageContainer>
   )
