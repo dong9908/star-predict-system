@@ -474,3 +474,25 @@ export const ConstellationDetailModal = styled.div`
     padding: 1.25rem;
   }
 `
+
+export const LoginRequiredContainer = styled.div`
+  min-height: calc(100vh - 80px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #a78bfa;
+  text-align: center;
+  padding: 3rem 1rem;
+`
+
+export const LoginButton = styled.button`
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  background-color: #9333ea;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 600;
+`
