@@ -1,0 +1,829 @@
+{
+  "schema_version": 1,
+  "created_at_utc": "2026-09-14T02:20:21.550512+00:00",
+  "source": "D:\\dev\\star-predict-system\\Constellation\\data\\results\\astro_smartphone_plate_solving\\plate_solve_results.csv",
+  "count": 205,
+  "skipped": 0,
+  "entries": {
+    "551031022c6284f2121a7a3c75e7ddaae7c93e8711d46c9875b280301f120b26": {
+      "filename": "PXL_20210730_215243932.NIGHT.jpg",
+      "wcs": "551031022c6284f2121a7a3c75e7ddaae7c93e8711d46c9875b280301f120b26.wcs"
+    },
+    "8daa814fa93f95bafcfbe66fe1a7a1f66f48f18c65d857c4ad41c63ff2e04452": {
+      "filename": "PXL_20210730_215626358.NIGHT.jpg",
+      "wcs": "8daa814fa93f95bafcfbe66fe1a7a1f66f48f18c65d857c4ad41c63ff2e04452.wcs"
+    },
+    "d0c9229331a414b9e61bd035b48808d5c05b1ed02839d575c49345a214066510": {
+      "filename": "PXL_20210730_220327577.NIGHT_0008.jpg",
+      "wcs": "d0c9229331a414b9e61bd035b48808d5c05b1ed02839d575c49345a214066510.wcs"
+    },
+    "4798efbdd726cd23e5482b623b0eec2aef9dbaf1d584fbbc7389288e81db0d5b": {
+      "filename": "PXL_20210730_220952232.NIGHT.jpg",
+      "wcs": "4798efbdd726cd23e5482b623b0eec2aef9dbaf1d584fbbc7389288e81db0d5b.wcs"
+    },
+    "98d0462111f70dd943738b4182d08445c6fefc1c2e6671140006b367c6ba16ab": {
+      "filename": "PXL_20210809_214226994.NIGHT.jpg",
+      "wcs": "98d0462111f70dd943738b4182d08445c6fefc1c2e6671140006b367c6ba16ab.wcs"
+    },
+    "b37c8d67f09930237c54749c76c11f6fb48da07c298d3d3bd903a2ebdf94fca7": {
+      "filename": "PXL_20210809_214735152.NIGHT.jpg",
+      "wcs": "b37c8d67f09930237c54749c76c11f6fb48da07c298d3d3bd903a2ebdf94fca7.wcs"
+    },
+    "4e8aec728330b9bca28d109df563de77431394f5e3371adbf30a28c245dfe426": {
+      "filename": "PXL_20210809_215337264.NIGHT_0008.jpg",
+      "wcs": "4e8aec728330b9bca28d109df563de77431394f5e3371adbf30a28c245dfe426.wcs"
+    },
+    "e818def55c32819436705852af1445d9e361f6d0b231f617318f36de87110ea4": {
+      "filename": "PXL_20210809_215846492.NIGHT_0008.jpg",
+      "wcs": "e818def55c32819436705852af1445d9e361f6d0b231f617318f36de87110ea4.wcs"
+    },
+    "2137126dafec7b72e4b1dcf5ed14c1eb99c9e59fbc6b9af609e20488312b9f2d": {
+      "filename": "PXL_20210809_220719808.NIGHT.jpg",
+      "wcs": "2137126dafec7b72e4b1dcf5ed14c1eb99c9e59fbc6b9af609e20488312b9f2d.wcs"
+    },
+    "03d9a16c3cc8cb92b1ea940983701d936c4274e0114043c2c747c222cb1590e6": {
+      "filename": "PXL_20210809_221153908.NIGHT.jpg",
+      "wcs": "03d9a16c3cc8cb92b1ea940983701d936c4274e0114043c2c747c222cb1590e6.wcs"
+    },
+    "edf7a349d3886bcf8286e145073ffc630174c4217ab89a21512d9de02a93c726": {
+      "filename": "PXL_20210813_211749094.NIGHT.jpg",
+      "wcs": "edf7a349d3886bcf8286e145073ffc630174c4217ab89a21512d9de02a93c726.wcs"
+    },
+    "2b754460b520c94ccc4a5d880540a793cf85bd8d27505445c28e0c62c71f32e5": {
+      "filename": "PXL_20210813_211949217.NIGHT.jpg",
+      "wcs": "2b754460b520c94ccc4a5d880540a793cf85bd8d27505445c28e0c62c71f32e5.wcs"
+    },
+    "64878106b05b1d71945692d8d98e2eccb4997d217eb13a7ca4153ec87c848c84": {
+      "filename": "PXL_20210813_213657387.NIGHT.jpg",
+      "wcs": "64878106b05b1d71945692d8d98e2eccb4997d217eb13a7ca4153ec87c848c84.wcs"
+    },
+    "1f7b7bed50daf60beeef1a8235ec2c9ecd5e53ad63434a6bcfbb2d627f52b951": {
+      "filename": "PXL_20210813_214507055.NIGHT.jpg",
+      "wcs": "1f7b7bed50daf60beeef1a8235ec2c9ecd5e53ad63434a6bcfbb2d627f52b951.wcs"
+    },
+    "166ef3bd7feec18bf7ef7eee4dda8ccc6cdeb115e1c1d47867dadd6ceb1e0d6d": {
+      "filename": "PXL_20210813_215345548.NIGHT.jpg",
+      "wcs": "166ef3bd7feec18bf7ef7eee4dda8ccc6cdeb115e1c1d47867dadd6ceb1e0d6d.wcs"
+    },
+    "b2545f307e55fdc002d728cf02f5b9c43af968bfa6bb3507adc8cfa9e76ec7e8": {
+      "filename": "PXL_20210813_220155714.NIGHT_0008.jpg",
+      "wcs": "b2545f307e55fdc002d728cf02f5b9c43af968bfa6bb3507adc8cfa9e76ec7e8.wcs"
+    },
+    "ed9bf81ebba76966955753e3ff6e49830d1e91169e8f0b1a11a866686c82f585": {
+      "filename": "PXL_20210813_221310723.NIGHT_0008.jpg",
+      "wcs": "ed9bf81ebba76966955753e3ff6e49830d1e91169e8f0b1a11a866686c82f585.wcs"
+    },
+    "e8e307890b068ec98ddee4e3f2c77e1c5d45e319f5dbedb4b8a393d8376c6607": {
+      "filename": "PXL_20210813_222244617.NIGHT_0008.jpg",
+      "wcs": "e8e307890b068ec98ddee4e3f2c77e1c5d45e319f5dbedb4b8a393d8376c6607.wcs"
+    },
+    "0efb550b51fefcf70901731784a8dc364da3e7efa2d516d704d003289c3fd955": {
+      "filename": "PXL_20210813_223449432.NIGHT_0008.jpg",
+      "wcs": "0efb550b51fefcf70901731784a8dc364da3e7efa2d516d704d003289c3fd955.wcs"
+    },
+    "26efd9499646cd893c66baaf77669a0f0e64df6f81cc8db14deeb7b68a2ba8eb": {
+      "filename": "PXL_20210813_224918777.NIGHT_0008.jpg",
+      "wcs": "26efd9499646cd893c66baaf77669a0f0e64df6f81cc8db14deeb7b68a2ba8eb.wcs"
+    },
+    "364cd060610c482e5c6ac0abf77d9b80722372255925acc936a947a7d7836887": {
+      "filename": "PXL_20210815_212032471.NIGHT.jpg",
+      "wcs": "364cd060610c482e5c6ac0abf77d9b80722372255925acc936a947a7d7836887.wcs"
+    },
+    "19cd40398336386abb2b974629ce0dbc9734a2c54025be4960a3d3a5197aeadc": {
+      "filename": "PXL_20210815_212223884.NIGHT.jpg",
+      "wcs": "19cd40398336386abb2b974629ce0dbc9734a2c54025be4960a3d3a5197aeadc.wcs"
+    },
+    "395be61ec33b8a65b3705d2c2f6ee403c74636e2a9d8fe447e7aff54e3b3f5de": {
+      "filename": "PXL_20210815_213013631.NIGHT.jpg",
+      "wcs": "395be61ec33b8a65b3705d2c2f6ee403c74636e2a9d8fe447e7aff54e3b3f5de.wcs"
+    },
+    "55b78e872a631ec02543fae44bc950ab190095d26e0c31015c86b209ba10cc3d": {
+      "filename": "PXL_20210815_214033081.NIGHT.jpg",
+      "wcs": "55b78e872a631ec02543fae44bc950ab190095d26e0c31015c86b209ba10cc3d.wcs"
+    },
+    "f2812892a524e860e7fa6653970af77611fbbeddbfff600352d72635b369b098": {
+      "filename": "PXL_20210815_214231501.NIGHT.jpg",
+      "wcs": "f2812892a524e860e7fa6653970af77611fbbeddbfff600352d72635b369b098.wcs"
+    },
+    "0b763d2d36725ddb06c7c9ea3faadeeb629811146e4165bd5dbb99f1296b4baf": {
+      "filename": "PXL_20210820_201932537.NIGHT_0008.jpg",
+      "wcs": "0b763d2d36725ddb06c7c9ea3faadeeb629811146e4165bd5dbb99f1296b4baf.wcs"
+    },
+    "336b9e65e263405bfb170d5d1a8dedbd6d986082c06ac94c48f22edc0e039a7d": {
+      "filename": "PXL_20210820_202909960.NIGHT_0008.jpg",
+      "wcs": "336b9e65e263405bfb170d5d1a8dedbd6d986082c06ac94c48f22edc0e039a7d.wcs"
+    },
+    "1cb9fec19fee30ac682ab826ac3839b79b1d0a3b4020d777bf9387362f41a5a2": {
+      "filename": "PXL_20210823_202635138.NIGHT.jpg",
+      "wcs": "1cb9fec19fee30ac682ab826ac3839b79b1d0a3b4020d777bf9387362f41a5a2.wcs"
+    },
+    "0b291a61879591002cde0781b39047ac3511235478abe957657cf3a89720fca4": {
+      "filename": "PXL_20210823_202926743.NIGHT.jpg",
+      "wcs": "0b291a61879591002cde0781b39047ac3511235478abe957657cf3a89720fca4.wcs"
+    },
+    "224a4a4e55d224113ced22c7d1c263303e2f12d652a50d7a9f572109a1d085b9": {
+      "filename": "PXL_20210823_203758182.NIGHT.jpg",
+      "wcs": "224a4a4e55d224113ced22c7d1c263303e2f12d652a50d7a9f572109a1d085b9.wcs"
+    },
+    "560435cc8bbaa00c26429411d624f4849a1dd4881c1f50193a5a34cd9a4b64b0": {
+      "filename": "PXL_20210823_203939372.NIGHT.jpg",
+      "wcs": "560435cc8bbaa00c26429411d624f4849a1dd4881c1f50193a5a34cd9a4b64b0.wcs"
+    },
+    "0e1b598844b875644520d705b81f99e39c6a1fea291aac0178ecf0003c2049cf": {
+      "filename": "PXL_20210823_203956656.NIGHT.jpg",
+      "wcs": "0e1b598844b875644520d705b81f99e39c6a1fea291aac0178ecf0003c2049cf.wcs"
+    },
+    "c99f2d2df63c774f7e6603bbd6ebdead073f503dfbcfa83c70813dd9fee03cb8": {
+      "filename": "PXL_20210823_204135313.NIGHT.jpg",
+      "wcs": "c99f2d2df63c774f7e6603bbd6ebdead073f503dfbcfa83c70813dd9fee03cb8.wcs"
+    },
+    "b9ae591b671e0e7b2f5d7f8cc7377c602c7b4339b8cac207efc9f5580029d69f": {
+      "filename": "PXL_20210823_204704710.NIGHT.jpg",
+      "wcs": "b9ae591b671e0e7b2f5d7f8cc7377c602c7b4339b8cac207efc9f5580029d69f.wcs"
+    },
+    "9282e34a2c3fc7eefb08e1b4103b7ca9623f2faab2cba45f48cd8ec50c5e620d": {
+      "filename": "PXL_20210823_205554052.NIGHT.jpg",
+      "wcs": "9282e34a2c3fc7eefb08e1b4103b7ca9623f2faab2cba45f48cd8ec50c5e620d.wcs"
+    },
+    "9e370bb5724d4f688ecd54d1d9fb54a7612f99a60d099403b6632de205adc2bb": {
+      "filename": "PXL_20210823_210036900.NIGHT.jpg",
+      "wcs": "9e370bb5724d4f688ecd54d1d9fb54a7612f99a60d099403b6632de205adc2bb.wcs"
+    },
+    "a5fa4e8ced02a45f8749e6597d2c38d215bd3f9bc6559acc3d6612694b221dfe": {
+      "filename": "PXL_20210823_210632593.NIGHT.jpg",
+      "wcs": "a5fa4e8ced02a45f8749e6597d2c38d215bd3f9bc6559acc3d6612694b221dfe.wcs"
+    },
+    "94347b487cde51be77e086f73a3d653f2000e0b1c2d0315a01bc969335d9c813": {
+      "filename": "PXL_20210825_202003081.NIGHT.jpg",
+      "wcs": "94347b487cde51be77e086f73a3d653f2000e0b1c2d0315a01bc969335d9c813.wcs"
+    },
+    "44e725333c17e32b5e34f5fbd604219a4a008b70276d282b87ea43579f2cd536": {
+      "filename": "PXL_20210825_202535892.NIGHT.jpg",
+      "wcs": "44e725333c17e32b5e34f5fbd604219a4a008b70276d282b87ea43579f2cd536.wcs"
+    },
+    "c3b9f10d141d86fe66ba39e9d0a2d7fcb9ee8cf93144c4c9e82e50d9acf7a468": {
+      "filename": "PXL_20210825_203208670.NIGHT.jpg",
+      "wcs": "c3b9f10d141d86fe66ba39e9d0a2d7fcb9ee8cf93144c4c9e82e50d9acf7a468.wcs"
+    },
+    "4fcc07e316c1c721a375587c5e0abed8236e6c4f493659c1809af5ec0ba2af17": {
+      "filename": "PXL_20210825_203833837.NIGHT.jpg",
+      "wcs": "4fcc07e316c1c721a375587c5e0abed8236e6c4f493659c1809af5ec0ba2af17.wcs"
+    },
+    "f27a8b251ede16aab51c4240bc3b07749e57ae06f733f844b082aac989a8a647": {
+      "filename": "PXL_20210825_204636196.NIGHT.jpg",
+      "wcs": "f27a8b251ede16aab51c4240bc3b07749e57ae06f733f844b082aac989a8a647.wcs"
+    },
+    "374e170cb066f7cbf09f8575932a4ed8178adf4f5a53597de4beb784c03fc5af": {
+      "filename": "PXL_20210825_205337936.NIGHT.jpg",
+      "wcs": "374e170cb066f7cbf09f8575932a4ed8178adf4f5a53597de4beb784c03fc5af.wcs"
+    },
+    "047886c88a18f91d15723be5ef6752245c9ff43720715fffe2e01a8f9e940d6c": {
+      "filename": "PXL_20210827_211954039.NIGHT.jpg",
+      "wcs": "047886c88a18f91d15723be5ef6752245c9ff43720715fffe2e01a8f9e940d6c.wcs"
+    },
+    "2fdc934eaab877bd6bd1097c75e87d1ee8d3d0fa7c5f938ea685c76107ac63c5": {
+      "filename": "PXL_20210827_212453585.NIGHT.jpg",
+      "wcs": "2fdc934eaab877bd6bd1097c75e87d1ee8d3d0fa7c5f938ea685c76107ac63c5.wcs"
+    },
+    "05e546bd1ecbb4caf906e866d467658e480ca4091460d4948abd006b8a3a162c": {
+      "filename": "PXL_20210827_212609341.NIGHT.jpg",
+      "wcs": "05e546bd1ecbb4caf906e866d467658e480ca4091460d4948abd006b8a3a162c.wcs"
+    },
+    "20001b679f791f75076e0f24dea7181de2636ec496af3424e2a3c4fc92ab7220": {
+      "filename": "PXL_20210827_213819511.NIGHT.jpg",
+      "wcs": "20001b679f791f75076e0f24dea7181de2636ec496af3424e2a3c4fc92ab7220.wcs"
+    },
+    "112a3c6afb9013043cd8f080ed1296bafc56da0320d92995e39234b0413b075a": {
+      "filename": "PXL_20210827_214302560.NIGHT.jpg",
+      "wcs": "112a3c6afb9013043cd8f080ed1296bafc56da0320d92995e39234b0413b075a.wcs"
+    },
+    "22af71d7c908f6a6ea33315d4ea5e4e04c4326c22a069d5fa0e0b44b870d6449": {
+      "filename": "PXL_20210828_203600043.NIGHT.jpg",
+      "wcs": "22af71d7c908f6a6ea33315d4ea5e4e04c4326c22a069d5fa0e0b44b870d6449.wcs"
+    },
+    "9d8cf9cd2d8bfa0a01ebd531063362062c65e98a1d2a4a93b70c10cc69aeb302": {
+      "filename": "PXL_20210828_204205363.NIGHT.jpg",
+      "wcs": "9d8cf9cd2d8bfa0a01ebd531063362062c65e98a1d2a4a93b70c10cc69aeb302.wcs"
+    },
+    "6044f68caebf0e1103b8e56a898166ed3cae11bb5a135bb22570d5dd071dd7da": {
+      "filename": "PXL_20210828_210506223.NIGHT.jpg",
+      "wcs": "6044f68caebf0e1103b8e56a898166ed3cae11bb5a135bb22570d5dd071dd7da.wcs"
+    },
+    "d05eeedc5e491812e6ebf4894f237d65af8ca29d452bd4651f06cece5623f374": {
+      "filename": "PXL_20210828_211147902.NIGHT.jpg",
+      "wcs": "d05eeedc5e491812e6ebf4894f237d65af8ca29d452bd4651f06cece5623f374.wcs"
+    },
+    "080143e83e72efe589975299fcc5937a60427dbd00733a72c651d755ff630bef": {
+      "filename": "PXL_20210830_195422677.NIGHT_0008.jpg",
+      "wcs": "080143e83e72efe589975299fcc5937a60427dbd00733a72c651d755ff630bef.wcs"
+    },
+    "c002c77d965eb077291a1772e576ba9bb07c7d8cb2dabdfd114d41d870e233f0": {
+      "filename": "PXL_20210831_194746490.NIGHT_0008.jpg",
+      "wcs": "c002c77d965eb077291a1772e576ba9bb07c7d8cb2dabdfd114d41d870e233f0.wcs"
+    },
+    "a055fe87ae337d53b0ef4c77ee486c846ebe8da81bd0d30754df3d3a697bff32": {
+      "filename": "PXL_20210902_212646348.NIGHT_0008.jpg",
+      "wcs": "a055fe87ae337d53b0ef4c77ee486c846ebe8da81bd0d30754df3d3a697bff32.wcs"
+    },
+    "c003ccf75184d3a7a730c4519a98879596f2efc4d9b89844059ec72bfa0bb2d1": {
+      "filename": "PXL_20210902_213619883.NIGHT_0008.jpg",
+      "wcs": "c003ccf75184d3a7a730c4519a98879596f2efc4d9b89844059ec72bfa0bb2d1.wcs"
+    },
+    "aab086830e826d31536bc49248fb172305cdc83e0c134832a57bf150e6d712c7": {
+      "filename": "PXL_20210905_201850289.NIGHT_0008.jpg",
+      "wcs": "aab086830e826d31536bc49248fb172305cdc83e0c134832a57bf150e6d712c7.wcs"
+    },
+    "fb74bd7aa4892f0fded29d33e0aadf4052eb2e813caf3757a64a649512da3fb6": {
+      "filename": "PXL_20210905_210045787.NIGHT_0008.jpg",
+      "wcs": "fb74bd7aa4892f0fded29d33e0aadf4052eb2e813caf3757a64a649512da3fb6.wcs"
+    },
+    "282f1c1b73d73290dbf262841dd22c4c37741b06c3c7f9999a563696e35960a7": {
+      "filename": "PXL_20210905_210734065.NIGHT_0008.jpg",
+      "wcs": "282f1c1b73d73290dbf262841dd22c4c37741b06c3c7f9999a563696e35960a7.wcs"
+    },
+    "d92a503d5dc5709802a8a68b1885fb633916295ed8bdc071e106a78dad3b0f1e": {
+      "filename": "PXL_20210913_194252393.NIGHT_0008.jpg",
+      "wcs": "d92a503d5dc5709802a8a68b1885fb633916295ed8bdc071e106a78dad3b0f1e.wcs"
+    },
+    "d9ba4dedb62afdcb84fc1060db3b7e30ef2ab15a7aed34552e6cbc618bf2ac14": {
+      "filename": "PXL_20210913_194859746.NIGHT_0008.jpg",
+      "wcs": "d9ba4dedb62afdcb84fc1060db3b7e30ef2ab15a7aed34552e6cbc618bf2ac14.wcs"
+    },
+    "cf61c3d4d62e02466c25519e611c0359418a6aa47713c27fe26eca768cb42dfb": {
+      "filename": "PXL_20210913_200247609.NIGHT_0008.jpg",
+      "wcs": "cf61c3d4d62e02466c25519e611c0359418a6aa47713c27fe26eca768cb42dfb.wcs"
+    },
+    "c3a196cc2983ca70071c1e13838be91107933dc6488b9c9b530a3ce1493b5007": {
+      "filename": "PXL_20210913_201348300.NIGHT_0008.jpg",
+      "wcs": "c3a196cc2983ca70071c1e13838be91107933dc6488b9c9b530a3ce1493b5007.wcs"
+    },
+    "27a9aec8787e9a422d66efeef76f284c5cac9a019e75df3af6293d19c60a81e9": {
+      "filename": "PXL_20210926_211058509.NIGHT_0008.jpg",
+      "wcs": "27a9aec8787e9a422d66efeef76f284c5cac9a019e75df3af6293d19c60a81e9.wcs"
+    },
+    "b7b0097e680b28c178084de0124b14122364afb34b8a213b0faff2b10111cc8d": {
+      "filename": "PXL_20210926_212520901.NIGHT_0008.jpg",
+      "wcs": "b7b0097e680b28c178084de0124b14122364afb34b8a213b0faff2b10111cc8d.wcs"
+    },
+    "1a5bf4e0cd0f5b922aba7f790c744e71dec18e44f1922386f379c267c0195b66": {
+      "filename": "PXL_20210929_195927443.NIGHT_0008.jpg",
+      "wcs": "1a5bf4e0cd0f5b922aba7f790c744e71dec18e44f1922386f379c267c0195b66.wcs"
+    },
+    "a1e3906ef1edb9e5802bfd79af3504aea1c8d07a1cb4701b8a36ac38b9431bfe": {
+      "filename": "PXL_20210929_200830272.NIGHT.jpg",
+      "wcs": "a1e3906ef1edb9e5802bfd79af3504aea1c8d07a1cb4701b8a36ac38b9431bfe.wcs"
+    },
+    "df68ce232b3d11979bbda55e400ff5f0527fba39bffe3a0d203125db1f7f8467": {
+      "filename": "PXL_20210929_204856284.NIGHT_0008.jpg",
+      "wcs": "df68ce232b3d11979bbda55e400ff5f0527fba39bffe3a0d203125db1f7f8467.wcs"
+    },
+    "5ef013595f7f5fd5d1d2fe5ab94cd65b43afa7aa62f2ab1e41fe07ad0034ebb3": {
+      "filename": "PXL_20210929_210337005.NIGHT_0008.jpg",
+      "wcs": "5ef013595f7f5fd5d1d2fe5ab94cd65b43afa7aa62f2ab1e41fe07ad0034ebb3.wcs"
+    },
+    "13f70bea7425bbe50801cbb43eabec3d92e3307850fff4c7b240b2de90c0a604": {
+      "filename": "PXL_20211007_185853573.NIGHT_0008.jpg",
+      "wcs": "13f70bea7425bbe50801cbb43eabec3d92e3307850fff4c7b240b2de90c0a604.wcs"
+    },
+    "57460c139626db14d7e9506c5e7e01b9d2eb1794ad06dd574fa034e2d55907db": {
+      "filename": "PXL_20211007_195247828.NIGHT_0008.jpg",
+      "wcs": "57460c139626db14d7e9506c5e7e01b9d2eb1794ad06dd574fa034e2d55907db.wcs"
+    },
+    "a65589763a054ccd8065d3218dde92e21f45d33e311d29d57ede49f3ff503cb6": {
+      "filename": "PXL_20211007_200324333.NIGHT_0008.jpg",
+      "wcs": "a65589763a054ccd8065d3218dde92e21f45d33e311d29d57ede49f3ff503cb6.wcs"
+    },
+    "e211001f7686544b3bd27edb482cfb1fa6afeb07d92c3301fca133c745946eda": {
+      "filename": "PXL_20211007_201337237.NIGHT_0008.jpg",
+      "wcs": "e211001f7686544b3bd27edb482cfb1fa6afeb07d92c3301fca133c745946eda.wcs"
+    },
+    "5466d042b5d380f31311ea30f858870801269887bdf341b8f98f9c0321d3094d": {
+      "filename": "PXL_20211007_202248966.NIGHT_0008.jpg",
+      "wcs": "5466d042b5d380f31311ea30f858870801269887bdf341b8f98f9c0321d3094d.wcs"
+    },
+    "ec97957da3e654d38fce2b6876c6c4c9931e8ea34882de62676379b94eee154b": {
+      "filename": "PXL_20211008_202057326.NIGHT_0008.jpg",
+      "wcs": "ec97957da3e654d38fce2b6876c6c4c9931e8ea34882de62676379b94eee154b.wcs"
+    },
+    "44beb791e1c9b5e76388f14728ab5ea8025103bfe643a880f18bd3f26e3ce1ef": {
+      "filename": "PXL_20211008_203711162.NIGHT_0008.jpg",
+      "wcs": "44beb791e1c9b5e76388f14728ab5ea8025103bfe643a880f18bd3f26e3ce1ef.wcs"
+    },
+    "3315461d4f8ed8d547b30b6b67d63bd38ec7801291a19e672904bc0bff8eae55": {
+      "filename": "PXL_20211008_204806145.NIGHT_0008.jpg",
+      "wcs": "3315461d4f8ed8d547b30b6b67d63bd38ec7801291a19e672904bc0bff8eae55.wcs"
+    },
+    "6958ee03c4a7ea7fc10b4afae9543f8e625510fdd1c5570b7109f869db922264": {
+      "filename": "PXL_20211008_210602918.NIGHT_0008.jpg",
+      "wcs": "6958ee03c4a7ea7fc10b4afae9543f8e625510fdd1c5570b7109f869db922264.wcs"
+    },
+    "ec5f864ee2a91f74ec1534bce2d00a88fca45b81964338d6aa9dc81036d10461": {
+      "filename": "PXL_20211008_211320260.NIGHT_0008.jpg",
+      "wcs": "ec5f864ee2a91f74ec1534bce2d00a88fca45b81964338d6aa9dc81036d10461.wcs"
+    },
+    "8af58fc7f50ed7cc87e59f7d14b7540acce474a35b36f489f8e112a208bd4c32": {
+      "filename": "PXL_20211008_214011950.NIGHT_0008.jpg",
+      "wcs": "8af58fc7f50ed7cc87e59f7d14b7540acce474a35b36f489f8e112a208bd4c32.wcs"
+    },
+    "d3e4b9a96ed1bccd62ca6306fb4ff7e7143f954e0473b2384e31ac499a9d5d80": {
+      "filename": "PXL_20211008_214511968.NIGHT_0008.jpg",
+      "wcs": "d3e4b9a96ed1bccd62ca6306fb4ff7e7143f954e0473b2384e31ac499a9d5d80.wcs"
+    },
+    "a709fe5bc51269941dbb69b5287a4c4c3d1124d143a9f3c1de4cf7a7ce1c6cf3": {
+      "filename": "PXL_20211009_203017892.NIGHT_0008.jpg",
+      "wcs": "a709fe5bc51269941dbb69b5287a4c4c3d1124d143a9f3c1de4cf7a7ce1c6cf3.wcs"
+    },
+    "3f36119e5c26b40c5930ed37d680e818a156c070a5d4717833a70620ab2536bf": {
+      "filename": "PXL_20211009_204020579.NIGHT_0008.jpg",
+      "wcs": "3f36119e5c26b40c5930ed37d680e818a156c070a5d4717833a70620ab2536bf.wcs"
+    },
+    "708d58d6635f4adae33c83b646b1016ce89799a73dc429c32e7172b39d6ffdf6": {
+      "filename": "PXL_20211009_204831003.NIGHT_0008.jpg",
+      "wcs": "708d58d6635f4adae33c83b646b1016ce89799a73dc429c32e7172b39d6ffdf6.wcs"
+    },
+    "8bd6b708b59696b43d28a7bee889730efa01772a6842a407466bf7a013e2148c": {
+      "filename": "PXL_20211009_205713554.NIGHT_0008.jpg",
+      "wcs": "8bd6b708b59696b43d28a7bee889730efa01772a6842a407466bf7a013e2148c.wcs"
+    },
+    "70d85c54bbf371343705c8b3dc4a62f44221e0b51a14f2b78f86a49caaf828d5": {
+      "filename": "PXL_20211009_210608633.NIGHT_0008.jpg",
+      "wcs": "70d85c54bbf371343705c8b3dc4a62f44221e0b51a14f2b78f86a49caaf828d5.wcs"
+    },
+    "1c1397ac03664e9506cc0adecd591b60c11d4f59b9a6d310fe9d79578e8e12a8": {
+      "filename": "PXL_20211010_182730560.NIGHT_0008.jpg",
+      "wcs": "1c1397ac03664e9506cc0adecd591b60c11d4f59b9a6d310fe9d79578e8e12a8.wcs"
+    },
+    "a60364843c89da384433f8ce6a589c4ca51a222449ea4eb4c21d756e240df079": {
+      "filename": "PXL_20211010_184625521.NIGHT_0008.jpg",
+      "wcs": "a60364843c89da384433f8ce6a589c4ca51a222449ea4eb4c21d756e240df079.wcs"
+    },
+    "5b0dad8a6bc04b38c4360dbd4fb3bf79dd49fc6ff8e9f6bcc3cecc41434c94ec": {
+      "filename": "PXL_20211010_192807947.NIGHT_0008.jpg",
+      "wcs": "5b0dad8a6bc04b38c4360dbd4fb3bf79dd49fc6ff8e9f6bcc3cecc41434c94ec.wcs"
+    },
+    "20ed85445dcad21c979dbf3ac1b5f680b675df7ff8706fad921157cc480f7b2a": {
+      "filename": "PXL_20211027_185915062.NIGHT_0008.jpg",
+      "wcs": "20ed85445dcad21c979dbf3ac1b5f680b675df7ff8706fad921157cc480f7b2a.wcs"
+    },
+    "cf6bc4e2f39443aafaa40137924baada17ee5cfe83447a5dc4c50978f951de15": {
+      "filename": "PXL_20211027_191122535.NIGHT_0008.jpg",
+      "wcs": "cf6bc4e2f39443aafaa40137924baada17ee5cfe83447a5dc4c50978f951de15.wcs"
+    },
+    "540ecf5e6f2258cfc5987d26c247f6e623649d4c35b6e24c58e6c4a1937bf1b8": {
+      "filename": "PXL_20211027_193316053.NIGHT_0008.jpg",
+      "wcs": "540ecf5e6f2258cfc5987d26c247f6e623649d4c35b6e24c58e6c4a1937bf1b8.wcs"
+    },
+    "45a1a7621c77f9ac950c1593e937e08f882d241790878dafca0a9629ad19b7fe": {
+      "filename": "PXL_20211101_180841080.NIGHT_0008.jpg",
+      "wcs": "45a1a7621c77f9ac950c1593e937e08f882d241790878dafca0a9629ad19b7fe.wcs"
+    },
+    "db33dd85bd90d25f01e08ecfd37b65a1f8780e6ea21e6810b153c67717ea0f60": {
+      "filename": "PXL_20211102_220559255.NIGHT_0008.jpg",
+      "wcs": "db33dd85bd90d25f01e08ecfd37b65a1f8780e6ea21e6810b153c67717ea0f60.wcs"
+    },
+    "d9ac779952a20fbd974304fe724ddb7c698916569a66a92b205e183900dcf6b6": {
+      "filename": "PXL_20211103_204227608.NIGHT_0008.jpg",
+      "wcs": "d9ac779952a20fbd974304fe724ddb7c698916569a66a92b205e183900dcf6b6.wcs"
+    },
+    "2fb26eb28bbaee620edb6fa9be19ad31812988496a3d8d449a8ec5325ea155ef": {
+      "filename": "PXL_20211103_204954728.NIGHT_0008.jpg",
+      "wcs": "2fb26eb28bbaee620edb6fa9be19ad31812988496a3d8d449a8ec5325ea155ef.wcs"
+    },
+    "daf802d017d66fdaf8f2775db644c2b69e1d4613b3c28fd473855cb687b302cd": {
+      "filename": "PXL_20211202_215736501.NIGHT_0008.jpg",
+      "wcs": "daf802d017d66fdaf8f2775db644c2b69e1d4613b3c28fd473855cb687b302cd.wcs"
+    },
+    "2feb7409845ff94379822d5995c74c8e0c8019a81b2bcdf4b00ad87b88f4da94": {
+      "filename": "PXL_20211202_220452968.NIGHT_0008.jpg",
+      "wcs": "2feb7409845ff94379822d5995c74c8e0c8019a81b2bcdf4b00ad87b88f4da94.wcs"
+    },
+    "db4383d71b58abd21d44608547d7237105b466045e0d1735908dde459dfe1cda": {
+      "filename": "PXL_20220124_192623631.NIGHT_0008.jpg",
+      "wcs": "db4383d71b58abd21d44608547d7237105b466045e0d1735908dde459dfe1cda.wcs"
+    },
+    "eaedca73c620e6ebe343e27a0a495c1265425000ccada60c8524576c1f04ab68": {
+      "filename": "PXL_20220124_194208106.NIGHT_0008.jpg",
+      "wcs": "eaedca73c620e6ebe343e27a0a495c1265425000ccada60c8524576c1f04ab68.wcs"
+    },
+    "b428ea20d92ea9485999de346b29f409bbbaf10297ce8bd3f38c67e0e2234303": {
+      "filename": "PXL_20220124_195112481.NIGHT_0008.jpg",
+      "wcs": "b428ea20d92ea9485999de346b29f409bbbaf10297ce8bd3f38c67e0e2234303.wcs"
+    },
+    "fa76a1924d8e8e95ee441a339d3f70293a3bc856ff4e7ae46b12ca8771abf8bd": {
+      "filename": "PXL_20220130_194337935.NIGHT_0008.jpg",
+      "wcs": "fa76a1924d8e8e95ee441a339d3f70293a3bc856ff4e7ae46b12ca8771abf8bd.wcs"
+    },
+    "2951c1399cbcc728191ac0cc116718accd77782ad4c21fc542de5dc299e5e148": {
+      "filename": "PXL_20220204_213752321.NIGHT_0008.jpg",
+      "wcs": "2951c1399cbcc728191ac0cc116718accd77782ad4c21fc542de5dc299e5e148.wcs"
+    },
+    "c6947b5d033bd54980c847a6850ab8c8faac93bcc3e4db83c032c74d8c010600": {
+      "filename": "PXL_20220204_221116092.NIGHT_0008.jpg",
+      "wcs": "c6947b5d033bd54980c847a6850ab8c8faac93bcc3e4db83c032c74d8c010600.wcs"
+    },
+    "0b444b8aaf7f42ff861ca20d2678888785363e624110bc923350076743f9e1c4": {
+      "filename": "PXL_20220207_190705969.NIGHT_0008.jpg",
+      "wcs": "0b444b8aaf7f42ff861ca20d2678888785363e624110bc923350076743f9e1c4.wcs"
+    },
+    "7ac5c28d77a1ba6ff98539ac64b60416ce7564e76ca98ec191e11cb69729fbf3": {
+      "filename": "PXL_20220207_191534461.NIGHT_0008.jpg",
+      "wcs": "7ac5c28d77a1ba6ff98539ac64b60416ce7564e76ca98ec191e11cb69729fbf3.wcs"
+    },
+    "8e43be59f7b2845766c6b03c4ba06dc5d9b432a532dd056b5686a16839932549": {
+      "filename": "PXL_20220209_204708344.NIGHT_0008.jpg",
+      "wcs": "8e43be59f7b2845766c6b03c4ba06dc5d9b432a532dd056b5686a16839932549.wcs"
+    },
+    "cd286231131da09820db2ac0355bde92f98a06a3fb92cff174a7b20f74ae294d": {
+      "filename": "PXL_20220228_193404879.NIGHT_0008.jpg",
+      "wcs": "cd286231131da09820db2ac0355bde92f98a06a3fb92cff174a7b20f74ae294d.wcs"
+    },
+    "49e5c095a9ea78987b7f43cd34760153b3b365f1100cf8d3ce9ecf1ecd1272ad": {
+      "filename": "PXL_20220530_212203355.NIGHT_0008.jpg",
+      "wcs": "49e5c095a9ea78987b7f43cd34760153b3b365f1100cf8d3ce9ecf1ecd1272ad.wcs"
+    },
+    "09c22b8086736fbd5be5b0422dc43720b04de185731f6ba7c0a1f7e2690e8de1": {
+      "filename": "PXL_20220702_220520631.NIGHT_0008.jpg",
+      "wcs": "09c22b8086736fbd5be5b0422dc43720b04de185731f6ba7c0a1f7e2690e8de1.wcs"
+    },
+    "bb89e1f5ad01664075216a29bcbdf198af370492d6dc6b1dff07c0f9d5f4275f": {
+      "filename": "PXL_20220702_221521011.NIGHT_0008.jpg",
+      "wcs": "bb89e1f5ad01664075216a29bcbdf198af370492d6dc6b1dff07c0f9d5f4275f.wcs"
+    },
+    "cad98f243a29867ae546878173c7fd9294e156a17e275db28fe30954da9c95f6": {
+      "filename": "PXL_20220702_222535527.NIGHT_0008.jpg",
+      "wcs": "cad98f243a29867ae546878173c7fd9294e156a17e275db28fe30954da9c95f6.wcs"
+    },
+    "4f85fee5c5790ad872c530bbcefe1b5fb37ccc8d76c8b5e6a0af9e9d68c07405": {
+      "filename": "PXL_20220702_223849233.NIGHT_0008.jpg",
+      "wcs": "4f85fee5c5790ad872c530bbcefe1b5fb37ccc8d76c8b5e6a0af9e9d68c07405.wcs"
+    },
+    "7409ffa45f72448b5d4c272e2837e7e7c3c3ebde8eccd1c9ae53a33b2bc4add4": {
+      "filename": "PXL_20220702_225116011.NIGHT_0008.jpg",
+      "wcs": "7409ffa45f72448b5d4c272e2837e7e7c3c3ebde8eccd1c9ae53a33b2bc4add4.wcs"
+    },
+    "b8ddd48648e050d7422e13f52b5f6e66c3278ded4f87c7e496c1369926fc2fec": {
+      "filename": "PXL_20220702_225906237.NIGHT_0008.jpg",
+      "wcs": "b8ddd48648e050d7422e13f52b5f6e66c3278ded4f87c7e496c1369926fc2fec.wcs"
+    },
+    "9c2a4b6411ed7de848874481db949be02bc07d514257573893fc1479b8bb501e": {
+      "filename": "PXL_20220703_214855927.NIGHT_0008.jpg",
+      "wcs": "9c2a4b6411ed7de848874481db949be02bc07d514257573893fc1479b8bb501e.wcs"
+    },
+    "2c214919654312a144ef229ffcdab988566042344de6ff6333b82c8535403444": {
+      "filename": "PXL_20220703_215730796.NIGHT_0008.jpg",
+      "wcs": "2c214919654312a144ef229ffcdab988566042344de6ff6333b82c8535403444.wcs"
+    },
+    "0b7df282a0c80eb0b892bd7969e405e2d0267750d6ba518268756d0ec726ae51": {
+      "filename": "PXL_20220703_221025654.NIGHT_0008.jpg",
+      "wcs": "0b7df282a0c80eb0b892bd7969e405e2d0267750d6ba518268756d0ec726ae51.wcs"
+    },
+    "b70646f0ac2b1e3b0ac8fde4a63c93385c1bee0f964f082ddc8765492d062416": {
+      "filename": "PXL_20220703_222922640.NIGHT_0008.jpg",
+      "wcs": "b70646f0ac2b1e3b0ac8fde4a63c93385c1bee0f964f082ddc8765492d062416.wcs"
+    },
+    "c2eb997b1ec2db1425adefdcafc95c3c8ae60febab5397bf1bc507c079826563": {
+      "filename": "PXL_20220703_224152600.NIGHT_0008.jpg",
+      "wcs": "c2eb997b1ec2db1425adefdcafc95c3c8ae60febab5397bf1bc507c079826563.wcs"
+    },
+    "f96b93b02dc27cdc3cd9b314bd6155396e103f24522ec39ea2bf1500d57f5353": {
+      "filename": "PXL_20220704_214440721.NIGHT_0008.jpg",
+      "wcs": "f96b93b02dc27cdc3cd9b314bd6155396e103f24522ec39ea2bf1500d57f5353.wcs"
+    },
+    "135fd9e505c654d751860e9ef5e971237ec73f6f88a73b7e8a292ab001d6405e": {
+      "filename": "PXL_20220704_215558061.NIGHT_0008.jpg",
+      "wcs": "135fd9e505c654d751860e9ef5e971237ec73f6f88a73b7e8a292ab001d6405e.wcs"
+    },
+    "c928e6debb974ea3ea7114d634b190950f3a3ac45d5e186b24b24c02e98da8b5": {
+      "filename": "PXL_20220704_220554650.NIGHT_0008.jpg",
+      "wcs": "c928e6debb974ea3ea7114d634b190950f3a3ac45d5e186b24b24c02e98da8b5.wcs"
+    },
+    "2df547adbfb949d17329e20bf8403535c4d9bbe2f173418bacd5673de1898696": {
+      "filename": "PXL_20220704_221817034.NIGHT_0008.jpg",
+      "wcs": "2df547adbfb949d17329e20bf8403535c4d9bbe2f173418bacd5673de1898696.wcs"
+    },
+    "5a2f396685be1a210125e3fff19dabc952f4dcfb490adf5bf78e84bcb1bcca73": {
+      "filename": "PXL_20220704_224100361.NIGHT_0008.jpg",
+      "wcs": "5a2f396685be1a210125e3fff19dabc952f4dcfb490adf5bf78e84bcb1bcca73.wcs"
+    },
+    "1cbb33149b6972de2b9cb47007b1887dd1777492c44cd7e019c8f541c9351978": {
+      "filename": "PXL_20220704_224824462.NIGHT_0008.jpg",
+      "wcs": "1cbb33149b6972de2b9cb47007b1887dd1777492c44cd7e019c8f541c9351978.wcs"
+    },
+    "ec2adf0120e04c886371ae6d70ad26d7e1b894d0c3690ecbf7ac7a4a391f5ec5": {
+      "filename": "PXL_20220705_215209557.NIGHT_0008.jpg",
+      "wcs": "ec2adf0120e04c886371ae6d70ad26d7e1b894d0c3690ecbf7ac7a4a391f5ec5.wcs"
+    },
+    "da6fb232ea0565d155419d9aa79f27477fb20b2b941f524a51cc52d2d3db5ef3": {
+      "filename": "PXL_20220705_223250056.NIGHT_0008.jpg",
+      "wcs": "da6fb232ea0565d155419d9aa79f27477fb20b2b941f524a51cc52d2d3db5ef3.wcs"
+    },
+    "be224b7c21210b4fde7de374dbf0c61699bf95eb0e82f9e461cff5d5b9d46cac": {
+      "filename": "PXL_20220705_224135886.NIGHT_0008.jpg",
+      "wcs": "be224b7c21210b4fde7de374dbf0c61699bf95eb0e82f9e461cff5d5b9d46cac.wcs"
+    },
+    "ba8a589863059863b495af0ba447ff7c4deb6060c41d13f20e17891c40e7222b": {
+      "filename": "PXL_20220705_230214157.NIGHT_0008.jpg",
+      "wcs": "ba8a589863059863b495af0ba447ff7c4deb6060c41d13f20e17891c40e7222b.wcs"
+    },
+    "ad4356123ec43a7e3bee0774f274cb51ffb4c1203bcb4b300b507d7fc9453c61": {
+      "filename": "PXL_20220705_231405288.NIGHT_0008.jpg",
+      "wcs": "ad4356123ec43a7e3bee0774f274cb51ffb4c1203bcb4b300b507d7fc9453c61.wcs"
+    },
+    "6578edbd323d90fbac649fdd2447447e4948349c6d485e6b2824b06ab4eef536": {
+      "filename": "PXL_20220706_214946458.NIGHT_0008.jpg",
+      "wcs": "6578edbd323d90fbac649fdd2447447e4948349c6d485e6b2824b06ab4eef536.wcs"
+    },
+    "b56240af4afcaa9acfdb129ecafe8488bafd0fe4f724d26cbcd52e89c18610d2": {
+      "filename": "PXL_20220706_220524734.NIGHT_0008.jpg",
+      "wcs": "b56240af4afcaa9acfdb129ecafe8488bafd0fe4f724d26cbcd52e89c18610d2.wcs"
+    },
+    "5c7fed061e2169875cd9f3a338388710635915dc051f4bc7b3b715fdb1170dfd": {
+      "filename": "PXL_20220706_222343085.NIGHT_0008.jpg",
+      "wcs": "5c7fed061e2169875cd9f3a338388710635915dc051f4bc7b3b715fdb1170dfd.wcs"
+    },
+    "6538660c784b272040986072e2d8681531eb44999245d3c86070042b4f63bdd3": {
+      "filename": "PXL_20220706_222938338.NIGHT_0008.jpg",
+      "wcs": "6538660c784b272040986072e2d8681531eb44999245d3c86070042b4f63bdd3.wcs"
+    },
+    "916863ee7e36f6fb743d533b02c83f0a0c183f854df7a70a3e1cab114b385d40": {
+      "filename": "PXL_20220706_223952684.NIGHT_0008.jpg",
+      "wcs": "916863ee7e36f6fb743d533b02c83f0a0c183f854df7a70a3e1cab114b385d40.wcs"
+    },
+    "e19212fa37d6fd5b6abd64e597d995891cbbdef79cc63ee241e0fe8ddd439d5d": {
+      "filename": "PXL_20220706_224636836.NIGHT_0008.jpg",
+      "wcs": "e19212fa37d6fd5b6abd64e597d995891cbbdef79cc63ee241e0fe8ddd439d5d.wcs"
+    },
+    "fc96abefe4df40df251973e494b5c0a7e617bcbefd8721e0cb098dc2bc9b241f": {
+      "filename": "PXL_20220706_225305569.NIGHT_0008.jpg",
+      "wcs": "fc96abefe4df40df251973e494b5c0a7e617bcbefd8721e0cb098dc2bc9b241f.wcs"
+    },
+    "978ba64989f0511f1102f265f345c87281977b44beba3903540e4f66eea1aaa5": {
+      "filename": "PXL_20220707_223817724.NIGHT_0008.jpg",
+      "wcs": "978ba64989f0511f1102f265f345c87281977b44beba3903540e4f66eea1aaa5.wcs"
+    },
+    "4b62936e6eef84bb33228352c5520fa5d4b40a298c5990c1e2add574373d6172": {
+      "filename": "PXL_20220707_225714430.NIGHT_0008.jpg",
+      "wcs": "4b62936e6eef84bb33228352c5520fa5d4b40a298c5990c1e2add574373d6172.wcs"
+    },
+    "8f840cc45bab2a8e16f60823239dba3acb48c58e251ffe71cba031e2ad8ffe34": {
+      "filename": "PXL_20220707_230548965.NIGHT_0008.jpg",
+      "wcs": "8f840cc45bab2a8e16f60823239dba3acb48c58e251ffe71cba031e2ad8ffe34.wcs"
+    },
+    "826cc1c5cc8ce5945c2d6266cf93299321af2268ed84661754ef1a3967d7d78d": {
+      "filename": "PXL_20220707_231840276.NIGHT_0008.jpg",
+      "wcs": "826cc1c5cc8ce5945c2d6266cf93299321af2268ed84661754ef1a3967d7d78d.wcs"
+    },
+    "74e05315de1bdb3c3209556f811031e7a4dffc12a647809bf6bccbd3a8496fbc": {
+      "filename": "PXL_20220708_222525458.NIGHT_0008.jpg",
+      "wcs": "74e05315de1bdb3c3209556f811031e7a4dffc12a647809bf6bccbd3a8496fbc.wcs"
+    },
+    "743268cbeca006919ca55c774c3711cfddd422398d32eb315f4efd4e7bacb84a": {
+      "filename": "PXL_20220708_223440176.NIGHT_0008.jpg",
+      "wcs": "743268cbeca006919ca55c774c3711cfddd422398d32eb315f4efd4e7bacb84a.wcs"
+    },
+    "1574a8be6e28e9ff367c323c9af2bc7dfee279942220a4f1c4422c2f43b6fe57": {
+      "filename": "PXL_20220709_220520096.NIGHT_0008.jpg",
+      "wcs": "1574a8be6e28e9ff367c323c9af2bc7dfee279942220a4f1c4422c2f43b6fe57.wcs"
+    },
+    "ebca9f482f1759b5b94574fcfb930953108cde3593d39d4728a0f0e97f887808": {
+      "filename": "PXL_20220714_212259772.NIGHT_0008.jpg",
+      "wcs": "ebca9f482f1759b5b94574fcfb930953108cde3593d39d4728a0f0e97f887808.wcs"
+    },
+    "c6aaa496de0451b6cf62fc2ecc82a4e95ebbd6f456fbf62a4b40d1cc443df0ae": {
+      "filename": "PXL_20220714_220205781.NIGHT_0008.jpg",
+      "wcs": "c6aaa496de0451b6cf62fc2ecc82a4e95ebbd6f456fbf62a4b40d1cc443df0ae.wcs"
+    },
+    "39e7874b56e88d1f0031b4bd7588d286817a240988a5793bece716ee04e18d51": {
+      "filename": "PXL_20220729_215331466.NIGHT_0008.jpg",
+      "wcs": "39e7874b56e88d1f0031b4bd7588d286817a240988a5793bece716ee04e18d51.wcs"
+    },
+    "27b400215320fc19f5aa47b74bc7f3cc644939b843a5d8ada739ca466598b892": {
+      "filename": "PXL_20220729_221304746.NIGHT_0008.jpg",
+      "wcs": "27b400215320fc19f5aa47b74bc7f3cc644939b843a5d8ada739ca466598b892.wcs"
+    },
+    "38fea62717873f609b629d90f81f67c0eb92ffab2bb8283288344f8b640a6746": {
+      "filename": "PXL_20220729_222334730.NIGHT_0008.jpg",
+      "wcs": "38fea62717873f609b629d90f81f67c0eb92ffab2bb8283288344f8b640a6746.wcs"
+    },
+    "3e02e3293a024802e551575eab41f00b4d6bc7402b15e10fcef2acb8108f70a3": {
+      "filename": "PXL_20220730_000415463.NIGHT_0008.jpg",
+      "wcs": "3e02e3293a024802e551575eab41f00b4d6bc7402b15e10fcef2acb8108f70a3.wcs"
+    },
+    "2472a39841889078d04a11f5f66b9b3499313f2af1a4e39feecfb987b62f929e": {
+      "filename": "PXL_20220731_214306408.NIGHT_0008.jpg",
+      "wcs": "2472a39841889078d04a11f5f66b9b3499313f2af1a4e39feecfb987b62f929e.wcs"
+    },
+    "6d5f95740e977b021fc4746f98f7eb166ce8c2d54efcdbc9130ddd7c560751e7": {
+      "filename": "PXL_20220731_214918204.NIGHT_0008.jpg",
+      "wcs": "6d5f95740e977b021fc4746f98f7eb166ce8c2d54efcdbc9130ddd7c560751e7.wcs"
+    },
+    "698314c0a19fb85c19acbbad23733dcfcccb961b7a93bcfaa7fc8448ab2e9499": {
+      "filename": "PXL_20220731_220158234.NIGHT_0008.jpg",
+      "wcs": "698314c0a19fb85c19acbbad23733dcfcccb961b7a93bcfaa7fc8448ab2e9499.wcs"
+    },
+    "06eebb64cd59287eb297241a5bf031b8548085258da5ec2acae761940a18bd21": {
+      "filename": "PXL_20220731_223831544.NIGHT_0008.jpg",
+      "wcs": "06eebb64cd59287eb297241a5bf031b8548085258da5ec2acae761940a18bd21.wcs"
+    },
+    "1598a8e5fe02fdc58184802dc8d4a808188477f970ae4866aa71d7e16a03c9c9": {
+      "filename": "PXL_20220731_224821724.NIGHT_0008.jpg",
+      "wcs": "1598a8e5fe02fdc58184802dc8d4a808188477f970ae4866aa71d7e16a03c9c9.wcs"
+    },
+    "c1bcf9d3b63369c922f421a4e4698d5cd57162a3b7db71c0c69c8714e2368b90": {
+      "filename": "PXL_20220731_225955728.NIGHT_0008.jpg",
+      "wcs": "c1bcf9d3b63369c922f421a4e4698d5cd57162a3b7db71c0c69c8714e2368b90.wcs"
+    },
+    "78093e1b658ce7369134437994af4d130cfc95db398867fabfa72c0824345974": {
+      "filename": "PXL_20220802_210158557.NIGHT_0008.jpg",
+      "wcs": "78093e1b658ce7369134437994af4d130cfc95db398867fabfa72c0824345974.wcs"
+    },
+    "5baccb697bcb1428e35b34261ef4956855160b2c219b39bbd336e4727697573d": {
+      "filename": "PXL_20220802_215011685.NIGHT_0008.jpg",
+      "wcs": "5baccb697bcb1428e35b34261ef4956855160b2c219b39bbd336e4727697573d.wcs"
+    },
+    "44a0c095cd9187cc6129c82a349127e8f602d74be453419d6047c3c69a6ddec3": {
+      "filename": "PXL_20220803_204750597.NIGHT_0008.jpg",
+      "wcs": "44a0c095cd9187cc6129c82a349127e8f602d74be453419d6047c3c69a6ddec3.wcs"
+    },
+    "d63592b93e258d9fb1b78d72c34ee4a4d7ffdf25197b6fdb3e1538183417de48": {
+      "filename": "PXL_20220806_222945011.NIGHT_0008.jpg",
+      "wcs": "d63592b93e258d9fb1b78d72c34ee4a4d7ffdf25197b6fdb3e1538183417de48.wcs"
+    },
+    "a55c1dbec7f1ad51143cc24c6667e7f75baf4f3740a12b9d32c87f8b22623481": {
+      "filename": "PXL_20220807_210830862.NIGHT_0008.jpg",
+      "wcs": "a55c1dbec7f1ad51143cc24c6667e7f75baf4f3740a12b9d32c87f8b22623481.wcs"
+    },
+    "3b0559019bb6b9be2bb238306c5a8b93ec4512bd3907e87e2846f51875534621": {
+      "filename": "PXL_20220807_214555957.NIGHT_0008.jpg",
+      "wcs": "3b0559019bb6b9be2bb238306c5a8b93ec4512bd3907e87e2846f51875534621.wcs"
+    },
+    "67c7f3e2e980e3f370ca898d03cc36580335391c50c1f084725534eb5a02f76c": {
+      "filename": "PXL_20220808_203552185.NIGHT_0008.jpg",
+      "wcs": "67c7f3e2e980e3f370ca898d03cc36580335391c50c1f084725534eb5a02f76c.wcs"
+    },
+    "b7045938ee3f6abcabde08d908a699ccd707b1a3fdaba14ce5e9f52b5eed9d90": {
+      "filename": "PXL_20220813_210125205.NIGHT_0008.jpg",
+      "wcs": "b7045938ee3f6abcabde08d908a699ccd707b1a3fdaba14ce5e9f52b5eed9d90.wcs"
+    },
+    "3cad6134c90d0899ed5a7aadbf14badb9694a7f543e42b4782c8c01650927b3c": {
+      "filename": "PXL_20220813_210942092.NIGHT_0008.jpg",
+      "wcs": "3cad6134c90d0899ed5a7aadbf14badb9694a7f543e42b4782c8c01650927b3c.wcs"
+    },
+    "acb689e5fd96635e01377ccd8fa528c774e4d34f61af68999df6964bee9ccf13": {
+      "filename": "PXL_20220813_211657316.NIGHT_0008.jpg",
+      "wcs": "acb689e5fd96635e01377ccd8fa528c774e4d34f61af68999df6964bee9ccf13.wcs"
+    },
+    "9f1a53bbc9de7e1a72c99eaf8f0278851679844b62e87edd610c4831f73fe336": {
+      "filename": "PXL_20220813_212237237.NIGHT_0008.jpg",
+      "wcs": "9f1a53bbc9de7e1a72c99eaf8f0278851679844b62e87edd610c4831f73fe336.wcs"
+    },
+    "61ec39ad023f216139ca3bb1496725ffd9f8f1e3212ab37a1c7187193b46507f": {
+      "filename": "PXL_20220821_211222442.NIGHT_0008.jpg",
+      "wcs": "61ec39ad023f216139ca3bb1496725ffd9f8f1e3212ab37a1c7187193b46507f.wcs"
+    },
+    "987c5e711f633963bc91f87853f9524e7bc411074d36a5c1012fcc5feda18bbe": {
+      "filename": "PXL_20220821_212444910.NIGHT_0008.jpg",
+      "wcs": "987c5e711f633963bc91f87853f9524e7bc411074d36a5c1012fcc5feda18bbe.wcs"
+    },
+    "6dc36cef1542784b48aefae31b2eb879959ca9f3ec320e4bda96fd1143de69c6": {
+      "filename": "PXL_20220821_213145666.NIGHT_0008.jpg",
+      "wcs": "6dc36cef1542784b48aefae31b2eb879959ca9f3ec320e4bda96fd1143de69c6.wcs"
+    },
+    "91f6fcd5632ad3d518acf995e423ffa2be81060b348564d778a09e86512570fa": {
+      "filename": "PXL_20220821_213953013.NIGHT_0008.jpg",
+      "wcs": "91f6fcd5632ad3d518acf995e423ffa2be81060b348564d778a09e86512570fa.wcs"
+    },
+    "8bb9e5f511faaf9476f9ed0145004c76fea2f69c9e2121e52d3997764ab31299": {
+      "filename": "PXL_20220822_201828072.NIGHT_0008.jpg",
+      "wcs": "8bb9e5f511faaf9476f9ed0145004c76fea2f69c9e2121e52d3997764ab31299.wcs"
+    },
+    "0bae74a52dc5cf88db6b2915add88a22ddeae4cfaa8f2f66dfcfb62646d2e636": {
+      "filename": "PXL_20220822_202607445.NIGHT_0008.jpg",
+      "wcs": "0bae74a52dc5cf88db6b2915add88a22ddeae4cfaa8f2f66dfcfb62646d2e636.wcs"
+    },
+    "f8ad4947242bbf1dc6798da4a28e44d4fe0cff3ad8348c0e54e89a9b47085b5f": {
+      "filename": "PXL_20220822_204324287.NIGHT_0008.jpg",
+      "wcs": "f8ad4947242bbf1dc6798da4a28e44d4fe0cff3ad8348c0e54e89a9b47085b5f.wcs"
+    },
+    "cce11e034db5c949f40786b57c6f7de5bf0dda4a5c106ab4dfb54a0e0ced12c8": {
+      "filename": "PXL_20220822_205540700.NIGHT_0008.jpg",
+      "wcs": "cce11e034db5c949f40786b57c6f7de5bf0dda4a5c106ab4dfb54a0e0ced12c8.wcs"
+    },
+    "3d614a121a3592ff0e48bf825121d7c16820811678a41b7dfae825584124627a": {
+      "filename": "PXL_20220822_210531875.NIGHT_0008.jpg",
+      "wcs": "3d614a121a3592ff0e48bf825121d7c16820811678a41b7dfae825584124627a.wcs"
+    },
+    "31eace30de9c587287552b46b90a747b0958cdb21182b3fc3c115be04d84af5a": {
+      "filename": "PXL_20220822_211544277.NIGHT_0008.jpg",
+      "wcs": "31eace30de9c587287552b46b90a747b0958cdb21182b3fc3c115be04d84af5a.wcs"
+    },
+    "285d02f73d4686e2f5e4f18ec41edb9532b74313228559b7818ab8660082ea59": {
+      "filename": "PXL_20220822_212958934.NIGHT_0008.jpg",
+      "wcs": "285d02f73d4686e2f5e4f18ec41edb9532b74313228559b7818ab8660082ea59.wcs"
+    },
+    "3129b1ac0ef5e7f0f7dee8f89ed07d49ad6892248165257f3e92199cdc724a9b": {
+      "filename": "PXL_20220823_204424311.NIGHT_0008.jpg",
+      "wcs": "3129b1ac0ef5e7f0f7dee8f89ed07d49ad6892248165257f3e92199cdc724a9b.wcs"
+    },
+    "a051dc53b4d503495e940004847c68e939f4ecd26101a7e2a94aa37dce3bef23": {
+      "filename": "PXL_20220823_210542932.NIGHT_0008.jpg",
+      "wcs": "a051dc53b4d503495e940004847c68e939f4ecd26101a7e2a94aa37dce3bef23.wcs"
+    },
+    "3d9eb25da64274f20f7dc89dd03e7f15f3e40ef722ef930fbaf9385af6044ccc": {
+      "filename": "PXL_20220824_202528625.NIGHT_0008.jpg",
+      "wcs": "3d9eb25da64274f20f7dc89dd03e7f15f3e40ef722ef930fbaf9385af6044ccc.wcs"
+    },
+    "c86b629457aa2ce3ce3fa4c96262e9527c32b93732a64e3c0f00ceabf02e94e9": {
+      "filename": "PXL_20220824_203200379.NIGHT_0008.jpg",
+      "wcs": "c86b629457aa2ce3ce3fa4c96262e9527c32b93732a64e3c0f00ceabf02e94e9.wcs"
+    },
+    "b74d6913605665a9299c5dd67e31a9063d81a27163d792050e6762314f8a9c74": {
+      "filename": "PXL_20220824_203815596.NIGHT_0008.jpg",
+      "wcs": "b74d6913605665a9299c5dd67e31a9063d81a27163d792050e6762314f8a9c74.wcs"
+    },
+    "ac46eb8f442b6ef5c5ef65051deb70eb3c3927ae6ae4c5bd1a46c30ef013daf0": {
+      "filename": "PXL_20220824_204623259.NIGHT_0008.jpg",
+      "wcs": "ac46eb8f442b6ef5c5ef65051deb70eb3c3927ae6ae4c5bd1a46c30ef013daf0.wcs"
+    },
+    "4d6506fdf333287945d08a127f6d79a6f52f23df7b802394c8b95e04db451698": {
+      "filename": "PXL_20220824_205440703.NIGHT_0008.jpg",
+      "wcs": "4d6506fdf333287945d08a127f6d79a6f52f23df7b802394c8b95e04db451698.wcs"
+    },
+    "dfe753e4dd8eed88f58b847f890d6042d76900db5f9fc8b175eccbb1c31d1a40": {
+      "filename": "PXL_20220824_211042407.NIGHT_0008.jpg",
+      "wcs": "dfe753e4dd8eed88f58b847f890d6042d76900db5f9fc8b175eccbb1c31d1a40.wcs"
+    },
+    "242b8610e1fcf3ec44fd6e71eecf1cef054ad6792d10357fd9dd4cd88583484c": {
+      "filename": "PXL_20220824_211737261.NIGHT_0008.jpg",
+      "wcs": "242b8610e1fcf3ec44fd6e71eecf1cef054ad6792d10357fd9dd4cd88583484c.wcs"
+    },
+    "f6fa6eb09a6a75e0aace3de8b6552962210087487e90f969e3962ea6fb4fd212": {
+      "filename": "PXL_20220824_212631023.NIGHT_0008.jpg",
+      "wcs": "f6fa6eb09a6a75e0aace3de8b6552962210087487e90f969e3962ea6fb4fd212.wcs"
+    },
+    "936d300ad5c04c89c508546289bddb63f159a0841eacb446f5e1a773ab0692fd": {
+      "filename": "PXL_20220824_213617204.NIGHT_0008.jpg",
+      "wcs": "936d300ad5c04c89c508546289bddb63f159a0841eacb446f5e1a773ab0692fd.wcs"
+    },
+    "01c8ec8529f859efb1a5961cd6fb8f6d6a479b4bf717b5d9b4652c48e11d1335": {
+      "filename": "PXL_20220921_203941351.NIGHT_0008.jpg",
+      "wcs": "01c8ec8529f859efb1a5961cd6fb8f6d6a479b4bf717b5d9b4652c48e11d1335.wcs"
+    },
+    "1a7365582e0e462526c34d37cc9ab230d857f14ea5a6168c52268217546f3c15": {
+      "filename": "PXL_20221011_205022973.NIGHT_0008.jpg",
+      "wcs": "1a7365582e0e462526c34d37cc9ab230d857f14ea5a6168c52268217546f3c15.wcs"
+    },
+    "a6bc2b49e17580d1e57225141da3ff91c4fa45eff84636c6edfe64f9884cfd49": {
+      "filename": "PXL_20230224_203448149.NIGHT_0008.jpg",
+      "wcs": "a6bc2b49e17580d1e57225141da3ff91c4fa45eff84636c6edfe64f9884cfd49.wcs"
+    },
+    "f2586bd40d28635df5e3d545407e0e3f00a78b6292c416755dab0e83fc4aea91": {
+      "filename": "PXL_20230224_204544452.NIGHT_0008.jpg",
+      "wcs": "f2586bd40d28635df5e3d545407e0e3f00a78b6292c416755dab0e83fc4aea91.wcs"
+    },
+    "acee1fe384b6ce268f78ab1a2b231510a3bc5a6e4170ea783328783f6e73694f": {
+      "filename": "PXL_20230224_205811234.NIGHT_0008.jpg",
+      "wcs": "acee1fe384b6ce268f78ab1a2b231510a3bc5a6e4170ea783328783f6e73694f.wcs"
+    },
+    "c29307146519e72242d3e0062216ac2894a6e9456f8d2f392414ca363fc41683": {
+      "filename": "PXL_20230224_210411239.NIGHT_0008.jpg",
+      "wcs": "c29307146519e72242d3e0062216ac2894a6e9456f8d2f392414ca363fc41683.wcs"
+    },
+    "175eb377358419b2cd8522a22942050f7bfcd31b225b5b4e8f70a3ef5181dba3": {
+      "filename": "PXL_20230224_211112441.NIGHT_0008.jpg",
+      "wcs": "175eb377358419b2cd8522a22942050f7bfcd31b225b5b4e8f70a3ef5181dba3.wcs"
+    },
+    "0c6bc29016069e0e62b274a860848b920914bcf99baaaa36500fe7bc7f3195fb": {
+      "filename": "PXL_20230225_213536123.NIGHT_0008.jpg",
+      "wcs": "0c6bc29016069e0e62b274a860848b920914bcf99baaaa36500fe7bc7f3195fb.wcs"
+    },
+    "d59da5471f1f2480e25d79999aeb86df78cb944bc1ec4911fdf2f3ef021869aa": {
+      "filename": "PXL_20230225_214313160.NIGHT_0008.jpg",
+      "wcs": "d59da5471f1f2480e25d79999aeb86df78cb944bc1ec4911fdf2f3ef021869aa.wcs"
+    },
+    "f5124520a0cc07188a4281e0ec51d27e472bf2ea7f12659dca4f3941e1f20fa7": {
+      "filename": "PXL_20230225_214926572.NIGHT_0008.jpg",
+      "wcs": "f5124520a0cc07188a4281e0ec51d27e472bf2ea7f12659dca4f3941e1f20fa7.wcs"
+    },
+    "80e1e5ec71a4777aabcc1d75a04f665caaef546b31d7126d456830f0c17da8da": {
+      "filename": "PXL_20230225_215711345.NIGHT_0008.jpg",
+      "wcs": "80e1e5ec71a4777aabcc1d75a04f665caaef546b31d7126d456830f0c17da8da.wcs"
+    },
+    "75f9697bf519f8e3e437e74d918222b09d7db1096ac76c47a190feaa016592f0": {
+      "filename": "PXL_20230225_221050958.NIGHT_0008.jpg",
+      "wcs": "75f9697bf519f8e3e437e74d918222b09d7db1096ac76c47a190feaa016592f0.wcs"
+    },
+    "962853202073c9f5c4375302f23c2362cf3cdb746fb8c30a336acc1d43dfe749": {
+      "filename": "PXL_20230616_214403673.NIGHT_0008.jpg",
+      "wcs": "962853202073c9f5c4375302f23c2362cf3cdb746fb8c30a336acc1d43dfe749.wcs"
+    },
+    "0462b32534c2596677aa6647757f7ce661e6ca4129c8f31e2e0b58daa761c9d4": {
+      "filename": "PXL_20230809_221142570.NIGHT_0008.jpg",
+      "wcs": "0462b32534c2596677aa6647757f7ce661e6ca4129c8f31e2e0b58daa761c9d4.wcs"
+    },
+    "0153e4c9aab60cf52dd21815a3e4635af0a246de018067227c9e2939f33606ba": {
+      "filename": "PXL_20230809_221935538.NIGHT_0008.jpg",
+      "wcs": "0153e4c9aab60cf52dd21815a3e4635af0a246de018067227c9e2939f33606ba.wcs"
+    }
+  }
+}

@@ -177,7 +177,8 @@ def solve_local(
         *scale_options(args),
         *center_options(args),
     ]
-    print(f"로컬 solve-field를 실행합니다 ({'WSL ' + wsl_distribution if wsl_distribution else 'Windows'}).")
+    runtime = "WSL " + wsl_distribution if wsl_distribution else "local"
+    print(f"로컬 solve-field를 실행합니다 ({runtime}).")
     started = time.monotonic()
     try:
         completed = subprocess.run(
