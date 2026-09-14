@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Header from './components/Header'
 import MainPage from './pages/MainPage'
+import MainMotionPreviewPage from './pages/MainMotionPreviewPage'
 import LoginPage from './pages/LoginPage'
 import SignupPage from './pages/SignupPage'
 import ConstellationFindPage from './pages/ConstellationFindPage'
@@ -26,6 +27,7 @@ function App() {
         <MainContent>
           <Routes>
             <Route path="/" element={<MainPage />} />
+            <Route path="/main-motion-preview" element={<MainMotionPreviewPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/constellation-find" element={<ConstellationFindPage />} />

@@ -128,7 +128,7 @@ function Header() {
   sessionStorage.setItem('sessionActive', 'true');
 
   return (
-    <HeaderWrapper>
+    <HeaderWrapper $borderless={location.pathname === '/' || location.pathname === '/main-motion-preview'}>
       <HeaderContainer>
         <Logo onClick={handleLogoClick}>
           <Sparkles size={24} color="#a78bfa" />
@@ -179,9 +179,9 @@ function Header() {
         </HamburgerButton>
       </HeaderContainer>
 
-      <MobileMenuOverlay isOpen={mobileMenuOpen} onClick={() => setMobileMenuOpen(false)} />
+      <MobileMenuOverlay $isOpen={mobileMenuOpen} onClick={() => setMobileMenuOpen(false)} />
 
-      <MobileMenu isOpen={mobileMenuOpen}>
+      <MobileMenu $isOpen={mobileMenuOpen}>
         <MobileMenuClose onClick={() => setMobileMenuOpen(false)}>
           <X size={24} />
         </MobileMenuClose>

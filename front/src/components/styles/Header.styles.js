@@ -15,8 +15,8 @@ const titleTextGlows = {
 }
 
 export const HeaderWrapper = styled.header`
-  border-bottom: 1px solid rgba(30, 41, 59, 0.8);
-  background: rgba(15, 23, 42, 0.5);
+  border-bottom: ${props => (props.$borderless ? 'none' : '1px solid rgba(30, 41, 59, 0.8)')};
+  background: ${props => (props.$borderless ? 'rgba(2, 6, 23, 0.08)' : 'rgba(15, 23, 42, 0.5)')};
   backdrop-filter: blur(12px);
   position: sticky;
   top: 0;
@@ -196,8 +196,8 @@ export const MobileMenuOverlay = styled.div`
   transition: opacity 300ms ease-in-out;
 
   @media (max-width: 768px) {
-    display: ${props => (props.isOpen ? 'block' : 'none')};
-    opacity: ${props => (props.isOpen ? 1 : 0)};
+    display: ${props => (props.$isOpen ? 'block' : 'none')};
+    opacity: ${props => (props.$isOpen ? 1 : 0)};
   }
 `
 
@@ -211,7 +211,7 @@ export const MobileMenu = styled.div`
   height: 100vh;
   background: rgba(15, 23, 42, 0.95);
   backdrop-filter: blur(12px);
-  transform: translateX(${props => (props.isOpen ? '0' : '100%')});
+  transform: translateX(${props => (props.$isOpen ? '0' : '100%')});
   transition: transform 300ms ease-in-out;
   z-index: 1000;
   padding: 1.5rem;
