@@ -158,6 +158,11 @@ function TitlePage({ onDataLoaded }) {
                   $selected={title.selected}
                   disabled={title.selected || selectingId !== null}
                   onClick={() => handleSelectTitle(title.id)}
+                  style={{
+                    background: title.selected
+                      ? 'linear-gradient(135deg, #a78bfa, #d8b4fe)'
+                      : undefined,
+                  }}
                 >
                   {title.selected
                     ? '대표 칭호로 사용 중'

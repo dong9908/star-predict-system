@@ -30,8 +30,8 @@ function MainPage() {
     {
       number: '02',
       title: '내 위치에서 별자리 찾기',
-      description: '현재 위치와 시간 기준으로 별이 있는 정확한 방향과 고도를 확인해요.',
-      linkText: '하늘 지도 열기',
+      description: '현재 위치와 시간 기준으로 별이 있는 정확한 방향과 고도를 찾아드려요.',
+      linkText: '별자리 위치 찾기',
     },
   ]
 

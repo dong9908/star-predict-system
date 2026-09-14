@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { Gift } from 'lucide-react'
 import { getMyInfoAPI } from '../api/auth'
 import { createInitialFortuneAPI } from '../api/fortune'
@@ -10,7 +10,7 @@ import {
   ConstellationName, ConstellationMetaInfo, DetailInfo, DetailLabel,
   ActionButton, FortuneBox, FortuneTitle, FortuneDate, FortuneContent,
   PremiumBox, PremiumContent, PremiumIcon, PremiumInfo, PremiumTitle,
-  PremiumDescription, PriceSection, Price, BuyButton,
+  PremiumDescription, PriceSection, Price, BuyButton, LoginRequiredContainer,
 } from './styles/FortuneReadingPage.styles'
 
 const formatDate = value => value ? String(value).replaceAll('-', '.') : '생년월일 정보 없음'
@@ -21,6 +21,7 @@ const formatToday = () => new Intl.DateTimeFormat('ko-KR', {
 
 function FortuneReadingPage() {
   const navigate = useNavigate()
+  const location = useLocation()
   const [user, setUser] = useState(null)
   const [checkingAccess, setCheckingAccess] = useState(false)
   const accessCheckStarted = useRef(false)
@@ -41,7 +42,6 @@ function FortuneReadingPage() {
 
       const accessToken = localStorage.getItem('accessToken')
       if (!accessToken) {
-        navigate('/login', { replace: true })
         return
       }
 
@@ -116,6 +116,43 @@ function FortuneReadingPage() {
     } finally {
       setCheckingAccess(false)
     }
+  }
+
+  if (!localStorage.getItem('accessToken')) {
+    return (
+      <LoginRequiredContainer>
+        <p
+          style={{
+            fontSize: '1.125rem',
+            marginBottom: '1rem',
+          }}
+        >
+          로그인이 필요합니다.
+        </p>
+
+        <button
+          onClick={() =>
+            navigate('/login', {
+              state: {
+                from: location.pathname + location.search,
+              },
+            })
+          }
+          style={{
+            padding: '0.75rem 1.5rem',
+            borderRadius: '0.5rem',
+            backgroundColor: '#9333ea',
+            color: 'white',
+            border: 'none',
+            cursor: 'pointer',
+            fontSize: '0.875rem',
+            fontWeight: '600',
+          }}
+        >
+          로그인하기
+        </button>
+      </LoginRequiredContainer>
+    )
   }
 
   return (

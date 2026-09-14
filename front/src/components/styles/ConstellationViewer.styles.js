@@ -72,6 +72,31 @@ export const LocationText = styled.span`
 `
 
 export const ConditionBadge = styled.span`
-  color: #34d399;
   font-weight: 500;
+
+  ${({ condition }) =>
+    condition === '관측 좋음' &&
+    `
+      color: #34d399;
+    `}
+
+  ${({ condition }) =>
+    condition === '관측 보통' &&
+    `
+      color: #facc15;
+    `}
+
+  ${({ condition }) =>
+    condition === '관측 나쁨' &&
+    `
+      color: #ff6565;
+    `}
+`
+
+export const InfoButton = styled.span`
+  color: #a855f7;
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
 `

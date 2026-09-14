@@ -117,17 +117,17 @@ export const Badge = styled.div`
 export const EditButton = styled.button`
   padding: 0.75rem 1.5rem;
   border-radius: 0.5rem;
-  background-color: #9333ea;
+  background: linear-gradient(135deg, #a78bfa, #d8b4fe);
   color: white;
   font-size: 0.875rem;
   font-weight: 600;
   border: none;
   cursor: pointer;
-  transition: background-color 150ms ease-in-out;
+  transition: opacity 150ms ease-in-out;
   white-space: nowrap;
 
   &:hover {
-    background-color: #a855f7;
+    opacity: 0.9;
   }
 
   @media (max-width: 768px) {
@@ -237,4 +237,32 @@ export const FooterText = styled.p`
   margin-top: 2rem;
   padding-top: 1.5rem;
   border-top: 1px solid rgba(147, 51, 234, 0.2);
+`
+
+export const LoginRequiredContainer = styled.div`
+  color: #a78bfa;
+  text-align: center;
+  padding: 3rem 1rem;
+`
+
+export const LoginRequiredText = styled.p`
+  font-size: 1.125rem;
+  margin-bottom: 1rem;
+`
+
+export const LoginButton = styled.button`
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  background: #9333ea;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 600;
+`
+
+export const EmptyTabMessage = styled.div`
+  padding: 2rem;
+  text-align: center;
+  color: #cbd5e1;
 `

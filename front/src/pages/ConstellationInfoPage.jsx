@@ -295,10 +295,29 @@ function ConstellationInfoPage() {
 
   // 이미지(시각화 패널)가 있는 영역을 최상단으로 잡기 위한 ref
   const visualizationRef = useRef(null)
+  const detailSectionRef = useRef(null)
+  const [detailHeight, setDetailHeight] = useState(400)
 
   useEffect(() => () => {
     if (flashTimerRef.current) window.clearTimeout(flashTimerRef.current)
   }, [])
+
+  useEffect(() => {
+    const element = detailSectionRef.current
+
+    if (!element) return
+
+    const updateHeight = () => {
+      setDetailHeight(element.getBoundingClientRect().height)
+    }
+
+    updateHeight()
+
+    const observer = new ResizeObserver(updateHeight)
+    observer.observe(element)
+
+    return () => observer.disconnect()
+  }, [selectedConstellation])
 
   const showStarMarker = (star) => {
     if (flashTimerRef.current) window.clearTimeout(flashTimerRef.current)
@@ -436,7 +455,7 @@ function ConstellationInfoPage() {
         </div>
 
 
-        <DetailSection>
+        <DetailSection ref={detailSectionRef}>
 
           {/* 별자리 이름 */}
           <ConstellationTitle>
@@ -544,7 +563,11 @@ function ConstellationInfoPage() {
 
 
         {/* 별자리 목록 */}
-        <ConstellationListContainer>
+          <ConstellationListContainer
+            style={{
+              height: `calc(${560 + detailHeight}px - 1.5rem - 33px)`
+            }}
+          >
 
           {filteredConstellations.length > 0 ? (
             filteredConstellations.map(

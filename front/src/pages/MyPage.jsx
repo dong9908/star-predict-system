@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { User, Star } from 'lucide-react'
 import TitlePage from './TitlePage'
 import {
@@ -14,6 +14,10 @@ import {
   TabMenu,
   Tab,
   ContentArea,
+  LoginRequiredContainer,
+  LoginRequiredText,
+  LoginButton,
+  EmptyTabMessage,
 } from './styles/MyPage.styles'
 
 const tabs = [
@@ -24,6 +28,7 @@ const tabs = [
 
 function MyPage() {
   const navigate = useNavigate()
+  const location = useLocation()
   const [activeTab, setActiveTab] = useState('titles')
   const [titleSummary, setTitleSummary] = useState({
     discoveredCount: 0,
@@ -42,24 +47,21 @@ function MyPage() {
   if (!user) {
     return (
       <PageContainer>
-        <div style={{ color: '#a78bfa', textAlign: 'center', padding: '3rem 1rem' }}>
-          <p style={{ fontSize: '1.125rem', marginBottom: '1rem' }}>로그인이 필요합니다.</p>
-          <button
-            onClick={() => navigate('/login')}
-            style={{
-              padding: '0.75rem 1.5rem',
-              borderRadius: '0.5rem',
-              backgroundColor: '#9333ea',
-              color: 'white',
-              border: 'none',
-              cursor: 'pointer',
-              fontSize: '0.875rem',
-              fontWeight: '600',
+        <LoginRequiredContainer>
+          <LoginRequiredText>로그인이 필요합니다.</LoginRequiredText>
+
+          <LoginButton
+            onClick={() => {
+              navigate('/login', {
+                state: {
+                  from: location.pathname + location.search,
+                },
+              })
             }}
           >
             로그인하기
-          </button>
-        </div>
+          </LoginButton>
+        </LoginRequiredContainer>
       </PageContainer>
     )
   }
@@ -87,7 +89,9 @@ function MyPage() {
           </ConstellationInfo>
         </ProfileInfo>
 
-        <EditButton onClick={() => navigate('/edit-profile')}>회원 정보 수정</EditButton>
+        <EditButton onClick={() => navigate('/edit-profile')}>
+          회원 정보 수정
+        </EditButton>
       </ProfileSection>
 
       {/* 탭 메뉴 */}
@@ -108,15 +112,15 @@ function MyPage() {
         {activeTab === 'titles' && <TitlePage onDataLoaded={setTitleSummary} />}
 
         {activeTab === 'background' && (
-          <div style={{ padding: '2rem', textAlign: 'center', color: '#cbd5e1' }}>
+          <EmptyTabMessage>
             배경 탭 컨텐츠가 준비 중입니다.
-          </div>
+          </EmptyTabMessage>
         )}
 
         {activeTab === 'profile' && (
-          <div style={{ padding: '2rem', textAlign: 'center', color: '#cbd5e1' }}>
+          <EmptyTabMessage>
             프로필 탭 컨텐츠가 준비 중입니다.
-          </div>
+          </EmptyTabMessage>
         )}
       </ContentArea>
     </PageContainer>
