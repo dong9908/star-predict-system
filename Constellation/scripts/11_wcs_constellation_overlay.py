@@ -78,7 +78,27 @@ def load_stellarium(path: Path) -> list[dict[str, Any]]:
     entries = json.loads(path.read_text(encoding="utf-8")).get("constellations")
     if not isinstance(entries, list):
         raise ValueError("Stellarium index.json 형식이 아닙니다.")
-    return entries
+    expanded: list[dict[str, Any]] = []
+    for entry in entries:
+        if entry.get("iau") != "Ser":
+            expanded.append(entry)
+            continue
+
+        # Stellarium stores Serpens as one constellation with two disconnected
+        # polylines. ASTRA's catalog stores those regions separately, so score
+        # each region independently and preserve the matching catalog code.
+        segment_names = (
+            ("SerH", "Serpens Caput", "뱀자리(머리)"),
+            ("SerT", "Serpens Cauda", "뱀자리(꼬리)"),
+        )
+        for lines, (iau, english, native) in zip(entry.get("lines", []), segment_names):
+            segment = dict(entry)
+            segment["id"] = f"CON western {iau}"
+            segment["iau"] = iau
+            segment["lines"] = [lines]
+            segment["common_name"] = {"english": english, "native": native}
+            expanded.append(segment)
+    return expanded
 
 
 def load_hyg(path: Path, required: set[int]) -> dict[int, dict[str, float]]:
