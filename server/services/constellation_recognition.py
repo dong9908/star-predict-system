@@ -365,8 +365,6 @@ def load_constellation_details(iau_codes: set[str], english_names: set[str]) -> 
     from sqlalchemy import or_
 
     lookup_codes = set(iau_codes)
-    if "Ser" in lookup_codes:
-        lookup_codes.update({"SerH", "SerT"})
     db = SessionLocal()
     try:
         constellations = (
@@ -409,12 +407,12 @@ def load_constellation_details(iau_codes: set[str], english_names: set[str]) -> 
     details: dict[str, dict] = {}
     for row in sorted(constellations, key=lambda item: item.abbreviation):
         is_serpens = row.abbreviation in {"SerH", "SerT"}
-        iau = "Ser" if is_serpens else row.abbreviation
+        iau = row.abbreviation
         star_code = "Ser" if is_serpens else row.abbreviation
         payload = {
             "constellationId": row.constellation_id,
-            "name": "뱀자리" if is_serpens else row.name_ko,
-            "englishName": "Serpens" if is_serpens else row.name_en,
+            "name": row.name_ko,
+            "englishName": row.name_en,
             "abbreviation": iau,
             "description": row.description,
             "story": row.mythology or "등록된 별자리 이야기가 없습니다.",
@@ -425,8 +423,6 @@ def load_constellation_details(iau_codes: set[str], english_names: set[str]) -> 
         }
         details.setdefault(iau, payload)
         details.setdefault(str(row.name_en).casefold(), payload)
-        if is_serpens:
-            details.setdefault("serpens", payload)
     return details
 
 

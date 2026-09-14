@@ -93,13 +93,29 @@ def stellarium_entries(path: Path) -> tuple[list[dict[str, Any]], set[int]]:
     entries = payload.get("constellations")
     if not isinstance(entries, list):
         raise ValueError("Stellarium JSON에 constellations 배열이 없습니다.")
+    expanded: list[dict[str, Any]] = []
+    for entry in entries:
+        if entry.get("iau") != "Ser":
+            expanded.append(entry)
+            continue
+        segment_names = (
+            ("SerH", "Serpens Caput", "뱀자리(머리)"),
+            ("SerT", "Serpens Cauda", "뱀자리(꼬리)"),
+        )
+        for lines, (iau, english, native) in zip(entry.get("lines", []), segment_names):
+            segment = dict(entry)
+            segment["id"] = f"CON western {iau}"
+            segment["iau"] = iau
+            segment["lines"] = [lines]
+            segment["common_name"] = {"english": english, "native": native}
+            expanded.append(segment)
     required_hips = {
         hip
-        for entry in entries
+        for entry in expanded
         for line in entry.get("lines", [])
         for hip in line_hips(line)
     }
-    return entries, required_hips
+    return expanded, required_hips
 
 
 def load_hyg_stars(path: Path, required_hips: set[int]) -> dict[int, dict[str, float]]:
