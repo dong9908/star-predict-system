@@ -29,6 +29,8 @@ DEFAULT_MODEL = (
     / "best.pt"
 )
 PORTABLE_RESULT_ROOT = Path(__file__).resolve().parents[1] / "assets" / "constellation_results"
+_KNOWN_WCS_DIR = os.getenv("KNOWN_WCS_DIR", "").strip()
+KNOWN_WCS_ROOT = Path(_KNOWN_WCS_DIR).expanduser() if _KNOWN_WCS_DIR else None
 REALTIME_PLATE_SOLVER = PROJECT_ROOT / "Constellation" / "scripts" / "48_realtime_plate_solve.py"
 REALTIME_PLATE_ROOT = (
     PROJECT_ROOT / "Constellation" / "data" / "results" / "realtime_plate_solving"
@@ -55,13 +57,18 @@ HYG_CATALOG = PROJECT_ROOT / "Constellation" / "HYG-Database-main" / "hyg" / "CU
 
 def find_known_wcs(content: bytes, filename: str) -> Path | None:
     """Return a cached WCS only when filename and bytes match a solved source."""
+    uploaded_hash = hashlib.sha256(content).hexdigest().lower()
+    if KNOWN_WCS_ROOT is not None:
+        portable_wcs = KNOWN_WCS_ROOT / f"{uploaded_hash}.wcs"
+        if portable_wcs.is_file():
+            return portable_wcs
     results_path = (
         PROJECT_ROOT / "Constellation" / "data" / "results"
         / "astro_smartphone_plate_solving" / "plate_solve_results.csv"
     )
     if not filename or not results_path.is_file():
         return None
-    uploaded_hash = hashlib.sha256(content).digest()
+    uploaded_digest = bytes.fromhex(uploaded_hash)
     with results_path.open("r", encoding="utf-8-sig", newline="") as file:
         for row in csv.DictReader(file):
             if row.get("filename") != filename or row.get("status") not in {"success", "cached_success"}:
@@ -69,7 +76,7 @@ def find_known_wcs(content: bytes, filename: str) -> Path | None:
             source, wcs = Path(row.get("source_path", "")), Path(row.get("wcs_path", ""))
             if not source.is_file() or not wcs.is_file() or source.stat().st_size != len(content):
                 continue
-            if hashlib.sha256(source.read_bytes()).digest() == uploaded_hash:
+            if hashlib.sha256(source.read_bytes()).digest() == uploaded_digest:
                 return wcs
     return None
 
@@ -138,6 +145,12 @@ def _plate_solver_settings() -> dict:
     scale_lower = float(os.getenv("PLATE_SOLVE_SCALE_LOWER", str(DEFAULT_PLATE_SOLVE_SCALE_LOWER)))
     scale_upper = float(os.getenv("PLATE_SOLVE_SCALE_UPPER", str(DEFAULT_PLATE_SOLVE_SCALE_UPPER)))
     downsample = int(os.getenv("PLATE_SOLVE_DOWNSAMPLE", str(DEFAULT_PLATE_SOLVE_DOWNSAMPLE)))
+    two_stage_retry = os.getenv("PLATE_SOLVE_TWO_STAGE_RETRY", "true").strip().lower() in {
+        "1", "true", "yes", "on",
+    }
+    second_stage_timeout_seconds = max(
+        30, int(os.getenv("PLATE_SOLVE_SECOND_STAGE_TIMEOUT_SECONDS", "75")),
+    )
     if not 0 < scale_lower < scale_upper:
         raise ValueError("PLATE_SOLVE_SCALE_LOWER는 SCALE_UPPER보다 작아야 합니다.")
     if downsample not in {1, 2, 4, 8}:
@@ -147,6 +160,8 @@ def _plate_solver_settings() -> dict:
         "scale_lower": scale_lower,
         "scale_upper": scale_upper,
         "downsample": downsample,
+        "two_stage_retry": two_stage_retry,
+        "second_stage_timeout_seconds": second_stage_timeout_seconds,
         "distribution": os.getenv("PLATE_SOLVE_WSL_DISTRIBUTION", "Ubuntu"),
     }
 
@@ -163,6 +178,7 @@ def _plate_cache_matches(result_path: Path, settings: dict) -> bool:
             and float(parameters.get("scale_lower")) == settings["scale_lower"]
             and float(parameters.get("scale_upper")) == settings["scale_upper"]
             and int(parameters.get("downsample")) == settings["downsample"]
+            and bool(parameters.get("two_stage_retry", False)) == settings["two_stage_retry"]
         )
     except (TypeError, ValueError):
         return False
@@ -212,13 +228,24 @@ def run_realtime_plate_solving(content: bytes, suffix: str) -> tuple[dict, Path 
                 "--downsample", str(downsample),
                 "--wsl-distribution", distribution,
             ]
+            if settings["two_stage_retry"]:
+                command.extend([
+                    "--two-stage-retry",
+                    "--second-stage-timeout-seconds",
+                    str(settings["second_stage_timeout_seconds"]),
+                ])
             if result_path.is_file() and not cache_matches:
                 command.append("--force")
             try:
                 completed = subprocess.run(
                     command, cwd=PROJECT_ROOT / "Constellation", capture_output=True,
                     text=True, encoding="utf-8", errors="replace",
-                    timeout=timeout_seconds + 45, check=False,
+                    timeout=(
+                        timeout_seconds
+                        + (settings["second_stage_timeout_seconds"] if settings["two_stage_retry"] else 0)
+                        + 60
+                    ),
+                    check=False,
                 )
             except subprocess.TimeoutExpired:
                 return {
@@ -227,7 +254,7 @@ def run_realtime_plate_solving(content: bytes, suffix: str) -> tuple[dict, Path 
                     "imageSha256": image_hash,
                     "aiUsed": False,
                     "errorType": "TimeoutError",
-                    "message": f"Plate Solving이 {timeout_seconds + 45}초를 초과했습니다.",
+                    "message": "Plate Solving 전체 실행 제한시간을 초과했습니다.",
                 }, None
         if result_path.is_file():
             return _read_realtime_plate_result(result_path, was_cached=False)

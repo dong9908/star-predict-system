@@ -3,6 +3,11 @@ weights/
 *.pth
 *.onnx
 
+# Docker deployment secrets and runtime files
+.env.docker
+deploy/models/
+deploy/astrometry/
+
 # OS metadata
 .DS_Store
 

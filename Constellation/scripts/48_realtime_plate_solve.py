@@ -2,7 +2,8 @@
 
 This stage is intentionally independent from the web server. Stage 49 can call
 the same functions from the upload API after this command-line contract has
-been verified. Local WSL Astrometry.net is used; the image is never uploaded.
+been verified. Astrometry.net runs directly on Linux and through WSL on
+Windows; the image is never uploaded.
 """
 
 from __future__ import annotations
@@ -188,16 +189,27 @@ def restore_original_wcs(source: Path, target: Path, transform: dict[str, Any]) 
     fits.PrimaryHDU(header=header).writeto(target, overwrite=True, output_verify="silentfix")
 
 
+def wsl_arguments(distribution: str) -> list[str]:
+    """Use WSL only on Windows; Linux containers run solve-field directly."""
+    return ["--wsl-distribution", distribution] if os.name == "nt" else []
+
+
 def environment_status(distribution: str) -> dict[str, Any]:
-    available = command_available(distribution, "solve-field")
+    local_solver = shutil.which("solve-field")
+    wsl_solver = os.name == "nt" and command_available(distribution, "solve-field")
+    available = bool(local_solver or wsl_solver)
+    backend = "local" if local_solver else ("wsl-local" if wsl_solver else None)
     return {
         "status": "ready" if available else "unavailable",
-        "wsl_distribution": distribution,
+        "platform": sys.platform,
+        "backend": backend,
+        "local_solve_field": local_solver,
+        "wsl_distribution": distribution if os.name == "nt" else None,
         "solve_field_available": available,
         "message": (
-            "WSL Astrometry.net Plate Solver를 사용할 수 있습니다."
+            f"Astrometry.net Plate Solver를 사용할 수 있습니다 ({backend})."
             if available
-            else "WSL Ubuntu에서 solve-field를 찾을 수 없습니다."
+            else "solve-field를 찾을 수 없습니다. Astrometry.net을 설치해주세요."
         ),
     }
 
@@ -232,7 +244,7 @@ def solve(args: argparse.Namespace) -> tuple[dict[str, Any], Path, bool]:
     command = [
         sys.executable, str(PLATE_SOLVER), str(staged), "--backend", "local",
         "--no-nova-fallback", "--output-dir", str(output_root),
-        "--wsl-distribution", args.wsl_distribution,
+        *wsl_arguments(args.wsl_distribution),
         "--timeout-seconds", str(args.timeout_seconds), "--downsample", str(downsample),
         "--scale-units", "degwidth", "--scale-lower", str(args.scale_lower),
         "--scale-upper", str(args.scale_upper),
@@ -271,7 +283,7 @@ def solve(args: argparse.Namespace) -> tuple[dict[str, Any], Path, bool]:
         retry_command = [
             sys.executable, str(PLATE_SOLVER), str(prepared), "--backend", "local",
             "--no-nova-fallback", "--output-dir", str(retry_root),
-            "--wsl-distribution", args.wsl_distribution,
+            *wsl_arguments(args.wsl_distribution),
             "--timeout-seconds", str(args.second_stage_timeout_seconds),
             "--downsample", "2", "--scale-units", "degwidth",
             "--scale-lower", "5", "--scale-upper", "160",
@@ -322,7 +334,9 @@ def solve(args: argparse.Namespace) -> tuple[dict[str, Any], Path, bool]:
         "status": "success" if success else "failed",
         "image_sha256": image_hash,
         "image": dimensions,
-        "backend": "wsl-local-astrometry-net",
+        "backend": str(low_level.get("backend") or (
+            "wsl-local-astrometry-net" if os.name == "nt" else "local-astrometry-net"
+        )),
         "ai_used": False,
         "elapsed_seconds": elapsed,
         "solved_stage": attempts[-1]["stage"] if success else None,
