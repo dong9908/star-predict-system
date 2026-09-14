@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { Search } from 'lucide-react'
 import {
   PageContainer,
@@ -35,9 +35,8 @@ import {
   CardName,
   CardDate,
   EmptyState,
-  ConstellationDetailModal,
-  SelectButtonGroup,
-  ModalOverlay
+  LoginRequiredContainer,
+  LoginButton,
 } from './styles/ConstellationCatalogPage.styles'
 import {
   getCatalogMyAPI,
@@ -45,60 +44,17 @@ import {
 
 function ConstellationCatalogPage() {
   const navigate = useNavigate()
+  const location = useLocation()
   const [filterType, setFilterType] = useState('all')
   const [difficultyFilter, setDifficultyFilter] = useState('all')
   const [searchQuery, setSearchQuery] = useState('')
   const [constellations, setConstellations] = useState([])
-
-  // 뱀자리 머리/꼬리 선택 모달을 위한 상태 및 스크롤 위치 상태
-  const [showSerpensModal, setShowSerpensModal] = useState(false)
-  const [serpensData, setSerpensData] = useState({ head: null, tail: null })
-  const [scrollPosition, setScrollPosition] = useState(0)
 
   // 로컬 스토리지에서 로그인된 유저 정보 가져오기
   const userString = localStorage.getItem('user')
   const user = userString ? JSON.parse(userString) : null
 
   // 로그인하지 않은 경우 로그인 페이지로 이동
-  if (!user) {
-    return (
-      <PageContainer>
-        <div
-          style={{
-            color: '#a78bfa',
-            textAlign: 'center',
-            padding: '3rem 1rem',
-          }}
-        >
-          <p
-            style={{
-              fontSize: '1.125rem',
-              marginBottom: '1rem',
-            }}
-          >
-            로그인이 필요합니다.
-          </p>
-
-          <button
-            onClick={() => navigate('/login')}
-            style={{
-              padding: '0.75rem 1.5rem',
-              borderRadius: '0.5rem',
-              backgroundColor: '#9333ea',
-              color: 'white',
-              border: 'none',
-              cursor: 'pointer',
-              fontSize: '0.875rem',
-              fontWeight: '600',
-            }}
-          >
-            로그인하기
-          </button>
-        </div>
-      </PageContainer>
-    )
-  }
-
   useEffect(() => {
     const fetchConstellations = async () => {
       try {
@@ -117,40 +73,7 @@ function ConstellationCatalogPage() {
           imageUrl: item.image_url,
         }))
 
-        // DB 버전에 따라 사용된 뱀자리 머리/꼬리 이름을 모두 지원한다.
-        const headNames = new Set(['뱀자리(머리)', '뱀머리자리'])
-        const tailNames = new Set(['뱀자리(꼬리)', '뱀꼬리자리'])
-        const headItem = rawData.find(c => headNames.has(c.name))
-        const tailItem = rawData.find(c => tailNames.has(c.name))
-
-        const filteredRawData = rawData.filter(
-          c => !headNames.has(c.name) && !tailNames.has(c.name)
-        )
-
-        if (headItem || tailItem) {
-          const isAnyDiscovered = headItem?.discovered || tailItem?.discovered
-
-          // 가장 최근 발견일 선택
-          const dates = [headItem?.date, tailItem?.date].filter(Boolean).sort()
-          const latestDate = dates[dates.length - 1] || ''
-
-          const mergedSerpens = {
-            id: 'serpens-merged', // 가상의 통합 ID
-            name: '뱀자리',
-            difficulty: headItem?.difficulty || tailItem?.difficulty || '3',
-            date: latestDate,
-            discovered: isAnyDiscovered,
-            isNew: false,
-            imageUrl: headItem?.imageUrl || tailItem?.imageUrl,
-            isSerpensGroup: true,
-            head: headItem,
-            tail: tailItem,
-          }
-
-          filteredRawData.push(mergedSerpens)
-        }
-
-        setConstellations(filteredRawData)
+        setConstellations(rawData)
 
       } catch (error) {
         console.error('별자리 도감 조회 실패:', error)
@@ -159,6 +82,35 @@ function ConstellationCatalogPage() {
 
     fetchConstellations()
   }, [])
+
+    if (!user) {
+      return (
+        <PageContainer>
+          <LoginRequiredContainer>
+            <p
+              style={{
+                fontSize: '1.125rem',
+                marginBottom: '1rem',
+              }}
+            >
+              로그인이 필요합니다.
+            </p>
+
+            <LoginButton
+              onClick={() =>
+                navigate('/login', {
+                  state: {
+                    from: location.pathname + location.search,
+                  },
+                })
+              }
+            >
+              로그인하기
+            </LoginButton>
+          </LoginRequiredContainer>
+        </PageContainer>
+      )
+    }
 
   const discoveredCount = constellations.filter(c => c.discovered).length
   const percentage = constellations.length > 0 ? Math.round((discoveredCount / constellations.length) * 100) : 0
@@ -197,13 +149,7 @@ function ConstellationCatalogPage() {
   }, [constellations])
 
   const handleCardClick = (constellation) => {
-    if (constellation.isSerpensGroup) {
-      setScrollPosition(window.scrollY) // 모달 열릴 때의 현재 스크롤 위치 저장
-      setSerpensData({ head: constellation.head, tail: constellation.tail })
-      setShowSerpensModal(true)
-    } else {
-      navigate(`/constellation-info?constellation_id=${constellation.id}`)
-    }
+    navigate(`/constellation-info?constellation_id=${constellation.id}`)
   }
 
   return (
@@ -222,7 +168,7 @@ function ConstellationCatalogPage() {
             <SidebarTitle>나의 도감</SidebarTitle>
 
             <CatalogInfo>
-              <CatalogLabel>전체 88개 중</CatalogLabel>
+              <CatalogLabel>전체 89개 중</CatalogLabel>
               <CatalogCount>{discoveredCount}개 발견</CatalogCount>
             </CatalogInfo>
 
@@ -319,7 +265,7 @@ function ConstellationCatalogPage() {
                 </FilterButton>
               </FilterGroup>
               <FilterInfo>
-                관측불가 : 일반적으로 한국에서 관측이 불가합니다.
+                <span style={{ color: '#22d3ee' }}>관측불가</span> : 일반적으로 <span style={{ color: '#22d3ee' }}>한국에서 관측이 불가</span>합니다.
               </FilterInfo>
             </FilterBar>
 
@@ -388,58 +334,6 @@ function ConstellationCatalogPage() {
           </ContentSection>
         </MainContainer>
       </ContentWrapper>
-
-      {/* 뱀자리 머리/꼬리 선택 모달 */}
-      {showSerpensModal && (
-        <ModalOverlay onClick={() => setShowSerpensModal(false)}>
-          <ConstellationDetailModal onClick={(e) => e.stopPropagation()}>
-            <h3 style={{ marginBottom: '1.5rem', fontSize: '1.25rem', textAlign: 'center', color: 'white' }}>
-              뱀자리 선택
-            </h3>
-            <SelectButtonGroup>
-              <button
-                disabled={!serpensData.head}
-                onClick={() => {
-                  if (!serpensData.head) return
-                  setShowSerpensModal(false)
-                  navigate(`/constellation-info?constellation_id=${serpensData.head.id}`)
-                }}
-                style={{
-                  cursor: serpensData.head ? 'pointer' : 'not-allowed',
-                  opacity: serpensData.head ? 1 : 0.45
-                }}
-              >
-                뱀자리(머리) 보기 {serpensData.head?.discovered ? '(발견됨)' : '(미발견)'}
-              </button>
-              <button
-                disabled={!serpensData.tail}
-                onClick={() => {
-                  if (!serpensData.tail) return
-                  setShowSerpensModal(false)
-                  navigate(`/constellation-info?constellation_id=${serpensData.tail.id}`)
-                }}
-                style={{
-                  cursor: serpensData.tail ? 'pointer' : 'not-allowed',
-                  opacity: serpensData.tail ? 1 : 0.45
-                }}
-              >
-                뱀자리(꼬리) 보기 {serpensData.tail?.discovered ? '(발견됨)' : '(미발견)'}
-              </button>
-            </SelectButtonGroup>
-            <div style={{ textAlign: 'center', marginTop: '1.5rem' }}>
-              <button
-                onClick={() => setShowSerpensModal(false)}
-                style={{
-                  padding: '0.5rem 1rem', background: 'transparent',
-                  color: '#94a3b8', border: 'none', cursor: 'pointer', fontSize: '0.875rem'
-                }}
-              >
-                닫기
-              </button>
-            </div>
-          </ConstellationDetailModal>
-        </ModalOverlay>
-      )}
     </PageContainer>
   )
 }

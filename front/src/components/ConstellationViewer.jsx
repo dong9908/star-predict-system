@@ -1,3 +1,5 @@
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Compass } from 'lucide-react'
 import {
   CardWrapper,
@@ -8,18 +10,38 @@ import {
   CardFooter,
   LocationText,
   ConditionBadge,
+  InfoButton,
 } from './styles/ConstellationViewer.styles'
+import CONSTELLATIONS_DATA from '../data/constellationViewerData'
 
-function ConstellationViewer({
-  title = '오리온자리',
-  location = '남동쪽 32°',
-  condition = '관측 좋음',
-  onCardClick,
-}) {
+function ConstellationViewer({ onCardClick }) {
+  const navigate = useNavigate()
+  const [currentTime, setCurrentTime] = useState('')
+  const [currentConstellation, setCurrentConstellation] = useState(null)
+
+  useEffect(() => {
+    const updateCurrentTime = () => {
+      const now = new Date()
+      const hours = String(now.getHours()).padStart(2, '0')
+      const minutes = String(now.getMinutes()).padStart(2, '0')
+      setCurrentTime(`${hours}:${minutes}`)
+    }
+
+    updateCurrentTime()
+    const timer = setInterval(updateCurrentTime, 1000)
+
+    const randomIndex = Math.floor(Math.random() * CONSTELLATIONS_DATA.length)
+    setCurrentConstellation(CONSTELLATIONS_DATA[randomIndex])
+
+    return () => clearInterval(timer)
+  }, [])
+
+  if (!currentConstellation) return null
+
   return (
     <CardWrapper onClick={onCardClick} style={{ cursor: onCardClick ? 'pointer' : 'default' }}>
       <CardHeader>
-        <HeaderText>LIVE SKY · SEOUL 21:42</HeaderText>
+        <HeaderText>LIVE SKY · SEOUL {currentTime}</HeaderText>
         <HeaderIcon>
           <Compass size={16} color="#22d3ee" />
         </HeaderIcon>
@@ -27,45 +49,50 @@ function ConstellationViewer({
 
       <SVGContainer>
         <svg viewBox="0 0 300 200">
-          <line
-            x1="50"
-            y1="140"
-            x2="110"
-            y2="90"
-            stroke="#818cf8"
-            strokeWidth="1.5"
-            strokeDasharray="3 3"
-          />
-          <line x1="110" y1="90" x2="160" y2="110" stroke="#818cf8" strokeWidth="1.5" />
-          <line x1="160" y1="110" x2="200" y2="55" stroke="#818cf8" strokeWidth="1.5" />
-          <line x1="200" y1="55" x2="250" y2="40" stroke="#818cf8" strokeWidth="1.5" />
-          <line x1="250" y1="40" x2="280" y2="90" stroke="#818cf8" strokeWidth="1.5" />
-          <line
-            x1="160"
-            y1="110"
-            x2="200"
-            y2="150"
-            stroke="#818cf8"
-            strokeWidth="1.5"
-            strokeDasharray="3 3"
-          />
+          {currentConstellation.lines.map((line, idx) => (
+            <line
+              key={`line-${idx}`}
+              x1={line.x1}
+              y1={line.y1}
+              x2={line.x2}
+              y2={line.y2}
+              stroke="#818cf8"
+              strokeWidth="1.5"
+              strokeDasharray={line.dashed ? '3 3' : 'none'}
+            />
+          ))}
 
-          {/* Star Nodes */}
-          <circle cx="50" cy="140" r="3.5" fill="#fff" className="star-pulse" />
-          <circle cx="110" cy="90" r="4.5" fill="#fff" />
-          <circle cx="160" cy="110" r="5" fill="#c084fc" />
-          <circle cx="200" cy="55" r="3.5" fill="#fff" />
-          <circle cx="250" cy="40" r="4" fill="#fff" />
-          <circle cx="280" cy="90" r="3.5" fill="#fff" />
-          <circle cx="200" cy="150" r="3" fill="#fff" />
+          {currentConstellation.stars.map((star, idx) => (
+            <circle
+              key={`star-${idx}`}
+              cx={star.cx}
+              cy={star.cy}
+              r={star.r}
+              fill={star.color || '#fff'}
+              className={star.pulse ? 'star-pulse' : ''}
+            />
+          ))}
         </svg>
       </SVGContainer>
 
       <CardFooter>
         <LocationText>
-          {title} · {location}
+          {currentConstellation.title} · {currentConstellation.location} ·{' '}
+          <ConditionBadge condition={currentConstellation.condition}>
+            {currentConstellation.condition}
+          </ConditionBadge>
         </LocationText>
-        <ConditionBadge>{condition}</ConditionBadge>
+
+        <InfoButton
+          onClick={(e) => {
+            e.stopPropagation()
+            navigate(
+              `/constellation-info?constellation_id=${currentConstellation.id}`
+            )
+          }}
+        >
+          정보보기 →
+        </InfoButton>
       </CardFooter>
     </CardWrapper>
   )

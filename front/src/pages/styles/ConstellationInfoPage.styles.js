@@ -5,7 +5,6 @@ export const PageWrapper = styled.div`
   gap: 2rem;
   padding: 2rem;
   background: transparent;
-  min-height: calc(100vh - 190px);
   width: 100%;
   max-width: 1800px;
   margin: 0 auto;
@@ -46,15 +45,11 @@ export const ConstellationListContainer = styled.div`
   border: 1px solid rgba(167, 139, 250, 0.3);
   border-radius: 1rem;
   padding: 1rem;
-  overflow-y: auto;
-  flex: 1;
-  min-height: 0;
+  width: 100%;
+  box-sizing: border-box;
 
-  /* 모바일 화면에서 카드가 4개 정도만 보이도록 높이 제한 */
-  @media (max-width: 1024px) {
-    max-height: 420px; /* 카드 크기에 맞춰 대략 4개 정도가 들어오는 높이 */
-    flex: none;
-  }
+  overflow-y: auto;
+  overflow-x: hidden;
 
   &:hover {
     border-color: #a78bfa;
@@ -75,6 +70,10 @@ export const ConstellationListContainer = styled.div`
     &:hover {
       background: rgba(167, 139, 250, 0.5);
     }
+  }
+
+  @media (max-width: 1024px) {
+    max-height: 420px;
   }
 `
 
@@ -231,8 +230,6 @@ export const DetailSection = styled.div`
   overflow-y: auto;
   max-height: 400px;
   box-sizing: border-box;
-  flex: 1;
-  min-height: 0;
 
   &:hover {
     border-color: #a78bfa;
@@ -416,19 +413,16 @@ export const StorySection = styled.div`
 
 /* 오른쪽 영역 바깥쪽 배경을 투명하게 만들어 전체 배경 그라데이션과 완전히 일치시킴 */
 export const RightSection = styled.div`
-  flex: 0 0 40%;
   min-width: 0;
-  width: auto;
+  width: 40%;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  height: 100%;
   background: transparent;
   border: none;
   padding: 0;
 
   @media (max-width: 1024px) {
-    flex: none;
     width: 100%;
     height: auto;
     order: 1;
@@ -445,6 +439,7 @@ export const SearchContainer = styled.div`
 
 export const SearchInput = styled.input`
   width: 100%;
+  box-sizing: border-box;
   padding: 1rem;
   border: 1px solid rgba(167, 139, 250, 0.3);
   border-radius: 8px;

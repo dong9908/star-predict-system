@@ -262,3 +262,14 @@ export const BuyButton = styled.button`
     width: 100%;
   }
 `
+
+export const LoginRequiredContainer = styled.div`
+  min-height: calc(100vh - 80px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #a78bfa;
+  text-align: center;
+  padding: 3rem 1rem;
+`

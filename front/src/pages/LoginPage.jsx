@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { loginAPI } from '../api/auth'
 import {
   FormContainer,
@@ -20,6 +20,7 @@ import {
 
 function LoginPage() {
   const navigate = useNavigate()
+  const location = useLocation()
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -60,7 +61,10 @@ function LoginPage() {
       }
 
       alert('로그인이 완료되었습니다!')
-      navigate('/') // 메인 페이지로 이동
+
+      const from = location.state?.from || '/'
+
+      navigate(from, { replace: true })
     } catch (error) {
       alert(error.message || '이메일 또는 비밀번호가 올바르지 않습니다.')
     } finally {
