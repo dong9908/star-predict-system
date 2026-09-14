@@ -40,8 +40,8 @@ services:
       - path: .env.docker
         required: false
     environment:
-      DB_HOST: db
-      DB_PORT: "3306"
+      DB_HOST: ${DB_HOST:-db}
+      DB_PORT: ${DB_PORT:-3306}
       YOLO_MODEL_PATH: /app/models/best.pt
       KNOWN_WCS_DIR: /app/known-wcs
       FRONT_ORIGINS: ${FRONT_ORIGINS:-http://localhost}
