@@ -71,6 +71,7 @@ function ConstellationFindResultPage() {
   const analysis = location.state?.analysis
 
   const [selectedRank, setSelectedRank] = useState(1)
+  const [hoveredOverlayIndex, setHoveredOverlayIndex] = useState(null)
   const [showShareModal, setShowShareModal] = useState(false)
   const [zoom, setZoom] = useState(1)
   const [pan, setPan] = useState({ x: 0, y: 0 })
@@ -272,8 +273,14 @@ function ConstellationFindResultPage() {
               {overlays.map((overlay, index) => {
                 const color = overlayColors[index % overlayColors.length]
                 return (
-                  <OverlayLegendItem key={`${overlay.iau}-${index}`} $color={color.bg}
-                    $borderColor={color.border} $glowColor={color.glow}>
+                  <OverlayLegendItem
+                    key={`${overlay.iau}-${index}`}
+                    $color={color.bg}
+                    $borderColor={color.border}
+                    $glowColor={color.glow}
+                    onMouseEnter={() => setHoveredOverlayIndex(index)}
+                    onMouseLeave={() => setHoveredOverlayIndex(null)}
+                  >
                     구조 후보 {index + 1}순위 : {overlay.name || overlay.candidate} · {overlay.score}% · {overlay.verified ? '검증됨' : '미확정'}
                   </OverlayLegendItem>
                 )
@@ -306,14 +313,33 @@ function ConstellationFindResultPage() {
                       const majorStars = overlay.mainStars || []
                       const majorIds = new Set(majorStars.map((star) => star.hip).filter(Boolean))
                       return (
-                        <g key={`${overlay.iau}-${overlayIndex}`}>
+                        <g
+                          key={`${overlay.iau}-${overlayIndex}`}
+                          opacity={
+                            hoveredOverlayIndex === null
+                              ? 1
+                              : hoveredOverlayIndex === overlayIndex
+                                ? 1
+                                : 0.7
+                          }
+                        >
                           {overlay.edges.map((edge, edgeIndex) => {
                             const from = points[edge.from]
                             const to = points[edge.to]
                             if (!from || !to) return null
-                            return <line key={edgeIndex} x1={from.x} y1={from.y} x2={to.x} y2={to.y}
-                              stroke={color.line} strokeWidth="5"
-                              strokeDasharray={overlay.verified ? undefined : '14 10'} opacity="0.92" />
+                            return (
+                              <line
+                                key={edgeIndex}
+                                x1={from.x}
+                                y1={from.y}
+                                x2={to.x}
+                                y2={to.y}
+                                stroke={color.line}
+                                strokeWidth={hoveredOverlayIndex === overlayIndex ? 8 : 3}
+                                strokeDasharray={overlay.verified ? undefined : '14 10'}
+                                opacity={hoveredOverlayIndex === overlayIndex ? 1 : 0.92}
+                              />
+                            )
                           })}
                           {overlay.points.map((point) => (
                             <g
