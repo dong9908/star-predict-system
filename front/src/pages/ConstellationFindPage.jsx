@@ -146,30 +146,14 @@ function ConstellationFindPage() {
           {previewUrl ? (
             <>
               <PreviewImage src={previewUrl} alt="선택한 밤하늘 사진 미리보기" />
-              <SelectedFileName title={uploadedFile?.name}>
-                ✓ {uploadedFile?.name} 선택됨
-              </SelectedFileName>
-
-              {/* 사진이 올라온 순간 '사진 선택' 대신 '분석하기' 버튼으로 완전히 탈바꿈 */}
-              <button
+              <SelectedFileName title={uploadedFile.name}>✓ {uploadedFile.name} 선택됨</SelectedFileName>
+              <SelectButton
                 type="button"
-                onClick={handleAnalyze}
-                style={{
-                  marginTop: '1rem',
-                  padding: '0.75rem 2rem',
-                  background: '#a78bfa',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: '8px',
-                  fontSize: '1rem',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease',
-                  boxShadow: '0 4px 12px rgba(167, 139, 250, 0.3)',
-                }}
+                $hasPreview={Boolean(previewUrl)}
+                onClick={handleSelectFile}
               >
-                분석하기
-              </button>
+                사진 선택
+              </SelectButton>
             </>
           ) : (
             <>
@@ -177,7 +161,11 @@ function ConstellationFindPage() {
               <UploadLabel>
                 <UploadText>사진을 드래그하거나 클릭해 업로드</UploadText>
                 <UploadSubText>JPG, PNG · 최대 10MB</UploadSubText>
-                <SelectButton type="button" onClick={handleSelectFile}>
+                <SelectButton
+                  type="button"
+                  $hasPreview={Boolean(previewUrl)}
+                  onClick={handleSelectFile}
+                >
                   사진 선택
                 </SelectButton>
               </UploadLabel>

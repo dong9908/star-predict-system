@@ -681,3 +681,17 @@ export const CloseButton = styled.button`
     color: white;
   }
 `
+
+export const ResultNotice = styled.p`
+  margin: 0 0 1rem 0;
+  padding: 0 0.25rem;
+  color: #cbd5e1;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  text-align: right;
+
+  strong {
+    color: #67e8f9;
+    font-weight: 600;
+  }
+`

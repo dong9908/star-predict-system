@@ -202,18 +202,36 @@ export const FileInput = styled.input`
 
 export const SelectButton = styled.button`
   padding: 0.75rem 1.5rem;
-  background: linear-gradient(135deg, #a78bfa, #d8b4fe);
-  color: white;
-  border: none;
   border-radius: 0.5rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 300ms ease;
 
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(167, 139, 250, 0.3);
-  }
+  ${props =>
+    props.$hasPreview
+      ? `
+    background: none;
+    border: 1px solid #475569;
+    color: #cbd5e1;
+
+    &:hover {
+      border-color: #64748b;
+      color: white;
+      background: rgba(255, 255, 255, 0.05);
+      transform: translateY(-2px);
+      box-shadow: none;
+    }
+  `
+      : `
+    background: linear-gradient(135deg, #a78bfa, #d8b4fe);
+    color: white;
+    border: none;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(167, 139, 250, 0.3);
+    }
+  `}
 
   &:disabled {
     opacity: 0.6;
