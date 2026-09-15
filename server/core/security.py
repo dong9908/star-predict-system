@@ -32,6 +32,7 @@ if ACCESS_SECRET == REFRESH_SECRET:
 ALGORITHM = os.getenv("ALGORITHM", "HS256")
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "60"))
 REFRESH_TOKEN_EXPIRE_DAYS = int(os.getenv("REFRESH_TOKEN_EXPIRE_DAYS", "7"))
+COOKIE_SECURE = os.getenv("COOKIE_SECURE", "false").lower() == "true"
 
 def hash_password(password: str) -> str:
     """bcrypt를 이용해 비밀번호 해시화 (72바이트 초과 방지 처리 포함)"""

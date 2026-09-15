@@ -13,9 +13,11 @@ import threading
 from functools import lru_cache
 from io import BytesIO
 from pathlib import Path
+import logging
 
 from PIL import Image, UnidentifiedImageError
 
+logger = logging.getLogger(__name__)
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_MODEL = (
@@ -248,6 +250,11 @@ def run_realtime_plate_solving(content: bytes, suffix: str) -> tuple[dict, Path 
                     check=False,
                 )
             except subprocess.TimeoutExpired:
+                logger.error(
+                    "Plate Solving timeout: image_sha256=%s, timeout_seconds=%s",
+                    image_hash,
+                    timeout_seconds,
+                )
                 return {
                     "status": "failed",
                     "cached": False,
@@ -326,8 +333,17 @@ def run_wcs_overlay(content: bytes, suffix: str, wcs_path: Path) -> list[dict]:
                     encoding="utf-8", errors="replace", timeout=30, check=False,
                 )
                 if completed.returncode != 0:
+                    logger.error(
+                        "WCS constellation overlay subprocess failed: returncode=%s, stderr=%s",
+                        completed.returncode,
+                        completed.stderr[-1000:],
+                    )
                     return []
         except subprocess.TimeoutExpired:
+            logger.error(
+                "WCS constellation overlay timeout: filename=%s",
+                image_path.name,
+            )
             return []
         result_path = overlay_root / "upload" / "upload_wcs_constellations.json"
         if not result_path.is_file():
@@ -526,9 +542,24 @@ def run_graph_matching(content: bytes, suffix: str, yolo_results: list[dict]) ->
                     text=True, encoding="utf-8", errors="replace", timeout=30, check=False,
                 )
                 if completed.returncode != 0:
-                    return {"status": "unavailable", "reason": "별 구조 분석을 완료하지 못했습니다."}
+                    logger.error(
+                        "Graph matching subprocess failed: returncode=%s, stderr=%s",
+                        completed.returncode,
+                        completed.stderr[-1000:],
+                    )
+                    return {
+                        "status": "unavailable",
+                        "reason": "별 구조 분석을 완료하지 못했습니다.",
+                    }
         except subprocess.TimeoutExpired:
-            return {"status": "unavailable", "reason": "별 구조 분석 제한시간을 초과했습니다."}
+            logger.error(
+                "별 구조 분석 timeout: filename=%s",
+                image_path.name,
+            )
+            return {
+                "status": "unavailable",
+                "reason": "별 구조 분석 제한시간을 초과했습니다.",
+            }
 
         matching_path = matching_root / "upload" / "upload_matching.json"
         if not matching_path.is_file():
