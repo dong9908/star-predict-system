@@ -23,6 +23,7 @@ from core.security import (
     ACCESS_SECRET,
     ALGORITHM,
     get_current_user,
+    COOKIE_SECURE,
 )
 
 member_router = APIRouter()
@@ -82,7 +83,7 @@ async def login(item: UserLoginItem, response: Response, db: Session = Depends(g
         "value": refresh_token,
         "httponly": True,
         "samesite": "lax",
-        "secure": False,
+        "secure": COOKIE_SECURE,
     }
 
     # '로그인 유지'를 체크한 경우에만 7일간 유지, 체크 안 하면 세션 쿠키(브라우저 닫으면 삭제)
@@ -198,7 +199,7 @@ async def update_my_info(
             value=refresh_token,
             httponly=True,
             samesite="lax",
-            secure=False,
+            secure=COOKIE_SECURE,
             max_age=60 * 60 * 24 * 7,
         )
 
@@ -240,7 +241,7 @@ async def delete_my_account(
         key="refreshToken",
         httponly=True,
         samesite="lax",
-        secure=False,
+        secure=COOKIE_SECURE,
     )
     response.status_code = status.HTTP_204_NO_CONTENT
     return response
@@ -254,7 +255,7 @@ async def logout(response: Response):
         value="",
         httponly=True,
         samesite="lax",
-        secure=False,
+        secure=COOKIE_SECURE,
         max_age=0,
         expires=datetime.now(timezone.utc) - timedelta(days=1)
     )
