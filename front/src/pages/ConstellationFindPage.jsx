@@ -73,7 +73,8 @@ function ConstellationFindPage() {
     }
   }
 
-  const handleAnalyze = () => {
+  const handleAnalyze = (e) => {
+    e.stopPropagation() // 업로드 영역의 클릭 이벤트가 중복으로 튀는 것 방지
     if (!uploadedFile) return
     navigate('/constellation-find-analyzing', { state: { image: uploadedFile } })
   }
@@ -140,13 +141,35 @@ function ConstellationFindPage() {
           onDragLeave={handleDrag}
           onDragOver={handleDrag}
           onDrop={handleDrop}
-          onClick={handleSelectFile}
+          onClick={!uploadedFile ? handleSelectFile : undefined}
         >
           {previewUrl ? (
             <>
               <PreviewImage src={previewUrl} alt="선택한 밤하늘 사진 미리보기" />
-              <SelectedFileName title={uploadedFile.name}>✓ {uploadedFile.name} 선택됨</SelectedFileName>
-              <SelectButton type="button" onClick={handleSelectFile}>사진 선택</SelectButton>
+              <SelectedFileName title={uploadedFile?.name}>
+                ✓ {uploadedFile?.name} 선택됨
+              </SelectedFileName>
+
+              {/* 사진이 올라온 순간 '사진 선택' 대신 '분석하기' 버튼으로 완전히 탈바꿈 */}
+              <button
+                type="button"
+                onClick={handleAnalyze}
+                style={{
+                  marginTop: '1rem',
+                  padding: '0.75rem 2rem',
+                  background: '#a78bfa',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: '8px',
+                  fontSize: '1rem',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                  boxShadow: '0 4px 12px rgba(167, 139, 250, 0.3)',
+                }}
+              >
+                분석하기
+              </button>
             </>
           ) : (
             <>
@@ -154,7 +177,9 @@ function ConstellationFindPage() {
               <UploadLabel>
                 <UploadText>사진을 드래그하거나 클릭해 업로드</UploadText>
                 <UploadSubText>JPG, PNG · 최대 10MB</UploadSubText>
-                <SelectButton type="button" onClick={handleSelectFile}>사진 선택</SelectButton>
+                <SelectButton type="button" onClick={handleSelectFile}>
+                  사진 선택
+                </SelectButton>
               </UploadLabel>
             </>
           )}
@@ -165,36 +190,6 @@ function ConstellationFindPage() {
             onChange={handleFileInput}
           />
         </UploadArea>
-
-        {uploadedFile && (
-          <div style={{ textAlign: 'center' }}>
-            <button
-              onClick={handleAnalyze}
-              style={{
-                padding: '0.75rem 2rem',
-                background: '#a78bfa',
-                color: '#fff',
-                border: 'none',
-                borderRadius: '8px',
-                fontSize: '1rem',
-                fontWeight: '600',
-                cursor: 'pointer',
-                opacity: 1,
-                transition: 'all 0.3s ease',
-              }}
-              onMouseOver={(e) => {
-                e.target.style.background = '#c084fc'
-                e.target.style.transform = 'translateY(-2px)'
-              }}
-              onMouseOut={(e) => {
-                e.target.style.background = '#a78bfa'
-                e.target.style.transform = 'translateY(0)'
-              }}
-            >
-              분석하기
-            </button>
-          </div>
-        )}
 
         {/* Features Grid */}
         <FeaturesGrid>
