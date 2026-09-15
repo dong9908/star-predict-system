@@ -158,9 +158,10 @@ export const Badge = styled.div`
 
 export const Title = styled.h1`
   margin: 1.25rem 0 0;
-  font-size: clamp(2.2rem, 4vw, 4rem);
-  line-height: 1.14;
-  letter-spacing: -0.045em;
+  /* 최소 1.75rem에서 최대 2.75rem 정도로 폰트 크기를 대폭 축소 */
+  font-size: clamp(1.75rem, 3vw, 2.75rem);
+  line-height: 1.2;
+  letter-spacing: -0.03em;
   text-shadow: 0 3px 30px rgba(2, 6, 23, 0.85);
 `
 
