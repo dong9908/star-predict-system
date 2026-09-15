@@ -141,7 +141,12 @@ function Header() {
           <NavButton $active={isActive('/constellation-location')} onClick={() => navigate('/constellation-location')}>별자리 위치</NavButton>
           <NavButton $active={isActive('/constellation-info')} onClick={() => navigate('/constellation-info')}>별자리 정보</NavButton>
           <NavButton $active={isActive('/constellation-catalog')} onClick={() => navigate('/constellation-catalog')}>도감</NavButton>
-          <NavButton $active={isActive('/fortune-reading')} onClick={() => navigate('/fortune-reading')}>운세</NavButton>
+          <NavButton
+            $active={isActive('/fortune-reading') || location.pathname === '/fortune-result'}
+            onClick={() => navigate('/fortune-reading')}
+          >
+            운세
+          </NavButton>
           <NavButton $active={isActive('/mypage')} onClick={() => navigate('/mypage')}>마이 페이지</NavButton>
         </Nav>
 
@@ -213,7 +218,10 @@ function Header() {
           <MobileMenuItem $active={isActive('/constellation-catalog')} onClick={() => handleMobileNavigation('/constellation-catalog')}>
             도감
           </MobileMenuItem>
-          <MobileMenuItem $active={isActive('/fortune-reading')} onClick={() => handleMobileNavigation('/fortune-reading')}>
+          <MobileMenuItem
+            $active={isActive('/fortune-reading') || location.pathname === '/fortune-result'}
+            onClick={() => handleMobileNavigation('/fortune-reading')}
+          >
             운세
           </MobileMenuItem>
           <MobileMenuItem $active={isActive('/mypage')} onClick={() => handleMobileNavigation('/mypage')}>
