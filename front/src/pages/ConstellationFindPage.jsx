@@ -73,8 +73,7 @@ function ConstellationFindPage() {
     }
   }
 
-  const handleAnalyze = (e) => {
-    e.stopPropagation() // 업로드 영역의 클릭 이벤트가 중복으로 튀는 것 방지
+  const handleAnalyze = () => {
     if (!uploadedFile) return
     navigate('/constellation-find-analyzing', { state: { image: uploadedFile } })
   }
@@ -141,7 +140,7 @@ function ConstellationFindPage() {
           onDragLeave={handleDrag}
           onDragOver={handleDrag}
           onDrop={handleDrop}
-          onClick={!uploadedFile ? handleSelectFile : undefined}
+          onClick={handleSelectFile}
         >
           {previewUrl ? (
             <>
@@ -178,6 +177,36 @@ function ConstellationFindPage() {
             onChange={handleFileInput}
           />
         </UploadArea>
+
+        {uploadedFile && (
+          <div style={{ textAlign: 'center' }}>
+            <button
+              onClick={handleAnalyze}
+              style={{
+                padding: '0.75rem 2rem',
+                background: '#a78bfa',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '8px',
+                fontSize: '1rem',
+                fontWeight: '600',
+                cursor: 'pointer',
+                opacity: 1,
+                transition: 'all 0.3s ease',
+              }}
+              onMouseOver={(e) => {
+                e.target.style.background = '#c084fc'
+                e.target.style.transform = 'translateY(-2px)'
+              }}
+              onMouseOut={(e) => {
+                e.target.style.background = '#a78bfa'
+                e.target.style.transform = 'translateY(0)'
+              }}
+            >
+              분석하기
+            </button>
+          </div>
+        )}
 
         {/* Features Grid */}
         <FeaturesGrid>
