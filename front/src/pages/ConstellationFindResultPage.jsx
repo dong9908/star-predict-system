@@ -33,6 +33,7 @@ import {
   ActionButtons,
   ActionButton,
   ResultListContainer,
+  ResultNotice,
   ResultItem,
   RankNumber,
   ResultInfo,
@@ -400,6 +401,9 @@ function ConstellationFindResultPage() {
               </ActionButton>
             </ActionButtons>
           </ResultHeader>
+          <ResultNotice>
+            결과가 여러 개일 경우, <strong>일치도 80%</strong> 이상인 별만 등록됩니다.
+          </ResultNotice>
           {liveResults.map((result) => (
             <ResultItem
               key={result.rank}
