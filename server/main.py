@@ -10,6 +10,7 @@ from routes.member import member_router
 from routes.constellation import constellation_router
 from routes.constellation_recognition import constellation_recognition_router
 from routes.title import title_router
+from routes.admin import admin_router
 from fortune.router import fortune_router
 from payment.router import payment_router
 
@@ -42,26 +43,17 @@ app.include_router(member_router, prefix="/api/member", tags=["Auth & Member"])
 
 # 운세 라우터
 app.include_router(fortune_router, prefix="/api/fortune", tags=["Fortune"])
-
 # 결제 라우터
 app.include_router(payment_router, prefix="/api/payment", tags=["Payment"])
-
 # 별자리 위치 조회 라우터
-app.include_router(
-    constellation_router,
-    prefix="/api/constellation",
-    tags=["Constellation"],
-)
-
+app.include_router(constellation_router,prefix="/api/constellation",tags=["Constellation"],)
 # 별자리 사진 분석 라우터
-app.include_router(
-    constellation_recognition_router,
-    prefix="/api/constellation",
-    tags=["Constellation Recognition"],
-)
-
+app.include_router(constellation_recognition_router, prefix="/api/constellation", tags=["Constellation Recognition"],)
 # 칭호 조회 및 획득 조건 라우터
 app.include_router(title_router, prefix="/api/titles", tags=["Titles"])
+# 관리자페이지 라우터
+app.include_router(admin_router, prefix="/api/admin", tags=["Admin"])
+
 
 
 @app.get("/")
