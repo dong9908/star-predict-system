@@ -47,12 +47,15 @@ function Header() {
   const userString = localStorage.getItem('user')
   const user = userString ? JSON.parse(userString) : null
 
+  // ★ 관리자 여부 확인 (이메일 기준)
+  const isAdmin = user?.email === 'admin@naver.com'
+
   useEffect(() => {
     let active = true
     const accessToken = localStorage.getItem('accessToken')
 
     const loadSelectedTitle = async () => {
-      if (!user || !accessToken) {
+      if (!user || !accessToken || isAdmin) {
         setSelectedTitle(null)
         return
       }
@@ -77,15 +80,15 @@ function Header() {
       active = false
       window.removeEventListener('astra:selected-title-changed', handleSelectedTitleChange)
     }
-  }, [userString])
+  }, [userString, isAdmin])
 
   const selectedTitleLevel = selectedTitle?.level || 1
   const isUnavailableTitle = selectedTitle?.id === 121
 
-  // 2. 로그아웃 핸들러 (백엔드 쿠키 삭제 + 로컬 스토리지 삭제)
+  // 2. 로그아웃 핸들러
   const handleLogout = async () => {
     try {
-      await logoutAPI() // 백엔드 쿠키(refreshToken) 만료 처리 요청
+      await logoutAPI()
     } catch (error) {
       console.error('로그아웃 요청 중 오류 발생:', error)
     } finally {
@@ -96,7 +99,7 @@ function Header() {
       alert('로그아웃 되었습니다.')
       setMobileMenuOpen(false)
       navigate('/')
-      window.location.reload() // 화면 상태 갱신을 위해 새로고침
+      window.location.reload()
     }
   }
 
@@ -117,13 +120,11 @@ function Header() {
   }, [])
 
   if (!sessionStorage.getItem('sessionActive')) {
-  
-  const isRemembered = localStorage.getItem('isRemembered') === 'true';
-  
-  if (!isRemembered) {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('user');
-  }
+    const isRemembered = localStorage.getItem('isRemembered') === 'true';
+    if (!isRemembered) {
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('user');
+    }
   }
   sessionStorage.setItem('sessionActive', 'true');
 
@@ -147,16 +148,22 @@ function Header() {
           >
             운세
           </NavButton>
-          <NavButton $active={isActive('/mypage')} onClick={() => navigate('/mypage')}>마이 페이지</NavButton>
+          
+          {/* ★ 경로는 항상 /mypage로 이동하되, 이름만 관리자일 때 '관리자 페이지'로 표시 */}
+          <NavButton 
+            $active={isActive('/mypage')} 
+            onClick={() => navigate('/mypage')}
+          >
+            {isAdmin ? '관리자 페이지' : '마이 페이지'}
+          </NavButton>
         </Nav>
 
         <AuthButtonsGroup>
           {user ? (
-            // 로그인 상태일 때 표시할 UI
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
               <UserIdentity>
                 <UserNameText>{user.name}님</UserNameText>
-                {selectedTitle && (
+                {!isAdmin && selectedTitle && (
                   <UserTitleText $level={selectedTitleLevel} $unavailable={isUnavailableTitle}>
                     ✦ {selectedTitle.name}
                   </UserTitleText>
@@ -167,7 +174,6 @@ function Header() {
               </AuthButton>
             </div>
           ) : (
-            // 비로그인 상태일 때 표시할 UI
             <>
               <AuthButton $variant="outline" onClick={() => navigate('/login')}>
                 로그인
@@ -195,7 +201,7 @@ function Header() {
           <MobileMenuUserInfo>
             <UserIdentity $mobile>
               <UserNameText>{user.name}님</UserNameText>
-              {selectedTitle && (
+              {!isAdmin && selectedTitle && (
                 <UserTitleText $level={selectedTitleLevel} $unavailable={isUnavailableTitle}>
                   ✦ {selectedTitle.name}
                 </UserTitleText>
@@ -224,8 +230,13 @@ function Header() {
           >
             운세
           </MobileMenuItem>
-          <MobileMenuItem $active={isActive('/mypage')} onClick={() => handleMobileNavigation('/mypage')}>
-            마이 페이지
+          
+          {/* 모바일 메뉴에서도 경로 고정, 이름만 변경 */}
+          <MobileMenuItem 
+            $active={isActive('/mypage')} 
+            onClick={() => handleMobileNavigation('/mypage')}
+          >
+            {isAdmin ? '관리자 페이지' : '마이 페이지'}
           </MobileMenuItem>
         </MobileMenuList>
 

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { User, Star } from 'lucide-react'
 import TitlePage from './TitlePage'
+import AdminDashboard from '../components/AdminDashboard' // 관리자 대시보드 컴포넌트 임포트
 import {
   PageContainer,
   ProfileSection,
@@ -64,6 +65,12 @@ function MyPage() {
         </LoginRequiredContainer>
       </PageContainer>
     )
+  }
+
+  // 관리자 계정(admin@naver.com)인 경우 일반 마이페이지 대신 관리자 대시보드 렌더링
+  const userEmail = user.email ? user.email.trim().toLowerCase() : ''
+  if (userEmail === 'admin@naver.com') {
+    return <AdminDashboard />
   }
 
   return (
