@@ -20,7 +20,7 @@ load_dotenv(BASE_DIR / ".env")
 # DB 테이블 자동 생성
 Base.metadata.create_all(bind=engine)
 
-app = FastAPI(title="ASTRA Backend Server")
+app = FastAPI(title="ORION Backend Server")
 
 # CORS 미들웨어 설정
 raw_origins = os.getenv(
@@ -66,4 +66,4 @@ app.include_router(title_router, prefix="/api/titles", tags=["Titles"])
 
 @app.get("/")
 def root():
-    return {"message": "ASTRA Server is Running"}
+    return {"message": "ORION Server is Running"}

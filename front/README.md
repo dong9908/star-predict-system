@@ -1,4 +1,4 @@
-# ASTRA Frontend
+# ORION Frontend
 
 밤하늘 사진을 업로드하면 Python 분석 서버와 연동하여 천체 및 별자리 후보를 찾고, 별자리 연결선과 상세 정보를 화면에 표시하는 React 프론트엔드입니다.
 

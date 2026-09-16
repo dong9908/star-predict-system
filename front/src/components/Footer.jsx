@@ -19,7 +19,7 @@ function Footer() {
   return (
     <FooterWrapper>
       <FooterContent>
-        <p>© 2024 ASTRA. All rights reserved.</p>
+        <p>© 2024 ORION. All rights reserved.</p>
       </FooterContent>
     </FooterWrapper>
   )
