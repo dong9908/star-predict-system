@@ -1,7 +1,7 @@
 {
   "name": "astra-front",
   "version": "1.0.0",
-  "description": "ASTRA - 별자리 분석 & 관측 서비스",
+  "description": "ORION - 별자리 분석 & 관측 서비스",
   "type": "module",
   "scripts": {
     "dev": "vite",

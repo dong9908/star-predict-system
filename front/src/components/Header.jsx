@@ -132,7 +132,7 @@ function Header() {
       <HeaderContainer>
         <Logo onClick={handleLogoClick}>
           <Sparkles size={24} color="#a78bfa" />
-          <LogoText>ASTRA</LogoText>
+          <LogoText>ORION</LogoText>
         </Logo>
 
         <Nav>

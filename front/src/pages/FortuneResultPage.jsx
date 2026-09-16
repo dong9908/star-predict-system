@@ -376,11 +376,11 @@ function FortuneResultPage() {
           <ChatMessages aria-live="polite">
             {messages.map((message, index) => (
               <ChatMessage key={`${message.role}-${index}`} $role={message.role}>
-                <MessageRole>{message.role === 'user' ? '나' : 'ASTRA AI'}</MessageRole>
+                <MessageRole>{message.role === 'user' ? '나' : 'ORION AI'}</MessageRole>
                 <p>{message.content}</p>
               </ChatMessage>
             ))}
-            {sending && <ChatMessage $role="assistant"><MessageRole>ASTRA AI</MessageRole><p>별의 흐름을 살펴보는 중입니다...</p></ChatMessage>}
+            {sending && <ChatMessage $role="assistant"><MessageRole>ORION AI</MessageRole><p>별의 흐름을 살펴보는 중입니다...</p></ChatMessage>}
           </ChatMessages>
 
           <SuggestedQuestions>

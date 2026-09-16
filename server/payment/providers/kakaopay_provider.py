@@ -157,7 +157,7 @@ class KakaoPayProvider:
                     f"{self.settings.secret_key}"
                 ),
                 "Content-Type": "application/json; charset=utf-8",
-                "User-Agent": "ASTRA-Payment-Server/1.0",
+                "User-Agent": "ORION-Payment-Server/1.0",
             },
             method="POST",
         )

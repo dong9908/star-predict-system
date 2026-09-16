@@ -85,7 +85,7 @@ def load_stellarium(path: Path) -> list[dict[str, Any]]:
             continue
 
         # Stellarium stores Serpens as one constellation with two disconnected
-        # polylines. ASTRA's catalog stores those regions separately, so score
+        # polylines. ORION's catalog stores those regions separately, so score
         # each region independently and preserve the matching catalog code.
         segment_names = (
             ("SerH", "Serpens Caput", "뱀자리(머리)"),

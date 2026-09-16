@@ -76,7 +76,7 @@ class GroqFortuneProvider:
             headers={
                 "Authorization": f"Bearer {self.settings.api_key}",
                 "Content-Type": "application/json",
-                "User-Agent": "ASTRA-Fortune-Server/1.0",
+                "User-Agent": "ORION-Fortune-Server/1.0",
             },
             method="POST",
         )
