@@ -32,6 +32,10 @@ import {
   SubmitButton,
 } from './styles/AdminDashboard.js'
 
+// ★ API 기본 경로 설정 (개발 및 AWS 배포 환경 공용 대응)
+// 빌드 시점에 환경변수가 있으면 사용하고, 없으면 상대 경로('')를 사용하여 배포 주소(http://3.38.57.120)와 연동합니다.
+const API_BASE = import.meta.env.VITE_API_URL || ''
+
 function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('users') // 'users', 'payments', 'constellations'
   const [users, setUsers] = useState([])
@@ -61,8 +65,8 @@ function AdminDashboard() {
       }
 
       const [userRes, payRes] = await Promise.all([
-        fetch('http://127.0.0.1:8000/api/admin/users', requestOptions),
-        fetch('http://127.0.0.1:8000/api/admin/payments', requestOptions)
+        fetch(`${API_BASE}/api/admin/users`, requestOptions),
+        fetch(`${API_BASE}/api/admin/payments`, requestOptions)
       ])
 
       if (userRes.ok) setUsers(await userRes.json())
@@ -77,7 +81,7 @@ function AdminDashboard() {
   // 2. 별자리 탭을 눌렀을 때만 비동기로 호출
   const fetchConstellations = async () => {
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/constellation')
+      const res = await fetch(`${API_BASE}/api/constellation`)
       if (res.ok) setConstellations(await res.json())
     } catch (error) {
       console.error('별자리 목록을 불러오는데 실패했습니다.', error)
@@ -100,7 +104,7 @@ function AdminDashboard() {
 
     try {
       const token = localStorage.getItem('accessToken')
-      const res = await fetch(`http://127.0.0.1:8000/api/admin/users/${userId}`, {
+      const res = await fetch(`${API_BASE}/api/admin/users/${userId}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` }
       })
@@ -124,8 +128,8 @@ function AdminDashboard() {
     const token = localStorage.getItem('accessToken')
     const method = editingId ? 'PUT' : 'POST'
     const url = editingId 
-      ? `http://127.0.0.1:8000/api/admin/constellations/${editingId}`
-      : 'http://127.0.0.1:8000/api/admin/constellations'
+      ? `${API_BASE}/api/admin/constellations/${editingId}`
+      : `${API_BASE}/api/admin/constellations`
 
     try {
       const res = await fetch(url, {
@@ -158,7 +162,7 @@ function AdminDashboard() {
 
     try {
       const token = localStorage.getItem('accessToken')
-      const res = await fetch(`http://127.0.0.1:8000/api/admin/constellations/${constellationId}`, {
+      const res = await fetch(`${API_BASE}/api/admin/constellations/${constellationId}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` }
       })
