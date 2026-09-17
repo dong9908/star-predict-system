@@ -159,7 +159,7 @@ export const CheckStatus = styled.div`
 export const VisualizationSection = styled.div`
   border: 1px solid rgba(167, 139, 250, 0.3);
   border-radius: 1rem;
-  padding: 1.5rem;
+  padding: 2rem;
   background: rgba(0, 0, 0, 0.3);
   box-sizing: border-box;
   width: 100%;
@@ -180,8 +180,9 @@ export const VisualizationSection = styled.div`
 
 export const VisualizationHeader = styled.div`
   display: flex;
-  flex-direction: column;
-  gap: 0;
+  flex-direction: column;   
+  width: 100%;
+  gap: 0rem;           
 `
 
 export const LocationNotice = styled.span`
