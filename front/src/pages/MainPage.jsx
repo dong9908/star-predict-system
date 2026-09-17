@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { Camera, MapPin, Sparkles } from 'lucide-react'
 import skyStaticA from '../assets/main-motion/sky-static-a.png'
 import skyStaticB from '../assets/main-motion/sky-static-b.png'
+import featureBook from '../assets/main-motion/feature-book.png'
+import featureCrystalBall from '../assets/main-motion/feature-crystal-ball.png'
 import CONSTELLATIONS_DATA from '../data/constellationViewerData'
 import {
   PreviewShell as MainShell,
@@ -53,6 +55,7 @@ const getConditionColor = (condition) => {
 function MainPage() {
   const navigate = useNavigate()
   const [activeImage, setActiveImage] = useState(0)
+  const [activeFeature, setActiveFeature] = useState(0)
   const [currentTime, setCurrentTime] = useState(getCurrentTime)
   const [currentConstellation] = useState(getRandomConstellation)
 
@@ -61,12 +64,17 @@ function MainPage() {
       setActiveImage((current) => (current + 1) % backgrounds.length)
     }, 10000)
 
+    const featureTimer = window.setInterval(() => {
+      setActiveFeature((current) => (current + 1) % 4)
+    }, 3000)
+
     const clockTimer = window.setInterval(() => {
       setCurrentTime(getCurrentTime())
     }, 1000)
 
     return () => {
       window.clearInterval(backgroundTimer)
+      window.clearInterval(featureTimer)
       window.clearInterval(clockTimer)
     }
   }, [])
@@ -139,22 +147,43 @@ function MainPage() {
         </HeroGrid>
 
         <FeatureGrid>
-          <FeatureCard onClick={() => navigate('/constellation-find')}>
+          <FeatureCard $active={activeFeature === 0}>
             <FeatureNumber>01</FeatureNumber>
             <FeatureIcon><Camera size={26} /></FeatureIcon>
             <div>
               <h3>사진으로 별자리 찾기</h3>
-              <p>밤하늘 사진을 올리면 별자리 이름과 숨겨진 신화 이야기를 알려드려요.</p>
-              <a>지금 업로드하기 →</a>
+              <p>밤하늘 사진을 올려서 별자리를 찾고 도감에 등록할 수 있어요.</p>
             </div>
           </FeatureCard>
-          <FeatureCard onClick={() => navigate('/constellation-location')}>
+
+          <FeatureCard $active={activeFeature === 1}>
             <FeatureNumber>02</FeatureNumber>
             <FeatureIcon><MapPin size={26} /></FeatureIcon>
             <div>
               <h3>내 위치에서 별자리 찾기</h3>
               <p>현재 위치와 시간 기준으로 별이 있는 정확한 방향과 고도를 찾아드려요.</p>
-              <a>별자리 위치 찾기 →</a>
+            </div>
+          </FeatureCard>
+
+          <FeatureCard $active={activeFeature === 2}>
+            <FeatureNumber>03</FeatureNumber>
+            <FeatureIcon>
+              <img src={featureBook} alt="" />
+            </FeatureIcon>
+            <div>
+              <h3>나만의 프로필 꾸미기</h3>
+              <p>특정 조건을 만족하고 다양한 프로필을 꾸며보세요.</p>
+            </div>
+          </FeatureCard>
+
+          <FeatureCard $active={activeFeature === 3}>
+            <FeatureNumber>04</FeatureNumber>
+            <FeatureIcon>
+              <img src={featureCrystalBall} alt="" />
+            </FeatureIcon>
+            <div>
+              <h3>오늘의 운세 (pro)</h3>
+              <p>내 생일을 바탕으로 오늘의 운세를 확인하고 다양하게 질문할 수 있어요.</p>
             </div>
           </FeatureCard>
         </FeatureGrid>

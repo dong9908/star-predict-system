@@ -272,13 +272,12 @@ export const FeatureCard = styled.article`
   background: rgba(15, 23, 42, 0.66);
   box-shadow: 0 16px 45px rgba(2, 6, 23, 0.3);
   backdrop-filter: blur(14px);
-  cursor: pointer;
   transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
-  &:hover {
+  ${props => props.$active && `
     transform: translateY(-3px);
     border-color: rgba(167, 139, 250, 0.52);
     background: rgba(23, 31, 54, 0.76);
-  }
+  `}
   h3 { margin: 0; font-size: 1rem; }
   p { margin: 0.4rem 0; color: #a7b2c5; font-size: 0.75rem; }
   a { color: #c084fc; font-size: 0.76rem; font-weight: 700; }
