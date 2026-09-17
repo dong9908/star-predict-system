@@ -19,9 +19,19 @@ const twinkle = keyframes`
 export const PreviewShell = styled.section`
   position: fixed;
   inset: 0;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   background: #020617;
   color: #f8fafc;
+  box-sizing: border-box;
+
+  /* ★ 기기 툴바 전환 시 뷰포트 폭 변경에 즉각 반응하도록 설정 */
+  @media (max-width: 850px) {
+    width: 100vw;
+    height: 100vh;
+    box-sizing: border-box;
+    overflow-x: hidden;
+  }
 `
 
 export const BackgroundLayer = styled.div`
@@ -125,9 +135,17 @@ export const PreviewContent = styled.div`
   width: min(1120px, calc(100% - 3rem));
   margin: 0 auto;
   padding-top: clamp(5.2rem, 10vh, 8rem);
+  box-sizing: border-box;
 
+  /* ★ 기기 크기가 고정된 모바일 뷰어 환경을 위한 완전 방어 설정 */
   @media (max-width: 850px) {
+    width: 100% !important;
+    max-width: 100% !important;
     padding-top: 6.8rem;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
   }
 `
 
@@ -136,33 +154,57 @@ export const HeroGrid = styled.div`
   grid-template-columns: 1.05fr 0.95fr;
   gap: clamp(2rem, 5vw, 5rem);
   align-items: center;
+  box-sizing: border-box;
+  width: 100%;
 
   @media (max-width: 850px) {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
   }
 `
 
-export const HeroCopy = styled.div``
+export const HeroCopy = styled.div`
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+
+  @media (max-width: 850px) {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+`
 
 export const Badge = styled.div`
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
-  padding: 0.55rem 0.8rem;
+  gap: 0.5rem;
+  padding: 0.55rem 0.95rem; /* 패딩 살짝 확대 */
   border: 1px solid rgba(192, 132, 252, 0.5);
   border-radius: 999px;
   background: rgba(88, 28, 135, 0.64);
   color: #e9d5ff;
-  font-size: 0.73rem;
+  font-size: 0.88rem; /* ★ 부제목(뱃지) 글자 크기를 약 1.2배 키움 */
+  font-weight: 600;
 `
 
 export const Title = styled.h1`
   margin: 1.25rem 0 0;
-  /* 최소 1.75rem에서 최대 2.75rem 정도로 폰트 크기를 대폭 축소 */
-  font-size: clamp(1.75rem, 3vw, 2.75rem);
+  font-size: clamp(1.5rem, 2.5vw, 2.3rem); /* ★ 데스크톱 제목 크기를 살짝 줄임 */
   line-height: 1.2;
   letter-spacing: -0.03em;
   text-shadow: 0 3px 30px rgba(2, 6, 23, 0.85);
+  word-break: keep-all;
+  overflow-wrap: break-word;
+
+  @media (max-width: 850px) {
+    font-size: 1.5rem;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
 `
 
 export const Accent = styled.span`color: #c4b5fd;`
@@ -179,19 +221,37 @@ export const ActionRow = styled.div`
   display: flex;
   gap: 0.8rem;
   margin-top: 1.6rem;
+  width: 100%;
+  box-sizing: border-box;
+
+  /* ★ 모바일(850px 이하)에서만 세로 정렬 및 100폭 적용, 데스크톱에서는 가로 나란히 정렬 유지 */
+  @media (max-width: 850px) {
+    flex-direction: column;
+    width: 100%;
+  }
 `
 
 const actionBase = css`
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.55rem;
-  min-width: 12.5rem;
   padding: 0.9rem 1.25rem;
   border-radius: 999px;
   color: white;
   font-weight: 700;
   cursor: pointer;
+  box-sizing: border-box;
+  width: auto;       /* 데스크톱에서는 내용물 크기에 맞게 */
+  min-width: 12.5rem;
+
+  /* ★ 모바일(850px 이하)에서만 버튼 폭 100% 강제 */
+  @media (max-width: 850px) {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
 `
 
 export const PrimaryAction = styled.button`
@@ -199,12 +259,26 @@ export const PrimaryAction = styled.button`
   border: 0;
   background: linear-gradient(135deg, #7c3aed, #a855f7);
   box-shadow: 0 12px 35px rgba(124, 58, 237, 0.42);
+
+  @media (max-width: 850px) {
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
 `
 
 export const SecondaryAction = styled.button`
   ${actionBase};
   border: 1px solid rgba(196, 181, 253, 0.7);
   background: rgba(2, 6, 23, 0.58);
+
+  @media (max-width: 850px) {
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
 `
 
 export const SkyCard = styled.div`
@@ -256,7 +330,7 @@ export const FeatureGrid = styled.div`
   margin-top: clamp(2.5rem, 6vh, 4.5rem);
 
   @media (max-width: 850px) {
-    grid-template-columns: 1fr;
+    display: none;
   }
 `
 
@@ -289,17 +363,13 @@ export const FeatureIcon = styled.div`
   border-radius: 0.9rem;
   background: rgba(139, 92, 246, 0.18);
   color: #c4b5fd;
-  
   overflow: hidden; 
 
   img {
     width: 100%;
     height: 100%;
-    
     object-fit: cover; 
-
     transform: translateX(-1px);
-    
   }
 `
 
@@ -331,4 +401,59 @@ export const ProgressDot = styled.button`
   background: ${props => (props.$active ? '#a78bfa' : 'rgba(255,255,255,0.42)')};
   transition: width 250ms ease, background 250ms ease;
   cursor: pointer;
+`
+
+export const MobileConstellationCard = styled.div`
+  display: none;
+
+  @media (max-width: 850px) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1.5rem;
+    padding: 1.8rem 1.6rem; /* ★ 상하 패딩을 더 넓혀서 위아래로 묵직하게 키움 */
+    border: 1px solid rgba(167, 139, 250, 0.45);
+    border-radius: 1.25rem;
+    background: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(12px);
+    box-sizing: border-box;
+    width: 100%;
+    cursor: pointer;
+    box-shadow: 0 14px 40px rgba(76, 29, 149, 0.35);
+  }
+`
+
+export const MobileCardInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+
+  span {
+    color: #c084fc;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+
+  h4 {
+    margin: 0;
+    color: #f8fafc;
+    font-size: 1.2rem;
+    font-weight: 700;
+  }
+
+  p {
+    margin: 0;
+    color: #94a3b8;
+    font-size: 0.82rem;
+  }
+`
+
+export const MobileCardDiagram = styled.svg`
+  width: 105px;  /* ★ 오른쪽 별자리 사진(SVG)의 가로 크기를 대폭 확대 */
+  height: 75px; /* ★ 세로 크기도 함께 키워서 시인성 극대화 */
+  filter: drop-shadow(0 0 8px rgba(167, 139, 250, 0.9));
+  
+  path { fill: none; stroke: #a5b4fc; stroke-width: 2; } /* 선 두께도 살짝 두껍게 */
+  circle { fill: white; }
 `

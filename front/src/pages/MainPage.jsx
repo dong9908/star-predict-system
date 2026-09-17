@@ -22,6 +22,9 @@ import {
   ActionRow,
   PrimaryAction,
   SecondaryAction,
+  MobileConstellationCard, // ★ 추가된 모바일 미니 카드
+  MobileCardInfo,         // ★ 추가된 모바일 미니 카드 정보
+  MobileCardDiagram,      // ★ 추가된 모바일 미니 카드 다이어그램
   SkyCard,
   SkyCardHeader,
   SkyDiagram,
@@ -62,9 +65,16 @@ function MainPage() {
   const [currentConstellation] = useState(getRandomConstellation)
 
   useEffect(() => {
-    const backgroundTimer = window.setInterval(() => {
-      setActiveImage((current) => (current + 1) % backgrounds.length)
-    }, 10000)
+    // ★ 모바일 화면인지 체크 (850px 이하)
+    const isMobile = window.innerWidth <= 850
+
+    // 모바일이 아닐 때만 배경 이미지가 자동으로 바뀌도록 설정
+    let backgroundTimer = null
+    if (!isMobile) {
+      backgroundTimer = window.setInterval(() => {
+        setActiveImage((current) => (current + 1) % backgrounds.length)
+      }, 10000)
+    }
 
     const featureTimer = window.setInterval(() => {
       setActiveFeature((current) => (current + 1) % 4)
@@ -75,7 +85,7 @@ function MainPage() {
     }, 1000)
 
     return () => {
-      window.clearInterval(backgroundTimer)
+      if (backgroundTimer) window.clearInterval(backgroundTimer)
       window.clearInterval(featureTimer)
       window.clearInterval(clockTimer)
     }
@@ -107,6 +117,39 @@ function MainPage() {
                 <MapPin size={19} /> 내 위치에서 찾기
               </SecondaryAction>
             </ActionRow>
+
+            {/* ★ 모바일 전용 오늘의 추천 별자리 미니 카드 */}
+            <MobileConstellationCard onClick={() => navigate(`/constellation-info?constellation_id=${currentConstellation.id}`)}>
+              <MobileCardInfo>
+                <span>✨ 오늘의 추천 별자리</span>
+                <h4>{currentConstellation.title}</h4>
+                <p>관측 조건: <b style={{ color: getConditionColor(currentConstellation.condition) }}>{currentConstellation.condition}</b></p>
+              </MobileCardInfo>
+              
+              <MobileCardDiagram viewBox="0 0 300 200" aria-hidden="true">
+                {currentConstellation.lines.map((line, index) => (
+                  <line
+                    key={`mini-line-${index}`}
+                    x1={line.x1}
+                    y1={line.y1}
+                    x2={line.x2}
+                    y2={line.y2}
+                    stroke="#a5b4fc"
+                    strokeWidth="2"
+                    strokeDasharray={line.dashed ? '3 3' : 'none'}
+                  />
+                ))}
+                {currentConstellation.stars.map((star, index) => (
+                  <circle
+                    key={`mini-star-${index}`}
+                    cx={star.cx}
+                    cy={star.cy}
+                    r={star.r * 1.5}
+                    fill={star.color || '#fff'}
+                  />
+                ))}
+              </MobileCardDiagram>
+            </MobileConstellationCard>
           </HeroCopy>
 
           <SkyCard>
