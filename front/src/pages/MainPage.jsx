@@ -5,6 +5,8 @@ import skyStaticA from '../assets/main-motion/sky-static-a.png'
 import skyStaticB from '../assets/main-motion/sky-static-b.png'
 import featureBook from '../assets/main-motion/feature-book.png'
 import featureCrystalBall from '../assets/main-motion/feature-crystal-ball.png'
+import featureCamera from '../assets/main-motion/feature-camera.png'
+import featureMap from '../assets/main-motion/feature-map.png'
 import CONSTELLATIONS_DATA from '../data/constellationViewerData'
 import {
   PreviewShell as MainShell,
@@ -149,7 +151,9 @@ function MainPage() {
         <FeatureGrid>
           <FeatureCard $active={activeFeature === 0}>
             <FeatureNumber>01</FeatureNumber>
-            <FeatureIcon><Camera size={26} /></FeatureIcon>
+            <FeatureIcon>
+              <img src={featureCamera} alt="" />
+            </FeatureIcon>
             <div>
               <h3>사진으로 별자리 찾기</h3>
               <p>밤하늘 사진을 올려서 별자리를 찾고 도감에 등록할 수 있어요.</p>
@@ -158,7 +162,9 @@ function MainPage() {
 
           <FeatureCard $active={activeFeature === 1}>
             <FeatureNumber>02</FeatureNumber>
-            <FeatureIcon><MapPin size={26} /></FeatureIcon>
+            <FeatureIcon>
+              <img src={featureMap} alt="" />
+            </FeatureIcon>
             <div>
               <h3>내 위치에서 별자리 찾기</h3>
               <p>현재 위치와 시간 기준으로 별이 있는 정확한 방향과 고도를 찾아드려요.</p>

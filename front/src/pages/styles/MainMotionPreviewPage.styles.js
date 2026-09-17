@@ -284,13 +284,23 @@ export const FeatureCard = styled.article`
 `
 
 export const FeatureIcon = styled.div`
-  display: grid;
   width: 3.5rem;
   height: 3.5rem;
   border-radius: 0.9rem;
   background: rgba(139, 92, 246, 0.18);
   color: #c4b5fd;
-  place-items: center;
+  
+  overflow: hidden; 
+
+  img {
+    width: 100%;
+    height: 100%;
+    
+    object-fit: cover; 
+
+    transform: translateX(-1px);
+    
+  }
 `
 
 export const FeatureNumber = styled.span`
